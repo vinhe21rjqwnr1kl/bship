@@ -1,0 +1,116 @@
+.dz-card{
+	&.style-2{
+		border-radius:var(--border-radius-base);
+		box-shadow: 1px 1.732px 60px 0px rgba(0, 0, 0, 0.1);
+		overflow:hidden;
+		
+		.dz-media{
+			border-radius: unset;
+			.dz-badge-list{
+				position:absolute;
+				bottom:25px;
+				left:20px;
+				@include respond('tab-port'){
+					bottom:15px;
+				}
+			}
+			.dz-badge{
+				background-color:var(--primary);
+				color:#fff;
+				border-radius:3px;
+				padding: 6px 15px;
+				font-size: 12px;
+				text-transform:uppercase;
+				
+			}
+		}
+		.dz-info{
+			padding:25px 30px;
+			.dz-user-rate,
+			.meta-bottom{
+				display:flex;
+				align-items:center;
+				color:grey;
+				justify-content:space-between;
+			}
+			p{
+				margin-bottom: 20px;
+			}
+			
+			.dz-user {
+				display:flex;
+				align-items:center;
+				
+				img {
+					height:45px;
+					width:45px;
+					margin-right:10px;
+					border:3px solid white;
+					box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+					border-radius:100%;
+					object-fit:cover;
+				}
+			}
+			.dz-ratings {
+				i {
+					color:#ffc107;
+					margin-right:5px;
+					font-size:18px;
+				}
+			}
+			.dz-price h4{
+				color:var(--primary);
+				margin:0;
+			}
+			.separator {
+				height: 1px;
+				width: 100%;
+				background: lightgrey;
+			}
+			.dz-view i{
+			    color: limegreen;
+				margin-right:5px;
+				background: #90ee904f;
+				padding: 7px;
+				border-radius: 100%;
+				
+			}
+			@include respond('tab-port'){
+				padding: 25px 25px;
+			}
+		}
+		
+		// Card List
+		&.card-list{
+			display: flex;
+			.dz-media{
+				width: 350px;
+				min-width: 350px;
+				img{
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+			@media screen and (min-width: 991px) and (max-width: 1191px){
+				display: block;
+				.dz-media{
+					width: 100%;
+					min-width: 100%;
+				}
+			}
+			@include respond('tab-port'){
+				.dz-media{
+					width: 300px;
+					min-width: 300px;
+				}
+			}
+			@include respond('phone-land'){
+				display: block;
+				.dz-media{
+					width: 100%;
+					min-width: 100%;
+				}
+			}
+		}
+	}
+}

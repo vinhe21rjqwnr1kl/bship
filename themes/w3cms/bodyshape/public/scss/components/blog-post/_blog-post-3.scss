@@ -1,0 +1,57 @@
+.dz-card{
+	&.style-3{
+		.dz-info{
+			
+			padding:10px 0 0;
+			text-align:center;
+			p {
+			    font-size: 15px;
+			}
+			@include respond ('phone'){
+				padding:20px 0 0;
+			}
+		}
+		.dz-title {
+			margin-bottom:15px;
+		}
+		.btn-link {
+			color: black;
+			font-weight: 600;
+			font-size: 15px;
+		}
+		.dz-media{
+			transition:all 0.3s;
+		    padding: 15px;
+			border: 2px solid transparent;
+			border-radius: var(--border-radius-base);
+			img{
+				border-radius:var(--border-radius-base);
+			}
+			.dz-badge-list{
+				position:absolute;
+				top:20px;
+				left:20px;
+			}
+			.dz-badge{
+				background-color:var(--primary);
+				color:#fff;
+				border-radius:var(--border-radius-base);
+				padding: 8px 15px;
+				font-size: 12px;
+				text-transform:uppercase;
+			}
+			@include respond ('phone'){
+				border: 2px solid var(--primary);
+			}
+		}
+		&:hover {
+			.dz-media {
+				border-color:var(--primary);
+			}
+			.btn-link {
+				color: var(--primary);
+			}
+		}
+	}
+}
+

@@ -1,0 +1,117 @@
+.dz-card{
+	&.style-1{
+		box-shadow: 0px 0 50px rgba(0, 0, 0, 0.1);
+		@include transitionMedium;
+		padding: 20px;
+	    transform: skewY(-5deg);
+		margin: 30px 0 20px;
+	
+		.dz-info{
+	    	transform: skewY(5deg);
+			padding: 20px 0 0;
+			
+			p {
+				margin-bottom:25px;
+				text-transform: capitalize;
+				@include respond('tab-port'){
+					margin-bottom:20px;
+				}
+			}
+			.dz-meta {
+				margin-bottom: 12px;
+			}
+			.dz-title {
+				margin-bottom: 12px;
+			}
+			.post-author {
+				img {
+					height: 35px;
+					width: 35px;
+					border-radius: 100%;
+					margin-right: 10px;
+					@include respond('phone-land'){
+						height: 27px;
+						width: 27px;
+						margin-right: 5px;
+					}
+				}
+			}
+		}
+		.dz-media{
+	    	transform: skewY(5deg);
+			border-radius: unset;
+			margin-top: -50px;
+			.dz-badge-list{
+				position:absolute;
+				top:20px;
+				left:20px;
+			}
+			.dz-badge{
+				background-color:var(--primary);
+				color:#fff;
+				border-radius:var(--border-radius-base);
+				padding: 8px 15px;
+				font-size: 12px;
+				text-transform:uppercase;
+			}
+		}
+		&:hover {
+			box-shadow: 0px 0 50px rgba(0, 0, 0, 0.2);
+		}
+		&.blog-half {
+			transform: skewX(0deg);
+			margin: 0;
+			@include respond('phone-land'){
+				display: block;
+			}
+			.dz-info{
+				transform: skewX(0deg);
+				padding: 0 0 0 30px;
+				@include custommq ($max:1199px){
+					padding: 0 0 0 20px;
+					.dz-title {
+						font-size: 20px;
+					}
+					.dz-meta ul li:last-child {
+						display: none;
+					}
+				}
+				@include respond('phone-land'){
+					padding: 0;
+					.dz-title {
+						font-size: 18px;
+					}
+				}
+			}
+			.dz-media {
+				transform: skewX(0deg);
+				margin: 0;
+				@include custommq ($max:1199px){
+					max-width: 220px;
+    				min-width: 220px;
+				}
+				@include respond('phone-land'){
+					max-width: 100%;
+    				min-width: 100%;
+    				margin-bottom: 20px;
+				}
+			}
+		}
+	}
+}
+.swiper {
+	&.blog-slider-wrapper{
+		overflow: unset;
+		
+		.swiper-slide{
+			@include transitionMedium;
+			opacity: 0;
+			
+			&.swiper-slide-prev,
+			&.swiper-slide-next,
+			&.swiper-slide-active{
+				opacity: 1;
+			}
+		}
+	}
+}

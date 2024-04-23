@@ -1,0 +1,73 @@
+.dz-card{
+	&.style-4{
+		.dz-info{
+			padding:10px 0;
+			p {
+			    font-size: 15px;
+			}
+			li {
+				position:relative;
+				&:not(:last-child):after {
+					position:absolute;
+					content:"";
+					height:15px;
+					width:1px;
+					background-color:lightgrey;
+					top:50%;
+					transform:translatey(-50%);
+					right:-13px;
+				}
+			}
+		}
+		.dz-title{
+			margin:10px 0;
+			font-size: 26px;
+			font-weight:700;
+		}
+		.btn-link {
+			color: black;
+			font-weight: 600;
+			font-size: 15px;
+		}
+		.dz-media{
+			img{
+				border-radius:var(--border-radius-base);
+			}
+			.dz-badge-list{
+				position:absolute;
+				top:20px;
+				left:20px;
+			}
+			.dz-badge{
+				background-color:var(--primary);
+				color:#fff;
+				border-radius:var(--border-radius-base);
+				padding: 8px 15px;
+				font-size: 12px;
+				text-transform:uppercase;
+			}
+		}
+		&:hover {
+			.dz-media {
+				border-color:var(--primary);
+			}
+			.btn-link {
+				color: var(--primary);
+			}
+		}
+		@include respond ('tab-port'){
+			.dz-info{
+				padding: 20px 15px;
+			}
+			.dz-media{
+				.dz-badge{	
+					top:10px;
+					left:10px;
+					padding: 5px 10px;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+}
+

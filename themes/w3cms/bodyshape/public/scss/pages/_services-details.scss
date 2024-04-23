@@ -1,0 +1,18 @@
+.dz_error {
+	font-size: 180px;
+	font-weight: 700;
+	line-height: 150px;
+	margin: auto;
+	color: var(--primary);
+	font-family: var(--font-family-title);
+	@include respond ('tab-port'){
+		font-size: 130px;
+		line-height: 1;
+	}
+	@include respond ('phone-land'){
+		font-size: 90px;
+	}
+	@include respond ('phone'){
+		font-size: 75px;
+	}
+}
