@@ -38,8 +38,6 @@ class TripController extends Controller
     {
         $page_title = __('Danh sách chuyến');
         $resultQuery = Trip::query();
-        $servicesDetailIdsToRefund = [26]; // Mảng các service detail id cần hoàn tiền tự động
-
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
             if ($request->filled('goid')) {
                 $pieces = explode("_", $request->input('goid'));
@@ -125,7 +123,7 @@ class TripController extends Controller
         // $status = config('blog.status');
         // $roleArr = Agency::pluck('name', 'id')->toArray();
         // $roleArr[0]= "Công ty BUTL";
-        return view('admin.trip.index', compact('service_id', 'drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'servicesDetailIdsToRefund', 'page_title'));
+        return view('admin.trip.index', compact('service_id', 'drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
     }
 
 
@@ -329,7 +327,6 @@ class TripController extends Controller
             $requestData["progress"] = 4;
             $requestData["feedback"] = $id_user;
 
-            DriverRefund::dispatch($Trip);
         } else {
             $requestData["progress"] = 3;
             $requestData["feedback"] = $id_user;
