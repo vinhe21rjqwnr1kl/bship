@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\UpdateDriverBalance;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Trip;
@@ -325,9 +326,13 @@ class TripController extends Controller
         if ($Trip->progress == 3) {
             $requestData["progress"] = 4;
             $requestData["feedback"] = $id_user;
+
+            UpdateDriverBalance::dispatch($Trip);
         } else {
             $requestData["progress"] = 3;
             $requestData["feedback"] = $id_user;
+//            event(new OrderCancelled($Trip));
+
         }
         $check = $Trip->fill($requestData)->save();
         if ($check) {
