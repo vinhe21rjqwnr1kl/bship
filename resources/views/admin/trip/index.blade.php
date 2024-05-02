@@ -220,7 +220,11 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($page->progress == 4)
+                                            @if($page->progress == 4 && in_array($page->service_detail_id, $servicesDetailIdsToRefund))
+                                                <span
+                                                    class="btn btn-success">Đã hoàn tiền tự động
+                                                </span>
+                                            @elseif($page->progress == 4)
                                                 <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
                                                    class="btn btn-danger">Hoàn tiền</a>
                                             @else

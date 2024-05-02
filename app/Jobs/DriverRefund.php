@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateDriverBalance implements ShouldQueue
+class DriverRefund implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -57,10 +57,8 @@ class UpdateDriverBalance implements ShouldQueue
             $driveData["status"] = 0;
 
             $blog = LogAddMoneyRequest::create($driveData);
-
             $this->addMoney($blog->id, $driver);
         }
-
     }
 
     /**
@@ -70,7 +68,6 @@ class UpdateDriverBalance implements ShouldQueue
     private function addMoney($id, $driver): void
     {
         $info_request = LogAddMoneyRequest::firstWhere('id', $id);
-        $current_user = auth()->user();
         if ($info_request && $info_request->status == 0) {
             $driver_id = $info_request->user_id;
             $driver_phone = $info_request->user_phone;
@@ -79,13 +76,6 @@ class UpdateDriverBalance implements ShouldQueue
             $driver_money = $info_request->money;
             $driver_reason = $info_request->reason;
             $driver_create_name = $info_request->create_name;
-
-            //check tai xe thuoc dai ly
-//            if ($current_user->agency_id > 0) {
-//                if ($current_user->agency_id != $driver_agency_id) {
-//                    return redirect()->route('driver.admin.payment_list_approve')->with('error', __('Bạn không quản lí tài xế không tồn tại.'));
-//                }
-//            }
 
             $driveData["money"] = $driver->money + $driver_money; //$driver_money số tiền yêu cầu thêm
 
