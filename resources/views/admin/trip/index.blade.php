@@ -46,6 +46,15 @@
                             @csrf
                             <input type="hidden" name="todo" value="Filter">
                             <div class="row">
+                                <div class="mb-12 col-md-12">
+                                    <div class="parent-tags">
+                                        <div class="wrapper-tags">
+                                            <input type="hidden" name="tags" id="tags_input" value="{{ old('tags', request()->input('tags')) }}">
+                                            <input type="text" id="input-tag-search" class="input-tag" placeholder="Tìm kiểm chuyến theo tên tỉnh/ thành phố">
+                                        </div>
+                                        <span class="tags-length">0 Thẻ</span>
+                                    </div>
+                                </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="search" name="goid" class="form-control" placeholder="Mã chuyến đi"
                                            value="{{ old('phone', request()->input('goid')) }}">

@@ -64,6 +64,15 @@ class TripController extends Controller
             if ($request->filled('progress')) {
                 $resultQuery->where('progress', 'like', "%{$request->input('progress')}%");
             }
+
+            $tags = json_decode($request->input("tags"), true);
+            if (!empty($tags)) {
+                $resultQuery->where(function ($query) use ($tags) {
+                    foreach ($tags as $tag) {
+                        $query->orWhere('go_info.pickup_address', 'like', "%{$tag}%");
+                    }
+                });
+            }
         }
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
@@ -288,6 +297,14 @@ class TripController extends Controller
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
+            }
+            $tags = json_decode($request->input("tags"), true);
+            if (!empty($tags)) {
+                $resultQuery->where(function ($query) use ($tags) {
+                    foreach ($tags as $tag) {
+                        $query->orWhere('go_request.pickup_address', 'like', "%{$tag}%");
+                    }
+                });
             }
         }
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';

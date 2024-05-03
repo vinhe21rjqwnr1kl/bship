@@ -30,6 +30,7 @@ return [
 		    	'vendor/bootstrap-select/dist/css/bootstrap-select.min.css',
 		    	'css/custom.css',
 		    	'css/style.css',
+		    	'css/tags-input.css',
 		    ],
 		    'js' => [
 		    	'top'=>[
@@ -40,6 +41,7 @@ return [
 					'js/deznav-init-min.js',
 					'js/custom-min.js',
 					'js/rdxjs-min.js',
+					'js/tags-input.js',
 				],
 		    ],
 	    ],
