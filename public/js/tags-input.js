@@ -68,9 +68,11 @@ function updateTagsAfterReload(tags) {
 }
 
 window.addEventListener('load', function() {
-    const tagsInput = document.getElementById('tags_input');
-    let arr = JSON.parse(tagsInput.value);
-    updateTagsAfterReload(arr)
+    const tagsInput = document.getElementById('tags_input').value;
+    if (tagsInput !== null && tagsInput !== '') {
+        let arr = JSON.parse(tagsInput);
+        updateTagsAfterReload(arr)
+    }
 });
 
 
