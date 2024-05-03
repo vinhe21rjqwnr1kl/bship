@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
-                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+{{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
                                         Lại</a>
 

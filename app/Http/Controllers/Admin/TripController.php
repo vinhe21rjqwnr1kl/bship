@@ -279,11 +279,17 @@ class TripController extends Controller
     {
         $page_title = __('Danh sách chuyến thất bại');
         $resultQuery = TripRequest::query();
+        $resultQuery->join('go_info', 'go_info.go_request_id', '=', 'go_request.id');
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
+            if ($request->filled('goid')) {
+                $pieces = explode("_", $request->input('goid'));
+                if (isset($pieces[1]))
+                    $resultQuery->Where('go_info.id', 'like', "%{$pieces[1]}%");
+                else
+                    $resultQuery->Where('go_info.id', 'like', "%{$request->input('goid')}%");
+            }
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
-
-
             }
             if ($request->filled('name')) {
                 $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
@@ -307,6 +313,9 @@ class TripController extends Controller
                 });
             }
         }
+        if (!$request->filled('status')) {
+            $resultQuery->where('go_request.status', '=', "1");
+        }
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
         $resultQuery->orderBy('go_request.' . $sortBy, $direction);
@@ -315,13 +324,12 @@ class TripController extends Controller
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_request.service_detail_id');
 
 
-        $resultQuery->select('*', 'go_request.status as statusmain',
+        $resultQuery->select('*', 'go_info.id as go_id', 'go_request.status as statusmain',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09');
 
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-
 
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();

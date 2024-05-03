@@ -42,7 +42,7 @@
 							</div>
                             <div class=" col-sm-12 col-md-12 text-sm-end">
                                 <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
-                                <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2"> 
+{{--                                <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2"> --}}
 
                                 <a href="{{ route('driver.admin.payment_log') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>
@@ -77,7 +77,7 @@
                                     <th> <strong> Tiền sau</strong> </th>
                                     <th> <strong> Lí do </strong> </th>
                                     <th> <strong> Người tạo </strong> </th>
-									<th> <strong> Thời gian </strong> </th>                                
+									<th> <strong> Thời gian </strong> </th>
                                 </tr>
                             </thead>
                             <tbody>

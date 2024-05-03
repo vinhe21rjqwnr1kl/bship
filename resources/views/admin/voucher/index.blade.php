@@ -34,9 +34,9 @@
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
                                 {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => __('Tiêu đề'))) }}
                             </div>
-              
+
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-6 text-sm-end">
-                                 <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2"> 
+{{--                                 <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2"> --}}
                                 <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
                                  <a href="{{ route('admin.voucher.index') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>
@@ -94,7 +94,7 @@
                                             <span class="badge badge-success"> Theo %</span>
                                         @elseif($voucher->discount_type == 2)
                                             <span class="badge badge-danger">Theo VNĐ</span>
-                                        @endif 
+                                        @endif
                                     </td>
                                     <td> {{ $voucher->discount_value }} </td>
                                     <td> {{ $voucher->start_date }} </td>
@@ -108,10 +108,10 @@
                                         @elseif($voucher->status == 0)
                                             <span class="badge badge-danger">Ngưng hoạt động</span>
                                         @endif </td>
-                                	
+
 										<td class="text-center ">
                                             <a href="{{ route('admin.voucher.edit', $voucher->id) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-                                       
+
                                    	 </td>
                                 </tr>
                                 @empty
