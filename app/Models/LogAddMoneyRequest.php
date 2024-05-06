@@ -13,6 +13,7 @@ class LogAddMoneyRequest extends Model
     protected $fillable = [
 		'money',
 		'user_id',
+		'go_id',
 		'user_name',
 		'user_phone',
 		'agency_id',
@@ -25,5 +26,5 @@ class LogAddMoneyRequest extends Model
 	{
 	    return $this->belongsToMany(User::class, 'model_has_roles', 'model_id', 'role_id');
 	}
- 
+
 }

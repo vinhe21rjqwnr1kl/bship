@@ -28,14 +28,14 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/driver')->group(f
     Route::get('/payment', [DriverController::class, 'payment'])->name('driver.admin.payment');
     Route::post('/payment_store', [DriverController::class, 'payment_store'])->name('driver.admin.payment_store');
     Route::get('/payment_create/{id}', [DriverController::class, 'payment_create'])->name('driver.admin.payment_create');
-    Route::get('/payment_create_info/{phone}', [DriverController::class, 'payment_create_info'])->name('driver.admin.payment_create_info');
+    Route::get('/payment_create_info/{go_id}/{phone}', [DriverController::class, 'payment_create_info'])->name('driver.admin.payment_create_info');
 
     Route::get('/payment_approve', [DriverController::class, 'payment_approve'])->name('driver.admin.payment_approve');
     Route::get('/payment_addmoney/{id}', [DriverController::class, 'payment_addmoney'])->name('driver.admin.payment_addmoney');
     Route::get('/payment_remove/{id}', [DriverController::class, 'payment_remove'])->name('driver.admin.payment_remove');
     Route::get('/payment_log', [DriverController::class, 'payment_log'])->name('driver.admin.payment_log');
 
-    
+
       //tai xe đăng  ký  chạy  dịch  vu  nàoo
       Route::get('/drservice/{driver_id}', [DriverController::class, 'admin_drservice'])->name('driver.admin.drservice');
       Route::get('/drservicedelete/{id}', [DriverController::class, 'admin_drserviceedelete'])->name('driver.admin.drservicedelete');
@@ -43,8 +43,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/driver')->group(f
       Route::get('/drserviceallow/{id}', [DriverController::class, 'admin_drserviceallow'])->name('driver.admin.drserviceallow');
 
 
-      
-      Route::get('/drservicestore/{driver_id}/{service_detail_id}', [DriverController::class, 'admin_drservicestore'])->name('driver.admin.drservicestore'); 
-      Route::get('/percent/{driver_id}/{service_detail_id}/{percent}', [DriverController::class, 'admin_percent'])->name('driver.admin.percent'); 
+
+      Route::get('/drservicestore/{driver_id}/{service_detail_id}', [DriverController::class, 'admin_drservicestore'])->name('driver.admin.drservicestore');
+      Route::get('/percent/{driver_id}/{service_detail_id}/{percent}', [DriverController::class, 'admin_percent'])->name('driver.admin.percent');
 
 });

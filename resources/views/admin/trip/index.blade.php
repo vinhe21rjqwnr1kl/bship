@@ -49,8 +49,10 @@
                                 <div class="mb-12 col-md-12">
                                     <div class="parent-tags">
                                         <div class="wrapper-tags">
-                                            <input type="hidden" name="tags" id="tags_input" value="{{ old('tags', request()->input('tags')) }}">
-                                            <input type="text" id="input-tag-search" class="input-tag" placeholder="Tìm kiểm chuyến theo tên tỉnh/ thành phố">
+                                            <input type="hidden" name="tags" id="tags_input"
+                                                   value="{{ old('tags', request()->input('tags')) }}">
+                                            <input type="text" id="input-tag-search" class="input-tag"
+                                                   placeholder="Tìm kiểm chuyến theo tên tỉnh/ thành phố">
                                         </div>
                                         <span class="tags-length">0 Thẻ</span>
                                     </div>
@@ -93,7 +95,7 @@
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
-{{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}
+                                    {{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
                                         Lại</a>
 
@@ -229,9 +231,19 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($page->progress == 4)
+                                            @if($page->progress == 4 && $page->log_add_money_request_status === 0)
+                                                <span class="btn btn-warning">Yêu cầu hoàn tiền đã được gửi</span>
+
+                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
+                                                <span class="btn btn-success">Đã hoàn tiền</span>
+
+                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
+                                                <span class="btn btn-primary">Yêu cầu hoàn tiền đã bị hủy</span>
+
+                                            @elseif($page->progress == 4)
                                                 <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
                                                    class="btn btn-danger">Hoàn tiền</a>
+
                                             @else
 
                                             @endif
@@ -483,6 +495,7 @@
                 console.error('Invalid serviceId:', serviceId);
             }
         })
+
     </script>
 
 @endsection

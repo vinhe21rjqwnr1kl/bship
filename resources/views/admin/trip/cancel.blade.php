@@ -42,15 +42,15 @@
 							<input type="search" name="name" class="form-control" placeholder="Họ và tên" value="{{ old('name', request()->input('name')) }}">
 							</div>
 							<div class="mb-3 col-md-4">
-								
+
 								<select name="progress" class="default-select form-control">
-								
+
 									<option  {{ request()->input('progress') == 1 ? 'selected="selected"':'' }} value="1">{{ $CfGoProcessArr[1] }}</option>
 									<option {{ request()->input('progress') == 2 ? 'selected="selected"':'' }} value="2">{{ $CfGoProcessArr[2] }}</option>
 									<option {{ request()->input('progress') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>
 									<option {{ request()->input('progress') == 4 ? 'selected="selected"':'' }} value="4">{{ $CfGoProcessArr[4] }}</option>
 									<option {{ request()->input('progress') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>
-							
+
 								</select>
 							</div>
 							<div class="mb-3 col-md-4">
@@ -60,11 +60,11 @@
 							<input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc" value="{{ old('dateto', request()->input('dateto')) }}">
 							</div>
 							<div class="mb-3 col-md-4">
-							<input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2"> 
+							<input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
 								<a href="{{ route('trip.admin.cancel') }}" class="btn btn-danger">Nhập Lại</a>
-							
+
 							</div>
-					
+
 						</div>
 					</form>
 				</div>
@@ -103,38 +103,38 @@
 									<tr>
 										<td> {{ $i++ }} </td>
 										<td> BUTL_{{ $page->go_id }} </td>
-										<td> 
+										<td>
 											<strong>Tên:</strong> {{$page->user_name09}}
 											<br><strong>SĐT:</strong> {{$page->user_phone09}}
 										 </td>
-										<td> 
+										<td>
 											<strong>Tên:</strong> {{$page->driver_name}}
 											<br><strong>SĐT:</strong> {{$page->driver_phone}}
 										 </td>
-										 <td>{{ $ServicesArr[$page->service_id] }} 
+										 <td>{{ $ServicesArr[$page->service_id] }}
 										 </td>
-										<td> 
+										<td>
 										 {{ $ServicesTypeArr[$page->service_type] }} </td>
-										 
-										 <td><strong>Tổng:</strong> {{ number_format($page->cost) }} 
-											<br><strong>Tài xế:</strong>{{ number_format($page->butl_cost  +  $page->service_cost) }} 
-											<br><strong>Đại lý:</strong>{{ number_format($page->driver_cost - $page->service_cost) }} 
-                                            <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }} 
-											<br><strong>Khuyến mại:</strong>{{ number_format($page->discount_from_code) }} 
+
+										 <td><strong>Tổng:</strong> {{ number_format($page->cost) }}
+											<br><strong>Tài xế:</strong>{{ number_format($page->butl_cost  +  $page->service_cost) }}
+											<br><strong>Đại lý:</strong>{{ number_format($page->driver_cost - $page->service_cost) }}
+                                            <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
+											<br><strong>Khuyến mại:</strong>{{ number_format($page->discount_from_code) }}
 
 										</td>
 										<td>
 											<strong>Số KM:</strong> {{ $page->distance/1000 }}
 											<br><strong>Đón:</strong> {{ $page->pickup_address }}
-											<br><strong>Đến:</strong> {{ $page->drop_address }} 
+											<br><strong>Đến:</strong> {{ $page->drop_address }}
 											@if($page->drop_second_address)
-												<br><strong>Đến:</strong> {{ $page->drop_second_address }} 
+												<br><strong>Đến:</strong> {{ $page->drop_second_address }}
 											@else
 											@endif
-										
+
 										</td>
-										<td> 
-											
+										<td>
+
 											@if ($page->progress == 3)
 												<span class="badge badge-success"> {{ $CfGoProcessArr[$page->progress] }}</span>
 											@elseif($page->progress == 4)
@@ -144,14 +144,24 @@
 											@endif
 										</td>
 										<td> {{ $page->create_date}} </td>
-										<td class="text-center">
-											@if($page->progress == 4)
-												<a href="{{ route('driver.admin.payment_create', $page->go_id) }}" class="btn btn-danger">Hoàn tiền</a>
-											@else
-												
-											@endif
+                                        <td class="text-center">
+                                            @if($page->progress == 4 && $page->log_add_money_request_status === 0)
+                                                <span class="btn btn-warning">Yêu cầu hoàn tiền đã được gửi</span>
 
-										</td>
+                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
+                                                <span class="btn btn-success">Đã hoàn tiền</span>
+
+                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
+                                                <span class="btn btn-primary">Yêu cầu hoàn tiền đã bị hủy</span>
+
+                                            @elseif($page->progress == 4)
+                                                <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
+                                                   class="btn btn-danger">Hoàn tiền</a>
+
+                                            @else
+
+                                            @endif
+                                        </td>
 									</tr>
 								@empty
 									<tr><td class="text-center" colspan="9"><p>Không có dữ liệu.</p></td></tr>

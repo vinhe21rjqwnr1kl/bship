@@ -81,12 +81,17 @@ class TripController extends Controller
         $resultQuery->join('user_driver_data', 'user_driver_data.id', '=', 'go_info.driver_id');
         $resultQuery->join('user_data', 'user_data.id', '=', 'go_info.user_id');
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_info.service_detail_id');
+        $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
 
         if ($service_id == 3) {
             $resultQuery
                 ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
                 ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
-                ->select('*', 'go_info.id as go_id', 'user_driver_data.name as driver_name',
+                ->select('*',
+                    'go_info.id as go_id',
+                    'log_add_money_request.id as log_add_money_request_id',
+                    'log_add_money_request.status as log_add_money_request_status',
+                    'user_driver_data.name as driver_name',
                     'user_driver_data.phone as driver_phone',
                     'user_data.name as user_name09',
                     'user_data.phone as user_phone09',
@@ -98,7 +103,11 @@ class TripController extends Controller
                     WHERE food_order_items.food_order_id = food_orders.id) AS food_product_name'))
                 ->whereNotNull('go_info.food_order_id');
         } else {
-            $resultQuery->select('*', 'go_info.id as go_id', 'user_driver_data.name as driver_name',
+            $resultQuery->select('*',
+                'go_info.id as go_id',
+                'log_add_money_request.id as log_add_money_request_id',
+                'log_add_money_request.status as log_add_money_request_status',
+                'user_driver_data.name as driver_name',
                 'user_driver_data.phone as driver_phone',
                 'user_data.name as user_name09',
                 'user_data.phone as user_phone09');
@@ -244,7 +253,12 @@ class TripController extends Controller
         $resultQuery->join('user_driver_data', 'user_driver_data.id', '=', 'go_info.driver_id');
         $resultQuery->join('user_data', 'user_data.id', '=', 'go_info.user_id');
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_info.service_detail_id');
-        $resultQuery->select('*', 'go_info.id as go_id', 'user_driver_data.name as driver_name',
+        $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
+        $resultQuery->select('*',
+            'go_info.id as go_id',
+            'log_add_money_request.id as log_add_money_request_id',
+            'log_add_money_request.status as log_add_money_request_status',
+            'user_driver_data.name as driver_name',
             'user_driver_data.phone as driver_phone',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09');

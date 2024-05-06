@@ -451,15 +451,19 @@ class DriverController extends Controller
     /**
      * Show the form for creating a new user.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function payment_create($id)
     {
+        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $id)->exists();
+        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+
         $page_title = __('Tạo yêu cầu nạp tiền');
         $phone = '';
         $reason = '';
         $money = 0;
         $info_string = '';
+        $go_id = $id;
         if ($id > 0) {
             $go_info = Trip::findorFail($id);
             $driver_id = $go_info->driver_id;
@@ -469,7 +473,7 @@ class DriverController extends Controller
             $reason = 'Nạp tiền cho Cuốc Hủy BUTL_' . $id . ' lúc ' . $go_info->create_date;
             $info_string = $driver->name;
         }
-        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'info_string', 'page_title'));
+        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'page_title'));
     }
 
     /**
@@ -477,9 +481,10 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment_create_info(Request $request, $phone)
+    public function payment_create_info(Request $request, $go_id, $phone)
     {
-
+        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $go_id)->exists();
+        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
 
         $page_title = __('Tạo yêu cầu nạp tiền');
         $driveData["phone"] = $phone;
@@ -496,13 +501,15 @@ class DriverController extends Controller
             $info_string = 'Tên tài xế: ' . $driveData["user_name"] . ' --- CMND: ' . $driveData["cmnd"];
         }
         $phone = $driveData["phone"];
-        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'info_string', 'page_title'));
+        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'page_title'));
     }
 
     public function payment_store(Request $request)
     {
+        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $request->input('go_id'))->exists();
+        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
 
-
+        $driveData["go_id"] = $request->input('go_id');
         $driveData["phone"] = $request->input('phone');
         $driveData["money"] = $request->input('money');
         $driveData["reason"] = $request->input('reason');
@@ -539,7 +546,7 @@ class DriverController extends Controller
                 }
             }
             $blog = LogAddMoneyRequest::create($driveData);
-            return redirect()->back()->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
+            return redirect()->route('trip.admin.index', 0)->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
         }
 
     }
