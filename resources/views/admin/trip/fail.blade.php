@@ -44,10 +44,7 @@
                                     <span class="tags-length">0 Thẻ</span>
                                 </div>
                             </div>
-                            <div class="mb-3 col-md-4">
-                                <input type="search" name="goid" class="form-control" placeholder="Mã chuyến đi"
-                                       value="{{ old('goid', request()->input('goid')) }}">
-                            </div>
+
 							<div class="mb-3 col-md-4">
 								<input type="search" name="phone" class="form-control" placeholder="Số điện thoại" value="{{ old('phone', request()->input('phone')) }}">
 							</div>
@@ -94,7 +91,6 @@
 							<thead class="">
 								<tr>
 									<th> <strong> STT</strong> </th>
-									<th> <strong> Mã BUTL </strong> </th>
 									<th> <strong> Khách hàng </strong> </th>
 									<th> <strong> DV </strong> </th>
 									<th> <strong> Loại </strong> </th>
@@ -111,7 +107,6 @@
 								@forelse ($drivers as $page)
 									<tr>
 										<td> {{ $i++ }} </td>
-                                        <td> BUTL_{{ $page->go_id }} </td>
 										<td>
 											<strong>Tên:</strong> {{$page->user_name09}}
 											<br><strong>SĐT:</strong> {{$page->user_phone09}}

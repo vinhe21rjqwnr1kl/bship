@@ -2,29 +2,34 @@ const input_tag = document.querySelector('.input-tag');
 const tagsInput = document.getElementById('tags_input');
 const tags_length = document.querySelector('.tags-length');
 let tags_list = [];
+var inputTagSearch = document.getElementById('input-tag-search');
 
-document.getElementById('input-tag-search').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-    }
-});
-
-input_tag.addEventListener("keyup", (e) => {
-    const val = input_tag.value;
-    if (e.key == "Enter") {
-        if (tags_list.some(e => e.text == val)) return alert("Duplicate tags!!!");
-        if (val == "") return;
-        const tags = val.split(',').map(e => e.trim()).filter(e => e !== "")
-        for (let tag of tags) {
-            tags_list.push({
-                id: Math.random().toString(10).substring(2, 10),
-                text: tag,
-            })
+if (inputTagSearch) {
+    inputTagSearch.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
         }
-        input_tag.value = "";
-        RenderTags();
-    }
-});
+    });
+}
+
+if (input_tag) {
+    input_tag.addEventListener("keyup", (e) => {
+        const val = input_tag.value;
+        if (e.key == "Enter") {
+            if (tags_list.some(e => e.text == val)) return alert("Duplicate tags!!!");
+            if (val == "") return;
+            const tags = val.split(',').map(e => e.trim()).filter(e => e !== "")
+            for (let tag of tags) {
+                tags_list.push({
+                    id: Math.random().toString(10).substring(2, 10),
+                    text: tag,
+                })
+            }
+            input_tag.value = "";
+            RenderTags();
+        }
+    });
+}
 
 function RenderTags() {
     tagsInput.value = JSON.stringify(tags_list.map(tag => tag.text));
@@ -67,12 +72,15 @@ function updateTagsAfterReload(tags) {
     RenderTags();
 }
 
-window.addEventListener('load', function() {
-    const tagsInput = document.getElementById('tags_input').value;
-    if (tagsInput !== null && tagsInput !== '') {
-        let arr = JSON.parse(tagsInput);
-        updateTagsAfterReload(arr)
-    }
-});
+if(tagsInput && tagsInput.value){
+    window.addEventListener('load', function () {
+        const tagsInput = document.getElementById('tags_input').value;
+        if (tagsInput !== null && tagsInput !== '') {
+            let arr = JSON.parse(tagsInput);
+            updateTagsAfterReload(arr)
+        }
+    });
+}
+
 
 

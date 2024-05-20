@@ -244,7 +244,7 @@ class TripController extends Controller
 
             }
             if ($request->filled('name')) {
-                $resultQuery->where('.user_data.name', 'like', "%{$request->input('name')}%");
+                $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
                 $resultQuery->orWhere('user_driver_data.name', 'like', "%{$request->input('name')}%");
 
             }
@@ -254,9 +254,9 @@ class TripController extends Controller
             if ($request->filled('dateto')) {
                 $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
-            if ($request->filled('progress')) {
-                $resultQuery->where('progress', '=', "%{$request->input('progress')}%");
-            }
+//            if ($request->filled('progress')) {
+//                $resultQuery->where('progress', '=', "{$request->input('progress')}");
+//            }
         }
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
@@ -268,6 +268,7 @@ class TripController extends Controller
         $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
         $resultQuery->select('*',
             'go_info.id as go_id',
+            'go_info.create_date as go_create_date',
             'log_add_money_request.id as log_add_money_request_id',
             'log_add_money_request.status as log_add_money_request_status',
             'user_driver_data.name as driver_name',
@@ -280,11 +281,11 @@ class TripController extends Controller
         if ($driveData["agency_id"] > 0) {
             $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
         }
-        $resultQuery->where('progress', '=', 4);
+        $resultQuery->where('progress', '=', "4");
 
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-
+//        return $drivers;
 
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
@@ -305,15 +306,7 @@ class TripController extends Controller
     {
         $page_title = __('Danh sách chuyến thất bại');
         $resultQuery = TripRequest::query();
-        $resultQuery->join('go_info', 'go_info.go_request_id', '=', 'go_request.id');
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
-            if ($request->filled('goid')) {
-                $pieces = explode("_", $request->input('goid'));
-                if (isset($pieces[1]))
-                    $resultQuery->Where('go_info.id', 'like', "%{$pieces[1]}%");
-                else
-                    $resultQuery->Where('go_info.id', 'like', "%{$request->input('goid')}%");
-            }
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
             }
@@ -350,13 +343,14 @@ class TripController extends Controller
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_request.service_detail_id');
 
 
-        $resultQuery->select('*', 'go_info.id as go_id', 'go_request.status as statusmain',
+        $resultQuery->select('*', 'go_request.status as statusmain',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09');
 
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
+//        return $drivers;
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
