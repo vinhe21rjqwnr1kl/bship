@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
-                                    {{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}
+                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
                                         Lại</a>
 
@@ -163,7 +163,7 @@
                                             <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
                                             <br><strong>Khuyến
                                                 mại:</strong>{{ number_format($page->discount_from_code) }}
-
+                                            <br><strong>Thanh toán:</strong>{{ $page->payment_status == "PAID" ? " Online" : " Tiền mặt" }}
                                         </td>
                                         <td>
                                             <strong>Số KM:</strong> {{ $page->distance/1000 }}
@@ -199,7 +199,7 @@
 
                                         </td>
 
-                                        <td> {{ $page->create_date}} </td>
+                                        <td> {{ $page->go_create_date}} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->go_id) }}"
@@ -232,17 +232,17 @@
                                         </td>
                                         <td class="text-center">
                                             @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                <span class="btn btn-warning">Yêu cầu hoàn tiền đã được gửi</span>
+                                                <span class="badge badge-warning">Chờ duyệt</span>
 
                                             @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                <span class="btn btn-success">Đã hoàn tiền</span>
+                                                <span class="badge badge-success">Thành công</span>
 
                                             @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                <span class="btn btn-primary">Yêu cầu hoàn tiền đã bị hủy</span>
+                                                <span class="badge badge-primary">Thất bại</span>
 
                                             @elseif($page->progress == 4)
                                                 <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
-                                                   class="btn btn-danger">Hoàn tiền</a>
+                                                   class="badge badge-danger">Hoàn tiền</a>
 
                                             @else
 

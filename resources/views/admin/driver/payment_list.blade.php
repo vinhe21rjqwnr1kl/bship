@@ -34,9 +34,11 @@
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
 							{{ Form::text('phone', null, array('class' => 'form-control', 'placeholder' => __('Số điện thoại'))) }}
                             </div>
-              
+
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">
-                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2"> <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Nhập Lại</a>
+                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
+                                <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+                                <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>
                         </div>
                     {{ Form::close() }}
@@ -67,7 +69,7 @@
                                     <th> <strong> Người tạo </strong> </th>
 									<th> <strong> Thời gian </strong> </th>
 									<th> <strong> Trạng thái </strong> </th>
-                                
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +85,7 @@
                                     <td> {{ $user->reason }} </td>
                                     <td> {{ $user->create_name }} </td>
                                     <td> {{ $user->create_date }} </td>
-									<td> 
+									<td>
 											@if ($user->status == 0)
 												<span class="badge badge-warning">Chưa duyệt</span>
 											@elseif ($user->status == 1)
@@ -93,7 +95,7 @@
 											@endif
 
 									</td>
-							
+
                                 </tr>
                                 @empty
                                     <tr>

@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stevebauman\Purify\Facades\Purify;
 
 class Driver extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'user_driver_data';
     protected $fillable = [
         'name',
@@ -37,10 +38,11 @@ class Driver extends Model
         'find_index',
         'car_num',
         'car_info',
-        
-        
-        
-        
+        'create_time',
+
+
+
+
     ];
 
     /**
@@ -53,7 +55,11 @@ class Driver extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-  
+    public function agency() :BelongsTo {
+        return $this->belongsTo(Agency::class, 'agency_id', 'id');
+    }
+
+
 
 
 }

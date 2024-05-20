@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\DriverRefund;
+use App\Services\SuperAdminPermissionService;
+use App\Utils\SuperAdminPermissionCheck;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Trip;
@@ -28,8 +30,8 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 
 class TripController extends Controller
-
 {
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -89,6 +91,7 @@ class TripController extends Controller
                 ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
                 ->select('*',
                     'go_info.id as go_id',
+                    'go_info.create_date as go_create_date',
                     'log_add_money_request.id as log_add_money_request_id',
                     'log_add_money_request.status as log_add_money_request_status',
                     'user_driver_data.name as driver_name',
@@ -105,6 +108,7 @@ class TripController extends Controller
         } else {
             $resultQuery->select('*',
                 'go_info.id as go_id',
+                'go_info.create_date as go_create_date',
                 'log_add_money_request.id as log_add_money_request_id',
                 'log_add_money_request.status as log_add_money_request_status',
                 'user_driver_data.name as driver_name',
@@ -129,19 +133,27 @@ class TripController extends Controller
         }
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
+//        return $drivers;
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
 
         if ($request->input('excel') == "Excel") {
-            $response = Excel::download(new ExportTrip($request, $service_id), 'chuyendi.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-            ob_end_clean();
-            return $response;
+            if (!SuperAdminPermissionCheck::isAdmin()) {
+                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
+            } else {
+                $response = Excel::download(new ExportTrip($request, $service_id), 'chuyendi.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+                if (ob_get_contents()) ob_end_clean();
+                return $response;
+            }
         }
+
         // $status = config('blog.status');
         // $roleArr = Agency::pluck('name', 'id')->toArray();
         // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.index', compact('service_id', 'drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
+
     }
 
 

@@ -14,13 +14,13 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    
+
     /*
     *  Display dashboard for admin panel
     */
     public function dashboard()
-    {   
-        $page_title = __('Tổng qua BUTL');
+    {
+        $page_title = __('Tổng quan BUTL');
 
         $current_user 	= auth()->user();
 
@@ -36,9 +36,9 @@ class DashboardController extends Controller
             $users_monthyear = $users->pluck('monthyear');
             $users_count = $users->pluck('data');
             $max_user_count = max($users_count->toArray());
-            $max_user_count = ($max_user_count <= 1) ? $max_user_count + 3 : $max_user_count + 1 ; 
+            $max_user_count = ($max_user_count <= 1) ? $max_user_count + 3 : $max_user_count + 1 ;
             return view('admin.dashboard',compact('go_info_count','taixe_count','khachhang_count','service_count','users_monthyear','users_count','max_user_count','page_title'));
-    
+
         }
         else
         {

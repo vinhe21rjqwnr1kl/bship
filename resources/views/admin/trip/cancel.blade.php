@@ -146,17 +146,17 @@
 										<td> {{ $page->create_date}} </td>
                                         <td class="text-center">
                                             @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                <span class="btn btn-warning">Yêu cầu hoàn tiền đã được gửi</span>
+                                                <span class="badge badge-warning">Chờ duyệt</span>
 
                                             @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                <span class="btn btn-success">Đã hoàn tiền</span>
+                                                <span class="badge badge-success">Thành công</span>
 
                                             @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                <span class="btn btn-primary">Yêu cầu hoàn tiền đã bị hủy</span>
+                                                <span class="badge badge-primary">Thất bại</span>
 
                                             @elseif($page->progress == 4)
                                                 <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
-                                                   class="btn btn-danger">Hoàn tiền</a>
+                                                   class="badge badge-danger">Hoàn tiền</a>
 
                                             @else
 

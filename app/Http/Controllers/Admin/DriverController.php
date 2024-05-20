@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ExportDriversList;
+use App\Exports\ExportPaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Utils\SuperAdminPermissionCheck;
 use Illuminate\Http\Request;
 use App\Models\Driver;
 use App\Models\User;
@@ -16,8 +19,6 @@ use App\Models\LogAddMoney;
 use App\Models\CfServiceDetail;
 use App\Models\Trip;
 use App\Rules\EditorEmptyCheckRule;
-use Maatwebsite\Excel\Facades\Excel\WithHeadings;
-use Maatwebsite\Excel\Facades\Excel\FromCollection;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -26,6 +27,7 @@ use Storage;
 
 class DriverController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -66,6 +68,16 @@ class DriverController extends Controller
         $status = config('blog.status');
         $roleArr = Agency::pluck('name', 'id')->toArray();
         $roleArr[0] = "Công ty BUTL";
+
+        if ($request->input('excel') == "Excel") {
+            if (!SuperAdminPermissionCheck::isAdmin()){
+                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
+            }else {
+                $response = Excel::download(new ExportDriversList($request), 'dstaixe.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+                if (ob_get_contents()) ob_end_clean();
+                return $response;
+            }
+        }
 
         return view('admin.driver.index', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
@@ -445,6 +457,15 @@ class DriverController extends Controller
         $resultQuery->orderBy($sortBy, $direction);
         $LogAddMoneyRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
+        if ($request->input('excel') == "Excel") {
+            if (!SuperAdminPermissionCheck::isAdmin()){
+                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
+            }else {
+                $response = Excel::download(new ExportPaymentRequest($request), 'ds-yeucau-naptien.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+                if (ob_get_contents()) ob_end_clean();
+                return $response;
+            }
+        }
         return view('admin.driver.payment_list', compact('LogAddMoneyRequest', 'page_title'));
     }
 
@@ -453,10 +474,14 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function payment_create($id)
+    public function payment_create($id = 0)
     {
-        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $id)->exists();
-        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+        if ($id > 0) {
+            $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $id)->exists();
+            if ($logAddMoneyRequest) {
+                return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+            }
+        }
 
         $page_title = __('Tạo yêu cầu nạp tiền');
         $phone = '';
@@ -481,10 +506,14 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment_create_info(Request $request, $go_id, $phone)
+    public function payment_create_info(Request $request, $go_id = 0, $phone)
     {
-        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $go_id)->exists();
-        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+        if ($go_id > 0) {
+            $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $go_id)->exists();
+            if ($logAddMoneyRequest) {
+                return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+            }
+        }
 
         $page_title = __('Tạo yêu cầu nạp tiền');
         $driveData["phone"] = $phone;
@@ -495,7 +524,6 @@ class DriverController extends Controller
         if (empty($check_phone)) {
             $info_string = 'Không có tài xế tồn tại với số điện thoại này';
         } else {
-
             $driveData["user_name"] = $check_phone->name;
             $driveData["cmnd"] = $check_phone->cmnd;
             $info_string = 'Tên tài xế: ' . $driveData["user_name"] . ' --- CMND: ' . $driveData["cmnd"];
@@ -506,8 +534,12 @@ class DriverController extends Controller
 
     public function payment_store(Request $request)
     {
-        $logAddMoneuRequest = LogAddMoneyRequest::query()->where('go_id', '=', $request->input('go_id'))->exists();
-        if($logAddMoneuRequest) return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+        if ($request->input('go_id') > 0) {
+            $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $request->input('go_id'))->exists();
+            if ($logAddMoneyRequest) {
+                return redirect()->route('trip.admin.index', 0)->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+            }
+        }
 
         $driveData["go_id"] = $request->input('go_id');
         $driveData["phone"] = $request->input('phone');
