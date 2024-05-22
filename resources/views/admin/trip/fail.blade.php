@@ -45,6 +45,10 @@
                                 </div>
                             </div>
 
+                            <div class="mb-3 col-md-4">
+                                <input type="search" name="id" class="form-control" placeholder="BUTL" value="{{ old('id', request()->input('id')) }}">
+                            </div>
+
 							<div class="mb-3 col-md-4">
 								<input type="search" name="phone" class="form-control" placeholder="Số điện thoại" value="{{ old('phone', request()->input('phone')) }}">
 							</div>
@@ -91,12 +95,14 @@
 							<thead class="">
 								<tr>
 									<th> <strong> STT</strong> </th>
+									<th> <strong> BUTL</strong> </th>
 									<th> <strong> Khách hàng </strong> </th>
 									<th> <strong> DV </strong> </th>
 									<th> <strong> Loại </strong> </th>
 									<th> <strong> Tiền </strong> </th>
 									<th> <strong> Thông tin </strong> </th>
-									<th> <strong> Trạng thái </strong> </th>
+									<th> <strong> Trạng thái tìm </strong> </th>
+									<th> <strong> Trạng thái chuyến </strong> </th>
 									<th> <strong> Thời gian </strong> </th>
 								</tr>
 							</thead>
@@ -107,6 +113,11 @@
 								@forelse ($drivers as $page)
 									<tr>
 										<td> {{ $i++ }} </td>
+										<td>
+                                            @if($page->trip)
+                                                BUTL_{{ $page->trip->id }}
+                                            @endif
+                                        </td>
 										<td>
 											<strong>Tên:</strong> {{$page->user_name09}}
 											<br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -137,13 +148,36 @@
 										<td>
 
 											@if ($page->statusmain == 2)
-												<span class="badge badge-success"> Tạo chuyến</span>
+												<span class="badge badge-success"> Tạo chuyến thành công</span>
 											@elseif($page->statusmain == 1)
 												<span class="badge badge-danger"> Không tìm thấy tx</span>
 											@else
 												<span class="badge badge-warning"> Đang tìm</span>
 											@endif
 										</td>
+
+                                        <td>
+                                            @if($page->trip)
+
+                                                @if ($page->trip->progress == 3)
+                                                    <span
+                                                        class="badge badge-success"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                @elseif($page->trip->progress == 4)
+                                                    <span
+                                                        class="badge badge-danger"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                @else
+                                                    <span
+                                                        class="badge badge-warning"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                @endif
+
+
+                                            @else
+
+                                            @endif
+
+
+                                        </td>
+
 										<td> {{ $page->create_date}} </td>
 
 									</tr>

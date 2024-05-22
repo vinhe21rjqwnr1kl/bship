@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stevebauman\Purify\Facades\Purify;
 
 class Trip extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'go_info';
     protected $fillable = [
 		'service_detail_id',
@@ -36,19 +37,20 @@ class Trip extends Model
         'service_cost',
         'feedback',
         'is_show_app'
-        
+
 	];
-    /**
-     * Blog belongs to User.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
+
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-  
+    public function tripRequest() : BelongsTo
+    {
+        return $this->belongsTo(TripRequest::class);
+    }
+
+
 
 
 }

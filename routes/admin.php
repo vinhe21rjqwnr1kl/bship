@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\AgencysController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\DashboardController;
-
+use \App\Http\Controllers\Admin\PointController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,6 +65,14 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
 	Route::post('/usersbutl/update/{id}', [UsersController::class, 'updatebutl'])->name('admin.usersbutl.update');
 
 
+    Route::get('/user/check-user', [PointController::class, 'checkUser'])->name('admin.point.check-user');
+    Route::get('/user/check-user-give-point', [PointController::class, 'checkUserGivePoint'])->name('admin.point.check-user.give-point');
+    Route::get('/user/add-points', [PointController::class, 'addPoint'])->name('admin.point.add');
+    Route::post('/user/store-add-points', [PointController::class, 'storeAddPoint'])->name('admin.point.add.store');
+    Route::get('/user/give-points', [PointController::class, 'givePoint'])->name('admin.point.give');
+    Route::post('/user/store-give-points', [PointController::class, 'storeGivePoint'])->name('admin.point.give.store');
 
-	
+
+
+
 });

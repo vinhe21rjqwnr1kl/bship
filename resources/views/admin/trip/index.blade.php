@@ -230,6 +230,7 @@
                                                 </button>
                                             @endif
                                         </td>
+                                        @if (!in_array($page->service_detail_id, [33]))
                                         <td class="text-center">
                                             @if($page->progress == 4 && $page->log_add_money_request_status === 0)
                                                 <span class="badge badge-warning">Chờ duyệt</span>
@@ -248,6 +249,10 @@
 
                                             @endif
                                         </td>
+
+                                        @else
+                                            <td class="text-center"></td>
+                                        @endif
 
                                     </tr>
                                 @empty

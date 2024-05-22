@@ -283,9 +283,7 @@ class TripController extends Controller
         }
         $resultQuery->where('progress', '=', "4");
 
-
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-//        return $drivers;
 
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
@@ -304,9 +302,27 @@ class TripController extends Controller
      */
     public function admin_fail(Request $request)
     {
+        $tripR = TripRequest::with('trip');
+
+
         $page_title = __('Danh sách chuyến thất bại');
-        $resultQuery = TripRequest::query();
+
+        TripRequest::updateFailedOrders();
+        $resultQuery = TripRequest::query()->with('trip');
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
+            if ($request->filled('id')) {
+                $pieces = explode("_", $request->input('id'));
+                if (isset($pieces[1])) {
+                    $resultQuery->whereHas('trip', function ($query) use ($pieces) {
+                        $query->where('id', 'like', "%{$pieces[1]}%");
+                    });
+                } else {
+                    $resultQuery->whereHas('trip', function ($query) use ($request) {
+                        $query->where('id', 'like', "%{$request->input('id')}%");
+                    });
+                }
+            }
+
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
             }
@@ -343,14 +359,17 @@ class TripController extends Controller
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_request.service_detail_id');
 
 
-        $resultQuery->select('*', 'go_request.status as statusmain',
+        $resultQuery->select('*', 'go_request.*', 'go_request.id as go_request_id', 'go_request.status as statusmain',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09');
 
-
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
+//        $test = TripRequest::with('trip')->orderBy('id', 'desc')->paginate(config('Reading.nodes_per_page'));
+
+
 //        return $drivers;
+
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
