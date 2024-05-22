@@ -506,7 +506,7 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment_create_info(Request $request, $go_id = 0, $phone)
+    public function payment_create_info(Request $request, $go_id = 0, $phone = null)
     {
         if ($go_id > 0) {
             $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $go_id)->exists();
@@ -517,7 +517,10 @@ class DriverController extends Controller
 
         $page_title = __('Tạo yêu cầu nạp tiền');
         $driveData["phone"] = $phone;
-        $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
+        if($phone) {
+            $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
+
+        }
         $info_string = '';
         $money = '';
         $reason = '';

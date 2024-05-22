@@ -38,7 +38,8 @@ class TripRequest extends Model
 //        'butl_cost',
         'status',
 //        'create_date',
-	];
+    ];
+
     /**
      * Blog belongs to User.
      *
@@ -57,47 +58,31 @@ class TripRequest extends Model
     public function scopeUpdateFailedOrders(Builder $query)
     {
         // Lấy thời gian hiện tại trừ đi 1 phút
-        $timeLimit = Carbon::now()->subMinute();
+        $timeLimit = Carbon::now()->subMinutes(10);
 
-        $tripRequests = TripRequest::where('status', 0)
-            ->where('create_date', '<', $timeLimit)
+        $tripRequests = TripRequest::where(function ($query) use ($timeLimit) {
+            $query->where('status', [0, 1, 2])
+                ->where('create_date', '<', $timeLimit);
+            })
             ->with('trip')
             ->get();
 
         foreach ($tripRequests as $tripRequest) {
-            if ($tripRequest->trip) {
-                $tripRequest->update(['status' => 2]);
-            } else {
+            if ($tripRequest->status == 0) {
+                if ($tripRequest->trip) {
+                    $tripRequest->update(['status' => 2]);
+                } else {
+                    $tripRequest->update(['status' => 1]);
+                }
+            } else if ($tripRequest->status == 2 && !$tripRequest->trip) {
                 $tripRequest->update(['status' => 1]);
+            } else if ($tripRequest->status == 1 && $tripRequest->trip) {
+                $tripRequest->update(['status' => 2]);
             }
         }
 
-//        $tripRequests = TripRequest::where(function ($query) use ($timeLimit) {
-//            $query->where('status', 0)
-//                ->where('create_date', '<', $timeLimit);
-//        })
-//            ->orWhereIn('status', [1,2])
-//            ->with('trip')
-//            ->get();
-//
-//        foreach ($tripRequests as $tripRequest) {
-//            if($tripRequest->status == 0) {
-//                if ($tripRequest->trip) {
-//                    $tripRequest->update(['status' => 2]);
-//                } else {
-//                    $tripRequest->update(['status' => 1]);
-//                }
-//            } else if($tripRequest->status == 2 && !$tripRequest->trip) {
-//                $tripRequest->update(['status' => 1]);
-//            } else if($tripRequest->status == 1 && $tripRequest->trip) {
-//                $tripRequest->update(['status' => 2]);
-//            }
-//        }
-
         return $query;
     }
-
-
 
 
 }

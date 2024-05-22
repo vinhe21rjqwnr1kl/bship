@@ -27,8 +27,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/driver')->group(f
     Route::get('/log', [DriverController::class, 'log'])->name('driver.admin.log');
     Route::get('/payment', [DriverController::class, 'payment'])->name('driver.admin.payment');
     Route::post('/payment_store', [DriverController::class, 'payment_store'])->name('driver.admin.payment_store');
-    Route::get('/payment_create/{id}', [DriverController::class, 'payment_create'])->name('driver.admin.payment_create');
-    Route::get('/payment_create_info/{go_id}/{phone}', [DriverController::class, 'payment_create_info'])->name('driver.admin.payment_create_info');
+    Route::get('/payment_create/{id?}', [DriverController::class, 'payment_create'])->name('driver.admin.payment_create');
+    Route::get('/payment_create_info/{go_id?}/{phone?}', [DriverController::class, 'payment_create_info'])->name('driver.admin.payment_create_info');
 
     Route::get('/payment_approve', [DriverController::class, 'payment_approve'])->name('driver.admin.payment_approve');
     Route::get('/payment_addmoney/{id}', [DriverController::class, 'payment_addmoney'])->name('driver.admin.payment_addmoney');

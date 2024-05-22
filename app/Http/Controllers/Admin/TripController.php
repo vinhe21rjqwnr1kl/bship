@@ -508,10 +508,10 @@ class TripController extends Controller
         $trip["pickup_address"] = $driveData["from"];
         $trip["pickup_place_id"] = "";
         $trip["pickup_date"] = date('Y-m-d', time());;
-        $trip["pickup_time"] = date('Y-m-d H:i:.htaccess', time());;
+        $trip["pickup_time"] = date('Y-m-d H:i:s', time());;
         $trip["drop_address"] = $driveData["to"];
         $trip["drop_place_id"] = "";
-        $trip["drop_time"] = date('Y-m-d H:i:.htaccess', time());;
+        $trip["drop_time"] = date('Y-m-d H:i:s', time());;
         $trip["drop_date"] = date('Y-m-d', time());;
         $trip["progress"] = 3;
 
@@ -519,7 +519,7 @@ class TripController extends Controller
         $trip["driver_cost"] = $driveData["money_butl"] + $driveData["money_dv"];
         $trip["butl_cost"] = $driveData["money_tx"] - $driveData["money_dv"];
 
-        $trip["create_date"] = date('Y-m-d H:i:.htaccess', time());;
+        $trip["create_date"] = date('Y-m-d H:i:s', time());;
         $trip["go_request_id"] = 1000;
         $trip["discount_from_code"] = $driveData["money_km"];
         $trip["service_cost"] = $driveData["money_dv"];
@@ -562,7 +562,7 @@ class TripController extends Controller
         // $activity = Telegram::getUpdates();
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $date = time() - 120;
-        $date_s = date("Y-m-d H:i:.htaccess", $date);
+        $date_s = date("Y-m-d H:i:s", $date);
         $resultQuery = Trip::query();
         $resultQuery->where('go_info.update_time', '>=', $date_s);
         $direction = 'desc';
@@ -673,7 +673,7 @@ class TripController extends Controller
         }
 
         $date = time() - 120;
-        $date_s = date("Y-m-d H:i:.htaccess", $date);
+        $date_s = date("Y-m-d H:i:s", $date);
         $resultQuery = TripRequest::query();
         $resultQuery->where('go_request.create_date', '>=', $date_s);
         $resultQuery->where('go_request.status', '!=', 2);

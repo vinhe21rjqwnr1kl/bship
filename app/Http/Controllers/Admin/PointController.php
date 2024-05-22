@@ -115,6 +115,8 @@ class PointController extends Controller
         $fromUserId = $request->input('fromUserId');
         $point = $request->input('point');
         $reason = $request->input('reason');
+        $currentDateTime = Carbon::now();
+
 
         try {
             $validator = Validator::make([
@@ -162,13 +164,15 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $fromUser->id,
                     'point' => -$point,
-                    'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '. Lờì nhắn: ' . $reason
+                    'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '. Lờì nhắn: ' . $reason,
+                    'created_at' => $currentDateTime
                 ]);
 
                 LogPoint::create([
                     'user_data_id' => $toUser->id,
                     'point' => $point,
-                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. Lờì nhắn: ' . $reason
+                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. Lờì nhắn: ' . $reason,
+                    'created_at' => $currentDateTime
                 ]);
 
                 return redirect()->back()->with('success', 'Points transferred successfully.');

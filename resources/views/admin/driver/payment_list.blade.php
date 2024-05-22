@@ -54,7 +54,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title"></h4>
-                        <a href="{{ route('driver.admin.payment_create',0) }}" class="btn btn-primary">Tạo yêu cầu nạp tiền</a>
+                        <a href="{{ route('driver.admin.payment_create') }}" class="btn btn-primary">Tạo yêu cầu nạp tiền</a>
                 </div>
                 <div class="pe-4 ps-4 pt-2 pb-2">
                     <div class="table-responsive">
