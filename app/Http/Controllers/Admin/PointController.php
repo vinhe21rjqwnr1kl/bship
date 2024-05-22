@@ -111,24 +111,34 @@ class PointController extends Controller
 
     public function storeGivePoint(Request $request)
     {
-        $toPhone = $request->input('toPhone');
-        $fromPhone = $request->input('fromPhone');
+        $toUserId = $request->input('toUserId');
+        $fromUserId = $request->input('fromUserId');
         $point = $request->input('point');
         $reason = $request->input('reason');
 
         try {
             $validator = Validator::make([
                 'point' => $point,
+                'toUserId' => $toUserId,
+                'fromUserId' => $fromUserId,
             ], [
                 'point' => 'required|integer|min:1|max:500',
+                'toUserId' => 'required',
+                'fromUserId' => 'required',
+            ], [
+                'point.required' => 'Trường điểm là bắt buộc.',
+                'point.integer' => 'Trường điểm phải là số nguyên.',
+                'point.min' => 'Điểm giao dịch phải lớn hơn 0.',
+                'point.max' => 'Điểm giao dịch không được lớn hơn 500.',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $toUser = UserB::where('id', $toPhone)->firstOrFail();
-            $fromUser = UserB::where('id', $fromPhone)->firstOrFail();
+
+            $toUser = UserB::where('id', $toUserId)->first();
+            $fromUser = UserB::where('id', $fromUserId)->first();
 
             if ($toUser->id === $fromUser->id) {
                 return redirect()->back()->with('error', __('Cannot transfer points to the same user'));
@@ -158,7 +168,7 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $toUser->id,
                     'point' => $point,
-                    'reason' => 'Chuyển từ người dùng ' . $fromUser->phone . '. Lờì nhắn: ' . $reason
+                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. Lờì nhắn: ' . $reason
                 ]);
 
                 return redirect()->back()->with('success', 'Points transferred successfully.');
@@ -166,13 +176,15 @@ class PointController extends Controller
                 return redirect()->back()->with('error', __('User not found'));
             }
 
-        } catch (ModelNotFoundException $e) {
-            return redirect()->back()->with('error', __('User not found'));
+
         } catch (\Exception $e) {
-            Log::error('Failed to transfer points: ' . $e->getMessage());
-            return redirect()->back()->with('error', __('An unexpected error occurred.'));
+            return redirect()->back()->with('error', __($e->getMessage()));
         }
+    }
 
-
+    public function log(){
+        $log = LogPoint::all();
+        return $log;
+//        return view('admin.users.log-point');
     }
 }

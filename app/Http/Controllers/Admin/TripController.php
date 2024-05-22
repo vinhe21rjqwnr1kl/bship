@@ -119,11 +119,15 @@ class TripController extends Controller
 
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
+
         $driveData["agency_id"] = $current_user->agency_id;
 
+
         if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+            $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
         }
+
+
 
         if ($service_id > 0) {
             $resultQuery->where('go_info.service_id', '=', $service_id);
@@ -131,6 +135,7 @@ class TripController extends Controller
         } else {
             $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
         }
+
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
@@ -165,13 +170,6 @@ class TripController extends Controller
     public function admin_detail($service_id, $go_id)
     {
         $resultQuery = Trip::query();
-
-        //check tai xe thuoc dai ly
-        $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
-        if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
-        }
 
         if ($service_id == 3) {
             $resultQuery
@@ -279,7 +277,7 @@ class TripController extends Controller
         $current_user = auth()->user();
         $driveData["agency_id"] = $current_user->agency_id;
         if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+            $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
         }
         $resultQuery->where('progress', '=', "4");
 
@@ -351,6 +349,8 @@ class TripController extends Controller
         if (!$request->filled('status')) {
             $resultQuery->where('go_request.status', '=', "1");
         }
+
+
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
         $resultQuery->orderBy('go_request.' . $sortBy, $direction);
@@ -365,11 +365,6 @@ class TripController extends Controller
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
-//        $test = TripRequest::with('trip')->orderBy('id', 'desc')->paginate(config('Reading.nodes_per_page'));
-
-
-//        return $drivers;
-
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
@@ -378,7 +373,6 @@ class TripController extends Controller
         // $roleArr = Agency::pluck('name', 'id')->toArray();
         // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.fail', compact('drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
-
     }
 
     public function status($id)

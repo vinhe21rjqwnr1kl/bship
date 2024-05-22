@@ -11,16 +11,6 @@
                 <h4 class="card-title">Thông tin</h4>
             </div>
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <div class="card-body">
                 <div class="basic-form">
                     <div class="row align-items-center">
@@ -33,10 +23,11 @@
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label>Số Điện thoại người gửi</label>
-                                                <input type="text" name="fromPhone" id="fromPhone" class="form-control" value="">
+                                                <input type="text" name="fromPhone" id="fromPhone" class="form-control"
+                                                       value="">
                                             </div>
                                             <div id="fromPhoneResult" class="text-danger"></div>
-                                            @error('fromPhone')
+                                            @error('fromUserId')
                                             <p class="text-danger">
                                                 {{ $message }}
                                             </p>
@@ -46,10 +37,11 @@
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label>Số Điện thoại người nhận</label>
-                                                <input type="text" name="toPhone" id="toPhone" class="form-control" value="">
+                                                <input type="text" name="toPhone" id="toPhone" class="form-control"
+                                                       value="">
                                             </div>
                                             <div id="toPhoneResult" class="text-danger"></div>
-                                            @error('toPhone')
+                                            @error('toUserId')
                                             <p class="text-danger">
                                                 {{ $message }}
                                             </p>
@@ -72,12 +64,12 @@
                                     <div class="form-group col-12">
 
                                         <label>Số điểm</label>
-                                        <input type="number" name="point" id="point" class="form-control">
-                                        @error('point')
-                                        <p class="text-danger">
-                                            {{ $message }}
-                                        </p>
-                                        @enderror
+                                        <input type="number" name="point" id="point" class="form-control" value="{{ old('point') }}">
+                                                                                @error('point')
+                                                                                <p class="text-danger">
+                                                                                    {{ $message }}
+                                                                                </p>
+                                                                                @enderror
                                     </div>
                                     <div class="form-group col-12">
                                         <label>Lí do</label>
@@ -88,7 +80,8 @@
                                         <button type="submit" class="btn btn-primary">
                                             Tạo
                                         </button>
-                                        <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Quay lại</a>
+                                        <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Quay
+                                            lại</a>
                                     </div>
 
                                 </form>

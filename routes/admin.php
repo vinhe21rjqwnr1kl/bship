@@ -71,6 +71,8 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
     Route::post('/user/store-add-points', [PointController::class, 'storeAddPoint'])->name('admin.point.add.store');
     Route::get('/user/give-points', [PointController::class, 'givePoint'])->name('admin.point.give');
     Route::post('/user/store-give-points', [PointController::class, 'storeGivePoint'])->name('admin.point.give.store');
+    Route::get('/user/log-points', [PointController::class, 'log'])->name('admin.point.log');
+
 
 
 

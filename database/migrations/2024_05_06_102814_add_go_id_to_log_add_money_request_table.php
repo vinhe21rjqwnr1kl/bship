@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('log_add_money_request', function (Blueprint $table) {
-            $table->unsignedBigInteger('go_id')->after('user_id');;
+            $table->unsignedBigInteger('go_id')->after('user_id');
             $table->foreign('go_id')->references('id')->on('go_info')->onDelete('cascade');
         });
     }
