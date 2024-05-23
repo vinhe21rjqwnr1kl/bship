@@ -209,7 +209,7 @@
                                                 Liên hệ Admin
                                             @endif
 
-                                            @if($page->service_id == 3 && $page->food_order_id)
+                                            @if($page->service_id == 7 && $page->food_order_id)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
                                                         data-bs-toggle="modal"
@@ -219,7 +219,7 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 
-                                            @elseif($page->service_id == 4)
+                                            @elseif($page->service_id == 6)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
                                                         data-bs-toggle="modal"
@@ -460,10 +460,10 @@
         async function handleService(serviceId, api) {
             try {
                 const data = await fetchData(api);
-                if (serviceId == 3) {
+                if (serviceId == 7) {
                     renderTableInfo(data.data);
                     renderTableProductsOrder(data.order_items);
-                } else if (serviceId == 4) {
+                } else if (serviceId == 6) {
                     renderDeliveryGoInfo(data.data);
                     renderImage(data.data.product_image);
                 } else {
@@ -482,7 +482,7 @@
             var serviceId = button.getAttribute('data-bs-service-id');
             var id = button.getAttribute('data-bs-id');
             var api = window.location.origin.concat(`/admin/trip/detail/${serviceId}/${id}/api`);
-            if (serviceId == 3 || serviceId == 4) {
+            if (serviceId == 7 || serviceId == 6) {
                 handleService(serviceId, api);
             } else {
                 console.error('Invalid serviceId:', serviceId);
@@ -494,7 +494,7 @@
             var serviceId = button.getAttribute('data-bs-service-id');
             var id = button.getAttribute('data-bs-id');
             var api = window.location.origin.concat(`/admin/trip/detail/${serviceId}/${id}/api`);
-            if (serviceId == 3 || serviceId == 4) {
+            if (serviceId == 7 || serviceId == 6) {
                 handleService(serviceId, api);
             } else {
                 console.error('Invalid serviceId:', serviceId);

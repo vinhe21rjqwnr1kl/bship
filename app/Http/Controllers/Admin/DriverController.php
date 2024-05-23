@@ -383,7 +383,8 @@ class DriverController extends Controller
         }
 
         // check online app
-        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers";
+//        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers"; // không sài nữa
+        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";  // new api get user and drive online
         $ch = curl_init();
         $options = array(
             CURLOPT_URL => $urrl,
@@ -399,13 +400,24 @@ class DriverController extends Controller
         $x = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($x, true);
-        $adriver = $result["data"]['drivers'];
         $list_driver_online = [];
-        for ($i = 0; $i < count($adriver); $i++) {
-            if ($adriver[$i]['online'] === true) {
-                $list_driver_online[] = $adriver[$i]['id'];
+
+        if (isset($result["data"]) && isset($result["data"]["drivers"])) {
+            $adriver = $result["data"]["drivers"];
+            $drivers = array_filter($adriver, function($driver) {
+                return isset($driver['type']) && $driver['type'] === 'DRIVER' && $driver['online'] === true;
+            });
+            foreach ($drivers as $driver) {
+                $list_driver_online[] = $driver['userID'];
             }
         }
+
+//        for ($i = 0; $i < count($adriver); $i++) {
+//            if ($adriver[$i]['online'] === true) {
+//                $list_driver_online[] = $adriver[$i]['id'];
+//            }
+//        }
+
         if ($list_driver_online) {
             $resultQuery->whereIn('id', $list_driver_online);
         }
@@ -422,10 +434,12 @@ class DriverController extends Controller
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_time';
         $resultQuery->orderBy('user_driver_data.' . $sortBy, $direction);
         $sortWith = $request->get('with') ? $request->get('with') : Null;
+
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
         $status = config('blog.status');
         $roleArr = Agency::pluck('name', 'id')->toArray();
         $roleArr[0] = "Công ty BUTL";
+
 
         return view('admin.driver.online', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
@@ -919,8 +933,8 @@ class DriverController extends Controller
 
         $page_title = __('Tài xế Online ');
         // $urrl  =  "http://app.butl.vn:8080/ButlAppServlet/services?cmd=doGetDriverLocation&data={%22accessToken%22:%22200ceb26807d6bf99fd6f4f0d1ca54d4%22,%22token%22:%223be575a201a825b42951a3f87ef13020%22}";
-        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers";
-
+//        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers";
+        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";
         $ch = curl_init();
         $options = array(
             CURLOPT_URL => $urrl,
@@ -936,11 +950,14 @@ class DriverController extends Controller
         $x = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($x, true);
+
+//        return $result;
         if ($result) {
             $adriver = $result["data"]['drivers'];
 
 
             // vi tri dai li
+
             $current_user = auth()->user();
             $agency_id = $current_user->agency_id;
             if ($agency_id == 1) {

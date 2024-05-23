@@ -85,7 +85,7 @@ class TripController extends Controller
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_info.service_detail_id');
         $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
 
-        if ($service_id == 3) {
+        if ($service_id == 7) {
             $resultQuery
                 ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
                 ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
@@ -133,7 +133,7 @@ class TripController extends Controller
             $resultQuery->where('go_info.service_id', '=', $service_id);
 
         } else {
-            $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
+            $resultQuery->whereNotIn('go_info.service_id', [3,4,5,8,9,10]);
         }
 
 
@@ -171,7 +171,7 @@ class TripController extends Controller
     {
         $resultQuery = Trip::query();
 
-        if ($service_id == 3) {
+        if ($service_id == 7) {
             $resultQuery
                 ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
                 ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
@@ -179,7 +179,8 @@ class TripController extends Controller
                     'food_orders.id as food_orders_id',
                     'restaurants.name as restaurant_name',
                     'restaurants.address as restaurant_address',
-                )->whereNotNull('go_info.food_order_id');
+                )
+                ->whereNotNull('go_info.food_order_id');
 
             $resultQuery->where('go_info.service_id', '=', $service_id)
                 ->where('go_info.id', $go_id);
@@ -205,7 +206,7 @@ class TripController extends Controller
             ]);
         }
 
-        if ($service_id == 4) {
+        if ($service_id == 6) {
             $resultQuery
                 ->join('go_request', 'go_request.id', '=', 'go_info.go_request_id')
                 ->join('delivery_go_info', 'delivery_go_info.go_id', '=', 'go_info.id')
