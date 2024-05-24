@@ -1,0 +1,45 @@
+stages:
+  - build
+
+default:
+  tags:
+    - bship-socket-java
+ 
+build:pro:
+  stage: build
+  script:
+    - mvn clean install -DskipTests -f pom.xml
+    - version=${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
+    - echo ${version}
+    - tar -zcvf ${version}.tar.gz app resources routes config
+    - ls -la
+    - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
+  variables:
+    SERVICE_NAME: "bshipadmin"
+    RSYNC_USER: "z.bshipbship"
+    RSYNC_PASS: "OgRrZfVmM4bC0e6BDPz0"
+    DEBUG: "false"
+    COMPRESS: "true"
+    SERVER: "103.63.215.74"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+build:dev:
+  stage: build
+  script:
+    - mvn clean install -DskipTests -f pom.xml
+    - version=${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
+    - echo ${version}
+    - tar -zcvf ${version}.tar.gz app resources routes config
+    - ls -la
+    - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
+  variables:
+    SERVICE_NAME: "bshipadmin"
+    RSYNC_USER: "z.bshipbship"
+    RSYNC_PASS: "OgRrZfVmM4bC0e6BDPz0"
+    DEBUG: "false"
+    COMPRESS: "true"
+    SERVER: "103.63.215.74"
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
