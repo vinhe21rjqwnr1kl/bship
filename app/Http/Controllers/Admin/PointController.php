@@ -82,7 +82,7 @@ class PointController extends Controller
             $response['fromUser'] = [
                 'name' => $fromUser->name,
                 'email' => $fromUser->email,
-                'points' => $fromUser->points
+                'points' => $fromUser->points,
             ];
         } else {
             $response['fromUser'] = 'Không tìm thấy người dùng';
@@ -154,7 +154,8 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $user->id,
                     'point' => $point,
-                    'reason' => 'Tặng điểm từ ADMIN: <strong>'. $admin .'</strong>.<br/>Lờì nhắn: ' . ($reason ?? 'Không có'),
+                    'reason' => 'Tặng điểm từ ADMIN: <strong>'. $admin .'</strong>
+                                    <br/>Lờì nhắn: ' . ($reason ?? 'Không có'),
                     'created_at' => $currentDateTime,
                 ]);
 
@@ -242,8 +243,8 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $fromUser->id,
                     'point' => -$point,
-                    'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '.<br/>
-                                    ADMIN giao dịch: <strong>' . $admin . '</strong>.<br/>
+                    'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '<br/>
+                                    ADMIN giao dịch: <strong>' . $admin . '</strong><br/>
                                     Lờì nhắn: ' . ($reason ?? 'Không có'),
                     'created_at' => $currentDateTime
                 ]);
@@ -251,8 +252,8 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $toUser->id,
                     'point' => $point,
-                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '.<br/>
-                                    ADMIN giao dịch: <strong>' . $admin . '</strong>.<br/>
+                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '<br/>
+                                    ADMIN giao dịch: <strong>' . $admin . '</strong><br/>
                                     Lờì nhắn: ' . ($reason ?? 'Không có'),
                     'created_at' => $currentDateTime
                 ]);
