@@ -13,6 +13,7 @@ build:pro:
     - tar -zcvf ${version}.tar.gz app resources routes config
     - ls -la
     - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
+    - rm -Rf /home/gitlab-runner/builds/3EtyoFLx3/0/bship1/*
   variables:
     SERVICE_NAME: "bshipadmin"
     RSYNC_USER: "z.bshipbship"
@@ -31,6 +32,7 @@ build:dev:
     - tar -zcvf ${version}.tar.gz app resources routes config
     - ls -la
     - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
+    - rm -Rf /home/gitlab-runner/builds/3EtyoFLx3/0/bship1/*
   variables:
     SERVICE_NAME: "bshipadmin"
     RSYNC_USER: "z.bshipbship"
