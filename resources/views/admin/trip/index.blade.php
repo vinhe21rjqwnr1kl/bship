@@ -199,7 +199,7 @@
 
                                         </td>
 
-                                        <td> {{ $page->go_create_date}} </td>
+                                        <td> {{ $page->create_date}} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->id) }}"
@@ -209,7 +209,7 @@
                                                 Liên hệ Admin
                                             @endif
 
-                                            @if($page->food_ordeṛ)
+                                            @if($page->food_order)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
                                                         data-bs-toggle="modal"
@@ -230,6 +230,7 @@
                                                 </button>
                                             @endif
                                         </td>
+{{--                                        @if (!$page->access_token_gsm)--}}
                                         @if (!in_array($page->service_detail_id, [33]))
                                         <td class="text-center">
                                             @if($page->progress == 4 && $page->log_add_money_request_status === 0)
@@ -290,12 +291,14 @@
                                     <tr>
                                         <th scope="col">Cửa hàng</th>
                                         <th scope="col">Địa chỉ</th>
+                                        <th scope="col">SĐT</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td class="restaurant-name"></td>
                                         <td class="restaurant-address"></td>
+                                        <td class="restaurant-phone"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -311,6 +314,7 @@
                                         <th scope="col">Tên sản phẩm</th>
                                         <th scope="col">Kích cỡ</th>
                                         <th scope="col">Số lượng</th>
+                                        <th scope="col">Giá tiền</th>
                                         <th scope="col">Hình ảnh</th>
                                     </tr>
                                     </thead>
@@ -318,6 +322,7 @@
 
                                     </tbody>
                                 </table>
+{{--                                <div class="my-2 mx-4" style="text-align:right"><strong>Tổng tiền: </strong><span id="total-order-price"></span></div>--}}
                             </div>
                         </div>
                     </div>
@@ -366,25 +371,36 @@
     <script type="text/javascript">
         'use strict';
 
+        let formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+
+
         function renderTableInfo(data) {
             var restaurantName = exampleModal.querySelector('.restaurant-name');
             var restaurantAddress = exampleModal.querySelector('.restaurant-address');
+            var restaurantPhone = exampleModal.querySelector('.restaurant-phone');
+            // var totalOrderPrice = exampleModal.querySelector('#total-order-price');
+            // totalOrderPrice.textContent = '';
+            // totalOrderPrice.textContent = formatter.format(data.total_order_price);
             restaurantName.textContent = '';
             restaurantAddress.textContent = '';
-            restaurantName.textContent = data.restaurant_name;
-            restaurantAddress.textContent = data.restaurant_address;
+            restaurantPhone.textContent = '';
+            restaurantName.textContent = data.food_order.restaurant.name;
+            restaurantAddress.textContent = data.food_order.restaurant.address;
+            restaurantPhone.textContent = data.food_order.restaurant.phone;
         }
 
         function renderTableProductsOrder(data) {
             var tableBody = document.querySelector('#prrductsOrder tbody');
             tableBody.textContent = '';
+
             data.forEach(function (item) {
                 var row = document.createElement('tr');
                 row.innerHTML =
-                    '<td>' + item.name + '</td>' +
+                    '<td>' + item.product.name + '</td>' +
                     '<td>' + item.size_name + '</td>' +
                     '<td>' + item.quantity + '</td>' +
-                    '<td><img src="' + item.img_url + '" alt="' + item.name + '"class="img-fluid rounded" style="max-width: 150px;"></td>';
+                    '<td>' +  formatter.format(item.price) + '</td>' +
+                    '<td><img src="' + item.product.img_url + '" alt="' + item.product.name + '"class="img-fluid rounded" style="max-width: 150px;"></td>';
                 tableBody.appendChild(row);
             });
         }
@@ -468,7 +484,7 @@
                     success: function (response) {
                         if (service == 'food') {
                             renderTableInfo(response.data);
-                            renderTableProductsOrder(response.order_items);
+                            renderTableProductsOrder(response.data.food_order.items);
                         } else if (service == 'delivery') {
                             renderDeliveryGoInfo(response.data);
                             renderImage(response.data.product_image);
