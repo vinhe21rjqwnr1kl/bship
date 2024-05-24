@@ -18,67 +18,72 @@
                         <div class="col-sm-12">
                             <div class="row">
 
-                                <form id="checkUserForm">
+                                <form action="{{ route('admin.point.give.store') }}" method="post">
+                                    @csrf
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label>Số Điện thoại người gửi</label>
+                                                <label>Số điện thoại người gửi</label>
                                                 <input type="text" name="fromPhone" id="fromPhone" class="form-control"
-                                                       value="">
+                                                    value="{{ old('fromPhone') }}">
                                             </div>
-                                            <div id="fromPhoneResult" class="text-danger"></div>
-                                            @error('fromUserId')
-                                            <p class="text-danger">
-                                                {{ $message }}
-                                            </p>
-                                            @enderror
+                                            <div id="fromPhoneResult">
+
+                                                @error('fromPhone')
+                                                <p class="text-danger">
+                                                    {{ $message }}
+                                                </p>
+                                                @enderror
+                                            </div>
+
                                         </div>
 
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label>Số Điện thoại người nhận</label>
+                                                <label>Số điện thoại người nhận</label>
                                                 <input type="text" name="toPhone" id="toPhone" class="form-control"
-                                                       value="">
+                                                    value="{{ old('toPhone') }}">
                                             </div>
-                                            <div id="toPhoneResult" class="text-danger"></div>
-                                            @error('toUserId')
-                                            <p class="text-danger">
-                                                {{ $message }}
-                                            </p>
-                                            @enderror
+                                            <div id="toPhoneResult">
+
+                                                @error('toPhone')
+                                                <p class="text-danger">
+                                                    {{ $message }}
+                                                </p>
+                                                @enderror
+                                            </div>
+
                                         </div>
                                     </div>
 
-
                                     <div class="form-group col-6" style="padding-top:30px;">
-                                        <button class="btn btn-primary">Kiểm tra tài xế</button>
+                                        <button id="checkUserForm" class="btn btn-primary">Kiểm tra người dùng</button>
                                     </div>
-                                </form>
-
-                                <form action="{{ route('admin.point.give.store') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" id="fromUserId" name="fromUserId">
-
-                                    <input type="hidden" id="toUserId" name="toUserId">
 
                                     <div class="form-group col-12">
 
                                         <label>Số điểm</label>
-                                        <input type="number" name="point" id="point" class="form-control" value="{{ old('point') }}">
-                                                                                @error('point')
-                                                                                <p class="text-danger">
-                                                                                    {{ $message }}
-                                                                                </p>
-                                                                                @enderror
+                                        <input type="number" name="point" id="point" class="form-control"
+                                               value="{{ old('point') }}">
+                                        @error('point')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
                                     </div>
                                     <div class="form-group col-12">
                                         <label>Lí do</label>
-                                        <input type="text" name="reason" id="reason" class="form-control">
+                                        <input type="text" name="reason" id="reason" class="form-control" value="{{ old('reason') }}">
+                                        @error('reason')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
                                     </div>
 
                                     <div class="card-footer pt-0 text-end">
                                         <button type="submit" class="btn btn-primary">
-                                            Tạo
+                                            Xác nhận
                                         </button>
                                         <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Quay
                                             lại</a>
@@ -99,7 +104,7 @@
         'use strict';
 
         $(document).ready(function () {
-            $('#checkUserForm').submit(function (event) {
+            $('#checkUserForm').click(function (event) {
                 event.preventDefault();
 
                 var fromPhone = $('#fromPhone').val();
@@ -113,25 +118,35 @@
                         toPhone: toPhone
                     },
                     success: function (response) {
+                        $('#fromPhoneResult').removeClass();
+                        $('#toPhoneResult').removeClass();
                         if (response.success) {
-                            $('#fromUserId').val(response.fromUser.id);
-                            $('#toUserId').val(response.toUser.id);
-
                             $('#fromPhoneResult').html('From User: ' + response.fromUser.name + '<br/>Email: ' + response.fromUser.email + '<br/>Points: ' + response.fromUser.points);
                             $('#toPhoneResult').html('To User: ' + response.toUser.name + '<br/>Email: ' + response.toUser.email + '<br/>Points: ' + response.toUser.points);
+
+                            $('#fromPhoneResult').addClass('text-success');
+                            $('#toPhoneResult').addClass('text-success');
                         } else {
                             if (response.fromUser !== null) {
                                 if (typeof response.fromUser == 'string') {
                                     $('#fromPhoneResult').html(response.fromUser);
+                                    $('#fromPhoneResult').addClass('text-danger');
+
                                 } else {
                                     $('#fromPhoneResult').html('From User: ' + response.fromUser.name + '<br/>Email: ' + response.fromUser.email + '<br/>Points: ' + response.fromUser.points);
+                                    $('#fromPhoneResult').addClass('text-success');
+
                                 }
                             }
                             if (response.toUser !== null) {
                                 if (typeof response.toUser == 'string') {
                                     $('#toPhoneResult').html(response.toUser);
+                                    $('#toPhoneResult').addClass('text-danger');
+
                                 } else {
                                     $('#toPhoneResult').html('To User: ' + response.toUser.name + '<br/>Email: ' + response.toUser.email + '<br/>Points: ' + response.toUser.points);
+                                    $('#toPhoneResult').addClass('text-success');
+
                                 }
                             }
                         }

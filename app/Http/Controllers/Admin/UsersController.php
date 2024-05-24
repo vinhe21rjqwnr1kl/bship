@@ -319,7 +319,6 @@ class UsersController extends Controller
         if($request->filled('phone'))
         {
             $resultQuery->where('phone', 'like', "%{$request->input('phone')}%");
-
         }
 
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_time';

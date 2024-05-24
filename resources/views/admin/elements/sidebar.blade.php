@@ -168,9 +168,9 @@
                             </a>
                             <ul aria-expanded="false">
                                 <li><a href="{{ route('admin.usersbutl.index') }}"> Danh sách</a></li>
-                                <li><a href="{{ route('admin.point.log') }}"> Log point </a></li>
-                                <li><a href="{{ route('admin.point.add') }}"> Thêm điểm cho khách hàng </a></li>
-                                <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm cho khách hàng </a></li>
+                                <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
+                                <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>
+                                <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
                             </ul>
                         </li>
                     @endif

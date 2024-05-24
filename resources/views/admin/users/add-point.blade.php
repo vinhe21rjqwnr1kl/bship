@@ -17,35 +17,47 @@
                         <div class="col-sm-12">
                             <div class="row">
 
-                                <form id="checkUserForm">
-                                    <div class="form-group col-6">
-                                        <label>Số Điện thoại khách hàng</label>
-                                        <input type="text" name="phone" id="phone" class="form-control" value="">
-                                        <div id="result" class="text-danger"></div>
-                                    </div>
-                                    <div class="form-group col-6" style="padding-top:30px;">
-                                        <button class="btn btn-primary">Kiểm tra tài xế</button>
-                                    </div>
-                                </form>
-
                                 <form action="{{ route('admin.point.add.store') }}" method="post">
                                     @csrf
-                                    <input type="hidden" id="userId" name="id">
+                                    <div class="form-group col-6">
+                                        <label>Số Điện thoại người dùng</label>
+                                        <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone') }}">
+                                    </div>
+                                    <div id="result" class="text-danger">
+                                        @error('phone')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-6" style="padding-top:30px;">
+                                        <button id="checkUserForm" class="btn btn-primary">Kiểm tra người dùng</button>
+                                    </div>
+
+{{--                                    <input type="hidden" id="userId" name="id">--}}
 
                                     <div class="form-group col-12">
                                         <label>Số điểm</label>
-                                        <input type="number" name="point" id="point" class="form-control">
+                                        <input type="number" name="point" id="point" class="form-control" value="{{ old('point') }}">
+                                        @error('point')
                                         <p class="text-danger">
+                                            {{ $message }}
                                         </p>
+                                        @enderror
                                     </div>
                                     <div class="form-group col-12">
                                         <label>Lí do</label>
-                                        <input type="text" name="reason" id="reason" class="form-control">
+                                        <input type="text" name="reason" id="reason" class="form-control" value="{{ old('reason') }}">
+                                        @error('reason')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
                                     </div>
 
                                     <div class="card-footer pt-0 text-end">
                                         <button type="submit" class="btn btn-primary">
-                                            Tạo
+                                            Xác nhận
                                         </button>
                                         <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Quay lại</a>
                                     </div>
@@ -65,7 +77,7 @@
         'use strict';
 
         $(document).ready(function () {
-            $('#checkUserForm').submit(function (event) {
+            $('#checkUserForm').click(function (event) {
                 event.preventDefault();
 
                 var phone = $('#phone').val();
@@ -75,11 +87,15 @@
                     type: 'GET',
                     data: {phone: phone},
                     success: function (response) {
+                        $('#result').removeClass();
                         if (response.success) {
-                            $('#userId').val(response.id);
                             $('#result').html('Name: ' + response.name + '<br>Email: ' + response.email + '<br>Points: ' + response.points);
+                            $('#result').addClass('text-success');
+
                         } else {
-                            $('#result').html('User not found.');
+                            $('#result').html(response.message);
+                            $('#result').addClass('text-danger');
+
                         }
                     }
                 });

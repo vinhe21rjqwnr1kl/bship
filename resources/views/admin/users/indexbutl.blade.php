@@ -34,7 +34,7 @@
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
                                 {{ Form::text('phone', null, array('class' => 'form-control', 'placeholder' => __('SĐT'))) }}
                             </div>
-                    
+
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">
                                 <input type="submit" name="search" value="{{ __('Tìm') }}" class="btn btn-primary me-2"> <a href="{{ route('admin.usersbutl.index') }}" class="btn btn-danger">Quay lại</a>
                             </div>
@@ -50,7 +50,7 @@
         <!-- Column starts -->
         <div class="col-xl-12">
             <div class="card">
-        
+
                 <div class="pe-4 ps-4 pt-2 pb-2">
                     <div class="table-responsive">
                         <table class="table table-responsive-lg mb-0">
@@ -61,6 +61,7 @@
                                     <th> <strong> Email </strong> </th>
                                     <th> <strong> SĐT </strong> </th>
                                     <th> <strong> HĐH </strong> </th>
+                                    <th> <strong> Điểm </strong> </th>
                                     <th> <strong> Trạng thái </strong> </th>
                                     <th> <strong> Ngày tạo </strong> </th>
                                 </tr>
@@ -72,13 +73,14 @@
                                 @forelse ($users as $user)
                                 <tr>
                                     <td> {{ $i++ }} </td>
-                             
+
                                     <td> {{ $user->name }} </td>
                                     <td> {{ $user->email }} </td>
                                     <td> {{ $user->phone }} </td>
                                     <td> {{ $user->platform }} </td>
-                                    <td> 
-                                        
+                                    <td>  <span class="badge badge-primary">{{ $user->points }}</span>  </td>
+                                    <td>
+
                                              @if ($user->is_active == '1')
 												<span class="badge badge-success">Hoạt động</span>
 											@else
@@ -86,10 +88,10 @@
 											@endif</td>
 
                                     <td> {{ $user->create_time }} </td>
-                                  
+
                                     <td class="text-center">
 												<a href="{{ route('admin.usersbutl.edit', $user->id) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-							
+
 										</td>
                                 </tr>
                                 @empty

@@ -25,19 +25,15 @@
                         <span class="accordion-header-indicator"></span>
                     </div>
                     <div class="card-body collapse accordion__body {{ $show }}" id="rounded-search-sec" data-bs-parent="#search-sec-outer">
-                        {{ Form::model(request()->all(), array('route' => array('admin.usersbutl.index'), 'method' => 'get')) }}
+                        {{ Form::model(request()->all(), array('route' => array('admin.point.log'), 'method' => 'get')) }}
                         <input type="hidden" name="todo" value="Filter">
                         <div class="row">
-                            <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
-                                {{ Form::text('name', null, array('class' => 'form-control', 'placeholder' => __('Tên'))) }}
-                            </div>
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
                                 {{ Form::text('phone', null, array('class' => 'form-control', 'placeholder' => __('SĐT'))) }}
                             </div>
 
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">
-                                <input type="submit" name="search" value="{{ __('Tìm') }}" class="btn btn-primary me-2"> <a href="{{ route('admin.usersbutl.index') }}" class="btn btn-danger">Quay lại</a>
-                            </div>
+                                <input type="submit" name="search" value="{{ __('Tìm') }}" class="btn btn-primary me-2"> <a href="{{ route('admin.point.log') }}" class="btn btn-danger">Quay lại</a>
                         </div>
                         {{ Form::close() }}
                     </div>
@@ -57,44 +53,33 @@
                                 <thead>
                                 <tr>
                                     <th> <strong> {{ __('common.s_no') }} </strong> </th>
-                                    <th> <strong> Tên </strong> </th>
-                                    <th> <strong> Email </strong> </th>
                                     <th> <strong> SĐT </strong> </th>
-                                    <th> <strong> HĐH </strong> </th>
-                                    <th> <strong> Trạng thái </strong> </th>
+                                    <th> <strong> Điểm giao dịch </strong> </th>
+                                    <th> <strong> Điểm sở hữu </strong> </th>
+                                    <th> <strong> Lý do </strong> </th>
                                     <th> <strong> Ngày tạo </strong> </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @php
-                                    $i = $users->firstItem();
+                                    $i = $logPoints->firstItem();
                                 @endphp
-                                @forelse ($users as $user)
+                                @forelse ($logPoints as $log)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-
-                                        <td> {{ $user->name }} </td>
-                                        <td> {{ $user->email }} </td>
-                                        <td> {{ $user->phone }} </td>
-                                        <td> {{ $user->platform }} </td>
+                                        <td> {{ $log->user_data->phone }} </td>
                                         <td>
-
-                                            @if ($user->is_active == '1')
-                                                <span class="badge badge-success">Hoạt động</span>
-                                            @else
-                                                <span class="badge badge-danger">Ngừng hoạt động</span>
-                                            @endif</td>
-
-                                        <td> {{ $user->create_time }} </td>
-
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.usersbutl.edit', $user->id) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-
+                                            <span class="badge badge-primary">{{ $log->point }}</span>
                                         </td>
+                                        <td>
+                                            <span class="badge badge-primary">{{ $log->user_data->points }}</span>
+                                        </td>
+                                        <td style="max-width: 500px;"> {!! $log->reason !!} </td>
+                                        <td> {{ $log->created_at }} </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">{{ __('common.no_users') }}</td>
+                                        <td colspan="6" class="text-center">{{ __('Nhật ký trống') }}</td>
                                     </tr>
                                 @endforelse
                                 </tbody>
@@ -102,7 +87,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        {{ $users->appends(Request::input())->links() }}
+                        {{ $logPoints->appends(Request::input())->links() }}
                     </div>
                 </div>
             </div>
