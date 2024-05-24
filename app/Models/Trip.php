@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Stevebauman\Purify\Facades\Purify;
 
 class Trip extends Model
@@ -45,9 +46,17 @@ class Trip extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function tripRequest() : BelongsTo
+    public function trip_request() : BelongsTo
     {
         return $this->belongsTo(TripRequest::class);
+    }
+
+    public function food_ordeṛ() : BelongsTo {
+        return $this->belongsTo(FoodOrder::class, 'food_order_id', 'id');
+    }
+
+    public function delivery_order() : HasOne {
+        return $this->hasOne(DeliveryOrder::class, 'go_id', 'id');
     }
 
 

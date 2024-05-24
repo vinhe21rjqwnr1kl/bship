@@ -220,9 +220,7 @@ class DriverController extends Controller
                         $driveData["gplx_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
                     }
                 }
-
             }
-
         }
 
 
@@ -948,7 +946,9 @@ class DriverController extends Controller
         $page_title = __('Tài xế Online ');
         // $urrl  =  "http://app.butl.vn:8080/ButlAppServlet/services?cmd=doGetDriverLocation&data={%22accessToken%22:%22200ceb26807d6bf99fd6f4f0d1ca54d4%22,%22token%22:%223be575a201a825b42951a3f87ef13020%22}";
 //        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers";
-        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";
+//        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";
+        $urrl = "http://api-taixe.bship.vn:22072/api/v1/web/get_all_user";
+
         $ch = curl_init();
         $options = array(
             CURLOPT_URL => $urrl,

@@ -39,7 +39,10 @@ class TripController extends Controller
     public function admin_index(Request $request, $service_id)
     {
         $page_title = __('Danh sách chuyến');
-        $resultQuery = Trip::query();
+//        $resultQuery = Trip::query()->with('delivery_order')->has('delivery_order');
+        $resultQuery = Trip::query()->with(['food_ordeṛ', 'delivery_order']);
+
+//        return $resultQuery->get();
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
             if ($request->filled('goid')) {
                 $pieces = explode("_", $request->input('goid'));
@@ -85,37 +88,37 @@ class TripController extends Controller
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_info.service_detail_id');
         $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
 
-        if ($service_id == 7) {
-            $resultQuery
-                ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
-                ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
-                ->select('*',
-                    'go_info.id as go_id',
-                    'go_info.create_date as go_create_date',
-                    'log_add_money_request.id as log_add_money_request_id',
-                    'log_add_money_request.status as log_add_money_request_status',
-                    'user_driver_data.name as driver_name',
-                    'user_driver_data.phone as driver_phone',
-                    'user_data.name as user_name09',
-                    'user_data.phone as user_phone09',
-                    'restaurants.name as restaurant_name',
-                    'restaurants.address as restaurant_address',
-                )
-                ->addSelect(DB::raw('(SELECT GROUP_CONCAT(food_products.name) FROM food_order_items
-                    JOIN food_products ON food_order_items.food_product_id = food_products.id
-                    WHERE food_order_items.food_order_id = food_orders.id) AS food_product_name'))
-                ->whereNotNull('go_info.food_order_id');
-        } else {
-            $resultQuery->select('*',
-                'go_info.id as go_id',
-                'go_info.create_date as go_create_date',
-                'log_add_money_request.id as log_add_money_request_id',
-                'log_add_money_request.status as log_add_money_request_status',
-                'user_driver_data.name as driver_name',
-                'user_driver_data.phone as driver_phone',
-                'user_data.name as user_name09',
-                'user_data.phone as user_phone09');
-        }
+//        if ($service_id == 7) {
+//            $resultQuery
+//                ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
+//                ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
+//                ->select('*',
+//                    'go_info.id as go_id',
+//                    'go_info.create_date as go_create_date',
+//                    'log_add_money_request.id as log_add_money_request_id',
+//                    'log_add_money_request.status as log_add_money_request_status',
+//                    'user_driver_data.name as driver_name',
+//                    'user_driver_data.phone as driver_phone',
+//                    'user_data.name as user_name09',
+//                    'user_data.phone as user_phone09',
+//                    'restaurants.name as restaurant_name',
+//                    'restaurants.address as restaurant_address',
+//                )
+//                ->addSelect(DB::raw('(SELECT GROUP_CONCAT(food_products.name) FROM food_order_items
+//                    JOIN food_products ON food_order_items.food_product_id = food_products.id
+//                    WHERE food_order_items.food_order_id = food_orders.id) AS food_product_name'))
+//                ->whereNotNull('go_info.food_order_id');
+//        } else {
+        $resultQuery->select('*',
+            'go_info.*',
+            'go_info.create_date as go_create_date',
+            'log_add_money_request.id as log_add_money_request_id',
+            'log_add_money_request.status as log_add_money_request_status',
+            'user_driver_data.name as driver_name',
+            'user_driver_data.phone as driver_phone',
+            'user_data.name as user_name09',
+            'user_data.phone as user_phone09');
+//        }
 
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
@@ -131,7 +134,9 @@ class TripController extends Controller
             $resultQuery->where('go_info.service_id', '=', $service_id);
 
         } else {
-            $resultQuery->whereNotIn('go_info.service_id', [3,4,5,8,9,10]);
+//            $resultQuery->whereNotIn('go_info.service_id', [3, 4, 5, 8, 9, 10]);
+            $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
+
         }
 
 
@@ -165,11 +170,12 @@ class TripController extends Controller
      * @param $go_id
      * @return JsonResponse|void
      */
-    public function admin_detail($service_id, $go_id)
+    public function admin_detail($service, $go_id)
     {
         $resultQuery = Trip::query();
+//        $resultQuery = Trip::query()->with(['food_order', 'delivery_order']);
 
-        if ($service_id == 7) {
+        if ($service == 'food') {
             $resultQuery
                 ->join('food_orders', 'food_orders.id', '=', 'go_info.food_order_id')
                 ->join('restaurants', 'restaurants.id', '=', 'food_orders.restaurant_id')
@@ -180,7 +186,7 @@ class TripController extends Controller
                 )
                 ->whereNotNull('go_info.food_order_id');
 
-            $resultQuery->where('go_info.service_id', '=', $service_id)
+            $resultQuery
                 ->where('go_info.id', $go_id);
 
             $data = $resultQuery->first();
@@ -204,7 +210,7 @@ class TripController extends Controller
             ]);
         }
 
-        if ($service_id == 6) {
+        if ($service == 'delivery') {
             $resultQuery
                 ->join('go_request', 'go_request.id', '=', 'go_info.go_request_id')
                 ->join('delivery_go_info', 'delivery_go_info.go_id', '=', 'go_info.id')
@@ -214,8 +220,7 @@ class TripController extends Controller
                 );
 
             $resultQuery
-                ->where('go_info.id', $go_id)
-                ->where('go_info.service_id', '=', $service_id);
+                ->where('go_info.id', $go_id);
 
             $data = $resultQuery->first();
 

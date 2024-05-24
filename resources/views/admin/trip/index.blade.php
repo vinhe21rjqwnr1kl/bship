@@ -140,7 +140,7 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> BUTL_{{ $page->go_id }} </td>
+                                        <td> BUTL_{{ $page->id }} </td>
                                         <td>
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -202,30 +202,30 @@
                                         <td> {{ $page->go_create_date}} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
-                                                <a href="{{ route('trip.admin.status', $page->go_id) }}"
+                                                <a href="{{ route('trip.admin.status', $page->id) }}"
                                                    class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i
                                                         class="fas fa-pencil-alt"></i></a>
                                             @else
                                                 Liên hệ Admin
                                             @endif
 
-                                            @if($page->service_id == 7 && $page->food_order_id)
+                                            @if($page->food_ordeṛ)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#exampleModal"
-                                                        data-bs-service-id="{{$page->service_id}}"
-                                                        data-bs-id="{{$page->go_id}}">
+                                                        data-bs-service="food"
+                                                        data-bs-id="{{$page->id}}">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
 
-                                            @elseif($page->service_id == 6)
+                                            @elseif($page->delivery_order)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#receiverGoInfoModal"
-                                                        data-bs-service-id="{{$page->service_id}}"
-                                                        data-bs-id="{{$page->go_id}}">
+                                                        data-bs-service="delivery"
+                                                        data-bs-id="{{$page->id}}">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                             @endif
@@ -242,7 +242,7 @@
                                                 <span class="badge badge-primary">Thất bại</span>
 
                                             @elseif($page->progress == 4)
-                                                <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
+                                                <a href="{{ route('driver.admin.payment_create', $page->id) }}"
                                                    class="badge badge-danger">Hoàn tiền</a>
 
                                             @else
@@ -460,16 +460,16 @@
             }
         }
 
-        async function handleService(serviceId, api) {
+        async function handleService(service, api) {
             try {
                 $.ajax({
                     url: api,
                     type: 'GET',
                     success: function (response) {
-                        if (serviceId == 7) {
+                        if (service == 'food') {
                             renderTableInfo(response.data);
                             renderTableProductsOrder(response.order_items);
-                        } else if (serviceId == 6) {
+                        } else if (service == 'delivery') {
                             renderDeliveryGoInfo(response.data);
                             renderImage(response.data.product_image);
                         } else {
@@ -489,26 +489,26 @@
 
         receiverGoInfoModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
-            var serviceId = button.getAttribute('data-bs-service-id');
+            var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            var api = `/admin/trip/detail/${serviceId}/${id}`;
+            var api = `/admin/trip/detail/${service}/${id}`;
 
-            if (serviceId == 7 || serviceId == 6) {
-                handleService(serviceId, api);
+            if (service == 'food' || service == 'delivery') {
+                handleService(service, api);
             } else {
-                console.error('Invalid serviceId:', serviceId);
+                console.error('Invalid service:', service);
             }
         })
 
         exampleModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
-            var serviceId = button.getAttribute('data-bs-service-id');
+            var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            var api = `/admin/trip/detail/${serviceId}/${id}`;
-            if (serviceId == 7 || serviceId == 6) {
-                handleService(serviceId, api);
+            var api = `/admin/trip/detail/${service}/${id}`;
+            if (service == 'food' || service == 'delivery') {
+                handleService(service, api);
             } else {
-                console.error('Invalid serviceId:', serviceId);
+                console.error('Invalid service:', service);
             }
         })
 
