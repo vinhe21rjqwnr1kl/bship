@@ -70,9 +70,9 @@ class DriverController extends Controller
         $roleArr[0] = "Công ty BUTL";
 
         if ($request->input('excel') == "Excel") {
-            if (!SuperAdminPermissionCheck::isAdmin()){
+            if (!SuperAdminPermissionCheck::isAdmin()) {
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
-            }else {
+            } else {
                 $response = Excel::download(new ExportDriversList($request), 'dstaixe.xlsx', \Maatwebsite\Excel\Excel::XLSX);
                 if (ob_get_contents()) ob_end_clean();
                 return $response;
@@ -384,7 +384,16 @@ class DriverController extends Controller
 
         // check online app
 //        $urrl = "http://api-taixe.bship.vn:22071/ButlAppServlet/driver/services?cmd=doGetDrivers"; // không sài nữa
-        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";  // new api get user and drive online
+
+        $urrl = "http://api-taixe.bship.vn:22072/api/v1/web/get_all_user";  // real
+
+//        $environment = (env('APP_ENV') === 'production') ? 'production' : 'local';
+//        if ($environment === 'production') {
+//            $urrl = "http://api-taixe.bship.vn:22072/api/v1/web/get_all_user";  // real
+//        } else {
+//            $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";  // new api get user and drive online
+//        }
+
         $ch = curl_init();
         $options = array(
             CURLOPT_URL => $urrl,
@@ -402,11 +411,15 @@ class DriverController extends Controller
         $result = json_decode($x, true);
         $list_driver_online = [];
 
+//            $adriver = $result["data"]["drivers"];
+
         if (isset($result["data"]) && isset($result["data"]["drivers"])) {
             $adriver = $result["data"]["drivers"];
-            $drivers = array_filter($adriver, function($driver) {
-                return isset($driver['type']) && $driver['type'] === 'DRIVER' && $driver['online'] === true;
+
+            $drivers = array_filter($adriver, function ($driver) {
+                return isset($driver['type']) && $driver['type'] == 'DRIVER' && $driver['online'];
             });
+
             foreach ($drivers as $driver) {
                 $list_driver_online[] = $driver['userID'];
             }
@@ -414,7 +427,7 @@ class DriverController extends Controller
 
 //        for ($i = 0; $i < count($adriver); $i++) {
 //            if ($adriver[$i]['online'] === true) {
-//                $list_driver_online[] = $adriver[$i]['id'];
+//                $list_driver_online[] = $adriver[$i]['userID'];
 //            }
 //        }
 
@@ -436,6 +449,7 @@ class DriverController extends Controller
         $sortWith = $request->get('with') ? $request->get('with') : Null;
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
+//        return $drivers;
         $status = config('blog.status');
         $roleArr = Agency::pluck('name', 'id')->toArray();
         $roleArr[0] = "Công ty BUTL";
@@ -472,9 +486,9 @@ class DriverController extends Controller
         $LogAddMoneyRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
         if ($request->input('excel') == "Excel") {
-            if (!SuperAdminPermissionCheck::isAdmin()){
+            if (!SuperAdminPermissionCheck::isAdmin()) {
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
-            }else {
+            } else {
                 $response = Excel::download(new ExportPaymentRequest($request), 'ds-yeucau-naptien.xlsx', \Maatwebsite\Excel\Excel::XLSX);
                 if (ob_get_contents()) ob_end_clean();
                 return $response;
@@ -531,7 +545,7 @@ class DriverController extends Controller
 
         $page_title = __('Tạo yêu cầu nạp tiền');
         $driveData["phone"] = $phone;
-        if($phone) {
+        if ($phone) {
             $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
 
         }
