@@ -362,7 +362,10 @@
         </div>
     </div>
 
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        'use strict';
+
         function renderTableInfo(data) {
             var restaurantName = exampleModal.querySelector('.restaurant-name');
             var restaurantAddress = exampleModal.querySelector('.restaurant-address');
@@ -459,16 +462,23 @@
 
         async function handleService(serviceId, api) {
             try {
-                const data = await fetchData(api);
-                if (serviceId == 7) {
-                    renderTableInfo(data.data);
-                    renderTableProductsOrder(data.order_items);
-                } else if (serviceId == 6) {
-                    renderDeliveryGoInfo(data.data);
-                    renderImage(data.data.product_image);
-                } else {
-                    console.error('Unknown serviceId:', serviceId);
-                }
+                $.ajax({
+                    url: api,
+                    type: 'GET',
+                    success: function (response) {
+                        if (serviceId == 7) {
+                            renderTableInfo(response.data);
+                            renderTableProductsOrder(response.order_items);
+                        } else if (serviceId == 6) {
+                            renderDeliveryGoInfo(response.data);
+                            renderImage(response.data.product_image);
+                        } else {
+                            console.error('Unknown serviceId:', serviceId);
+                        }
+                    }
+                })
+
+
             } catch (error) {
                 // Handle errors
             }
@@ -481,7 +491,8 @@
             var button = event.relatedTarget;
             var serviceId = button.getAttribute('data-bs-service-id');
             var id = button.getAttribute('data-bs-id');
-            var api = window.location.origin.concat(`/admin/trip/detail/${serviceId}/${id}/api`);
+            var api = `/admin/trip/detail/${serviceId}/${id}`;
+
             if (serviceId == 7 || serviceId == 6) {
                 handleService(serviceId, api);
             } else {
@@ -493,7 +504,7 @@
             var button = event.relatedTarget;
             var serviceId = button.getAttribute('data-bs-service-id');
             var id = button.getAttribute('data-bs-id');
-            var api = window.location.origin.concat(`/admin/trip/detail/${serviceId}/${id}/api`);
+            var api = `/admin/trip/detail/${serviceId}/${id}`;
             if (serviceId == 7 || serviceId == 6) {
                 handleService(serviceId, api);
             } else {

@@ -127,8 +127,6 @@ class TripController extends Controller
             $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
         }
 
-
-
         if ($service_id > 0) {
             $resultQuery->where('go_info.service_id', '=', $service_id);
 

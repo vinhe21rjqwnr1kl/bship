@@ -20,7 +20,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/trip')->group(fun
     Route::get('/create', [TripController::class, 'admin_create'])->name('trip.admin.create');
     Route::post('/store', [TripController::class, 'admin_store'])->name('trip.admin.store');
     Route::get('/status/{id}', [TripController::class, 'status'])->name('trip.admin.status');
-    Route::get('/detail/{service_id}/{go_id}/api', [TripController::class, 'admin_detail'])->name('trip.admin.detail');
+    Route::get('/detail/{service_id}/{go_id}', [TripController::class, 'admin_detail'])->name('trip.admin.detail');
 
 
 });
