@@ -8,7 +8,7 @@ default:
 build:pro:
   stage: build
   script:
-    - version=${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
+    - version=LIVE-${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
     - echo ${version}
     - tar -zcvf ${version}.tar.gz app resources routes config
     - ls -la
@@ -26,7 +26,7 @@ build:pro:
 build:dev:
   stage: build
   script:
-    - version=${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
+    - version=DEV-${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
     - echo ${version}
     - tar -zcvf ${version}.tar.gz app resources routes config
     - ls -la
