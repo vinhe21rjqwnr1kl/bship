@@ -46,7 +46,7 @@
                             </div>
 
                             <div class="mb-3 col-md-4">
-                                <input type="search" name="id" class="form-control" placeholder="BUTL" value="{{ old('id', request()->input('id')) }}">
+                                <input type="search" name="id" class="form-control" placeholder="Mã chuyến đi" value="{{ old('id', request()->input('id')) }}">
                             </div>
 
 							<div class="mb-3 col-md-4">
@@ -95,7 +95,7 @@
 							<thead class="">
 								<tr>
 									<th> <strong> STT</strong> </th>
-									<th> <strong> BUTL</strong> </th>
+									<th> <strong> Mã BSHIP</strong> </th>
 									<th> <strong> Khách hàng </strong> </th>
 									<th> <strong> DV </strong> </th>
 									<th> <strong> Loại </strong> </th>
@@ -115,7 +115,7 @@
 										<td> {{ $i++ }} </td>
 										<td>
                                             @if($page->trip)
-                                                BUTL_{{ $page->trip->id }}
+                                                BSHIP_{{ $page->trip->id }}
                                             @endif
                                         </td>
 										<td>

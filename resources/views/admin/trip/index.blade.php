@@ -119,12 +119,14 @@
                                 <thead class="">
                                 <tr>
                                     <th><strong> STT</strong></th>
-                                    <th><strong> Mã BUTL </strong></th>
+                                    <th><strong> Mã BSHIP </strong></th>
+                                    <th><strong> Mã GSM </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
                                     <th><strong> Loại </strong></th>
                                     <th><strong> Tiền </strong></th>
+                                    <th><strong> Phương thức </strong></th>
                                     <th><strong> Thông tin </strong></th>
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Tạo bởi </strong></th>
@@ -140,7 +142,8 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> BUTL_{{ $page->id }} </td>
+                                        <td> BSHIP_{{ $page->id }} </td>
+                                        <td> {{ $page->order_id_gsm }} </td>
                                         <td>
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -163,7 +166,12 @@
                                             <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
                                             <br><strong>Khuyến
                                                 mại:</strong>{{ number_format($page->discount_from_code) }}
-                                            <br><strong>Thanh toán:</strong>{{ $page->payment_status == "PAID" ? " Online" : " Tiền mặt" }}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-warning">
+                                                {{ $page->payment_status == "PAID" ? " Online" : " Tiền mặt" }}
+                                            </span>
+
                                         </td>
                                         <td>
                                             <strong>Số KM:</strong> {{ $page->distance/1000 }}
@@ -206,7 +214,7 @@
                                                    class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i
                                                         class="fas fa-pencil-alt"></i></a>
                                             @else
-                                                Liên hệ Admin
+                                                Liên hệ Admin<br/>
                                             @endif
 
                                             @if($page->food_order)
@@ -322,7 +330,7 @@
 
                                     </tbody>
                                 </table>
-{{--                                <div class="my-2 mx-4" style="text-align:right"><strong>Tổng tiền: </strong><span id="total-order-price"></span></div>--}}
+                                <div class="my-2 mx-4" style="text-align:right"><strong>Tổng tiền: </strong><span id="total-order-price"></span></div>
                             </div>
                         </div>
                     </div>
@@ -378,9 +386,9 @@
             var restaurantName = exampleModal.querySelector('.restaurant-name');
             var restaurantAddress = exampleModal.querySelector('.restaurant-address');
             var restaurantPhone = exampleModal.querySelector('.restaurant-phone');
-            // var totalOrderPrice = exampleModal.querySelector('#total-order-price');
-            // totalOrderPrice.textContent = '';
-            // totalOrderPrice.textContent = formatter.format(data.total_order_price);
+            var totalOrderPrice = exampleModal.querySelector('#total-order-price');
+            totalOrderPrice.textContent = '';
+            totalOrderPrice.textContent = formatter.format(data.totalOrderPrice);
             restaurantName.textContent = '';
             restaurantAddress.textContent = '';
             restaurantPhone.textContent = '';

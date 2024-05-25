@@ -89,7 +89,7 @@
                                 <thead class="">
                                 <tr>
                                     <th><strong> STT</strong></th>
-                                    <th><strong> Mã BUTL </strong></th>
+                                    <th><strong> Mã BSHIP </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
@@ -108,7 +108,7 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> BUTL_{{ $page->id }} </td>
+                                        <td> BSHIP_{{ $page->id }} </td>
                                         <td>
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}

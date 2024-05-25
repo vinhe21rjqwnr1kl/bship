@@ -27,6 +27,7 @@ use App\Exports\ExportTrip;
 use App\Rules\EditorEmptyCheckRule;
 use Storage;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Carbon\Carbon;
 
 
 class TripController extends Controller
@@ -135,7 +136,7 @@ class TripController extends Controller
 
         } else {
 //            $resultQuery->whereNotIn('go_info.service_id', [3, 4, 5, 8, 9, 10]);
-            $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
+//            $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
 
         }
 
@@ -187,9 +188,14 @@ class TripController extends Controller
             if ($goInfo) {
                 $orderItems = $goInfo->food_order->items;
 
+                $totalOrderPrice = 0;
+
                 foreach ($orderItems as $orderItem) {
                     $orderItem->size_name = $orderItem->size->name ?? "Không có";
+                    $totalOrderPrice += $orderItem->total_price;
                 }
+
+                $goInfo->totalOrderPrice = $totalOrderPrice;
 
                 return response()->json([
                     'data' => $goInfo,
@@ -202,6 +208,21 @@ class TripController extends Controller
         }
 
         if ($service == 'delivery') {
+
+//            $goInfo = Trip::with(['trip_request', 'delivery_order'])
+//                ->where('id', $go_id)
+//                ->first();
+//
+//            if (!$goInfo) {
+//                return response()->json([
+//                    'message' => 'Data not found',
+//                ], 404);
+//            }
+//
+//            return response()->json([
+//                'data' => $goInfo,
+//            ]);
+
             $resultQuery
                 ->join('go_request', 'go_request.id', '=', 'go_info.go_request_id')
                 ->join('delivery_go_info', 'delivery_go_info.go_id', '=', 'go_info.id')
@@ -263,8 +284,6 @@ class TripController extends Controller
         $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
         $resultQuery->select('*',
             'go_info.*',
-//            'go_info.id as go_id',
-//            'go_info.create_date as go_create_date',
             'log_add_money_request.id as log_add_money_request_id',
             'log_add_money_request.status as log_add_money_request_status',
             'user_driver_data.name as driver_name',
@@ -300,11 +319,9 @@ class TripController extends Controller
      */
     public function admin_fail(Request $request)
     {
-        $tripR = TripRequest::with('trip');
-
+//        $tripR = TripRequest::with('trip');
 
         $page_title = __('Danh sách chuyến thất bại');
-
         TripRequest::updateFailedOrders();
         $resultQuery = TripRequest::query()->with('trip');
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
@@ -363,6 +380,8 @@ class TripController extends Controller
             'user_data.phone as user_phone09');
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
+//        return $drivers;
 
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();

@@ -62,13 +62,15 @@ class TripRequest extends Model
 
     public function scopeUpdateFailedOrders(Builder $query)
     {
-        // Lấy thời gian hiện tại trừ đi 1 phút
-        $timeLimit = Carbon::now()->subMinutes(10);
+        $now = Carbon::now();
+        $tenMinutesAgo = $now->copy()->subMinutes(3);
+        $tenDaysAgo = $now->copy()->subDays(10);
 
-        $tripRequests = TripRequest::where(function ($query) use ($timeLimit) {
-            $query->where('status', [0, 1, 2])
-                ->where('create_date', '<', $timeLimit);
-            })
+        $tripRequests = TripRequest::where(function ($query) use ($tenMinutesAgo, $tenDaysAgo) {
+            $query->whereIn('status', [0, 1, 2])
+                ->whereBetween('create_date', [$tenDaysAgo, $tenMinutesAgo]);
+
+        })
             ->with('trip')
             ->get();
 

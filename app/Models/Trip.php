@@ -41,8 +41,6 @@ class Trip extends Model
 
 	];
 
-//    protected $appends = ['total_order_price'];
-
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -50,7 +48,7 @@ class Trip extends Model
 
     public function trip_request() : BelongsTo
     {
-        return $this->belongsTo(TripRequest::class);
+        return $this->belongsTo(TripRequest::class, 'go_request_id', 'id');
     }
 
     public function food_order() : BelongsTo {
@@ -62,14 +60,6 @@ class Trip extends Model
     }
 
 
-//    public function getTotalOrderPriceAttribute()
-//    {
-//        $totalOrderPrice = 0;
-//        foreach ($this->food_order->items as $orderItem) {
-//            $totalOrderPrice += $orderItem->total_price;
-//        }
-//        return $totalOrderPrice;
-//    }
 
 
 }
