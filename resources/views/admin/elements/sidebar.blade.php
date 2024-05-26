@@ -110,7 +110,7 @@
                     </li>
                 @endif
                 <!--  Đại lý BUÔN MA THUỘT -->
-                @if($agency_id !=3 && $role_id !== 8)
+                @if($agency_id !=3 && $role_id !== 8 && $role_id !== null )
 
                     <li class="nav-label">Thông tin</li>
                     <li>

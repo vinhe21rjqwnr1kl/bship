@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TripRequest extends Model
@@ -58,6 +59,10 @@ class TripRequest extends Model
 
     public function delivery_order() : HasOne {
         return $this->hasOne(DeliveryOrder::class, 'go_request_id', 'id');
+    }
+
+    public function food_order() : BelongsTo {
+        return $this->belongsTo(FoodOrder::class, 'food_order_id', 'id');
     }
 
     public function scopeUpdateFailedOrders(Builder $query)

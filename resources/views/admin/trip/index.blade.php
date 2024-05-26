@@ -168,9 +168,11 @@
                                                 mại:</strong>{{ number_format($page->discount_from_code) }}
                                         </td>
                                         <td>
-                                            <span class="badge badge-warning">
-                                                {{ $page->payment_status == "PAID" ? " Online" : " Tiền mặt" }}
-                                            </span>
+                                            @if($page->payment_status == "PAID")
+                                                <span class="badge badge-success">Chuyển khoản</span>
+                                                @else
+                                                <span class="badge badge-warning">Tiền mặt</span>
+                                            @endif
 
                                         </td>
                                         <td>
@@ -238,26 +240,26 @@
                                                 </button>
                                             @endif
                                         </td>
-{{--                                        @if (!$page->access_token_gsm)--}}
+                                        {{--                                        @if (!$page->access_token_gsm)--}}
                                         @if (!in_array($page->service_detail_id, [33]))
-                                        <td class="text-center">
-                                            @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                <span class="badge badge-warning">Chờ duyệt</span>
+                                            <td class="text-center">
+                                                @if($page->progress == 4 && $page->log_add_money_request_status === 0)
+                                                    <span class="badge badge-warning">Chờ duyệt</span>
 
-                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                <span class="badge badge-success">Thành công</span>
+                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
+                                                    <span class="badge badge-success">Thành công</span>
 
-                                            @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                <span class="badge badge-primary">Thất bại</span>
+                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
+                                                    <span class="badge badge-primary">Thất bại</span>
 
-                                            @elseif($page->progress == 4)
-                                                <a href="{{ route('driver.admin.payment_create', $page->id) }}"
-                                                   class="badge badge-danger">Hoàn tiền</a>
+                                                @elseif($page->progress == 4)
+                                                    <a href="{{ route('driver.admin.payment_create', $page->id) }}"
+                                                       class="badge badge-danger">Hoàn tiền</a>
 
-                                            @else
+                                                @else
 
-                                            @endif
-                                        </td>
+                                                @endif
+                                            </td>
 
                                         @else
                                             <td class="text-center"></td>
@@ -330,7 +332,8 @@
 
                                     </tbody>
                                 </table>
-                                <div class="my-2 mx-4" style="text-align:right"><strong>Tổng tiền: </strong><span id="total-order-price"></span></div>
+                                <div class="my-2 mx-4" style="text-align:right"><strong>Tổng tiền: </strong><span
+                                        id="total-order-price"></span></div>
                             </div>
                         </div>
                     </div>
@@ -379,7 +382,7 @@
     <script type="text/javascript">
         'use strict';
 
-        let formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+        let formatter = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'});
 
 
         function renderTableInfo(data) {
@@ -407,7 +410,7 @@
                     '<td>' + item.product.name + '</td>' +
                     '<td>' + item.size_name + '</td>' +
                     '<td>' + item.quantity + '</td>' +
-                    '<td>' +  formatter.format(item.price) + '</td>' +
+                    '<td>' + formatter.format(item.price) + '</td>' +
                     '<td><img src="' + item.product.img_url + '" alt="' + item.product.name + '"class="img-fluid rounded" style="max-width: 150px;"></td>';
                 tableBody.appendChild(row);
             });
@@ -515,7 +518,9 @@
             var button = event.relatedTarget;
             var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            var api = `/admin/trip/detail/${service}/${id}`;
+            {{--var api = '{{ url("/admin/trip/detail") }}/' + service + '/' + id;--}}
+            var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
+            var api = apiTemp.replace(':service', service).replace(':id', id);
 
             if (service == 'food' || service == 'delivery') {
                 handleService(service, api);
@@ -528,7 +533,10 @@
             var button = event.relatedTarget;
             var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            var api = `/admin/trip/detail/${service}/${id}`;
+            {{--var api = '{{ url("/admin/trip/detail") }}/' + service + '/' + id;--}}
+            var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
+            var api = apiTemp.replace(':service', service).replace(':id', id);
+
             if (service == 'food' || service == 'delivery') {
                 handleService(service, api);
             } else {

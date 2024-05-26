@@ -110,8 +110,11 @@
                 var fromPhone = $('#fromPhone').val();
                 var toPhone = $('#toPhone').val();
 
+                var url = '{{ route("admin.point.check-user.give-point") }}';
+
+
                 $.ajax({
-                    url: '/admin/user/check-user-give-point',
+                    url: url,
                     type: 'GET',
                     data: {
                         fromPhone: fromPhone,

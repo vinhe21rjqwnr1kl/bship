@@ -82,8 +82,10 @@
 
                 var phone = $('#phone').val();
 
+                var url = '{{ route("admin.point.check-user") }}';
+
                 $.ajax({
-                    url: '/admin/user/check-user',
+                    url: url,
                     type: 'GET',
                     data: {phone: phone},
                     success: function (response) {

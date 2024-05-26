@@ -154,8 +154,9 @@ class PointController extends Controller
                 LogPoint::create([
                     'user_data_id' => $user->id,
                     'point' => $point,
-                    'reason' => 'Tặng điểm từ ADMIN: <strong>'. $admin .'</strong>
-                                    <br/>Lờì nhắn: ' . ($reason ?? 'Không có'),
+                    'reason' => 'Tặng điểm từ ADMIN
+                                <br/>ADMIN giao dịch: <strong>' . $admin . '</strong>
+                                <br/>Lờì nhắn: ' . ($reason ?? 'Không có'),
                     'created_at' => $currentDateTime,
                 ]);
 
