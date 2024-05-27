@@ -89,7 +89,7 @@
                                 <thead class="">
                                 <tr>
                                     <th><strong> STT</strong></th>
-                                    <th><strong> Mã BUTL </strong></th>
+                                    <th><strong> Mã BSHIP </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
@@ -108,7 +108,7 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> BUTL_{{ $page->go_id }} </td>
+                                        <td> BSHIP_{{ $page->id }} </td>
                                         <td>
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -155,8 +155,9 @@
                                                     class="badge badge-warning"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @endif
                                         </td>
-                                        <td> {{ $page->go_create_date}} </td>
+                                        <td> {{ $page->create_date}} </td>
 
+{{--                                        @if (!$page->access_token_gsm)--}}
                                         @if (!in_array($page->service_detail_id, [33]))
                                             <td class="text-center">
                                                 @if($page->progress == 4 && $page->log_add_money_request_status === 0)
@@ -169,7 +170,7 @@
                                                     <span class="badge badge-primary">Thất bại</span>
 
                                                 @elseif($page->progress == 4)
-                                                    <a href="{{ route('driver.admin.payment_create', $page->go_id) }}"
+                                                    <a href="{{ route('driver.admin.payment_create', $page->id) }}"
                                                        class="badge badge-danger">Hoàn tiền</a>
 
                                                 @else

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TripRequest extends Model
 {
@@ -55,15 +57,25 @@ class TripRequest extends Model
         return $this->hasOne(Trip::class, 'go_request_id', 'id');
     }
 
+    public function delivery_order() : HasOne {
+        return $this->hasOne(DeliveryOrder::class, 'go_request_id', 'id');
+    }
+
+    public function food_order() : BelongsTo {
+        return $this->belongsTo(FoodOrder::class, 'food_order_id', 'id');
+    }
+
     public function scopeUpdateFailedOrders(Builder $query)
     {
-        // Lấy thời gian hiện tại trừ đi 1 phút
-        $timeLimit = Carbon::now()->subMinutes(10);
+        $now = Carbon::now();
+        $tenMinutesAgo = $now->copy()->subMinutes(3);
+        $tenDaysAgo = $now->copy()->subDays(10);
 
-        $tripRequests = TripRequest::where(function ($query) use ($timeLimit) {
-            $query->where('status', [0, 1, 2])
-                ->where('create_date', '<', $timeLimit);
-            })
+        $tripRequests = TripRequest::where(function ($query) use ($tenMinutesAgo, $tenDaysAgo) {
+            $query->whereIn('status', [0, 1, 2])
+                ->whereBetween('create_date', [$tenDaysAgo, $tenMinutesAgo]);
+
+        })
             ->with('trip')
             ->get();
 

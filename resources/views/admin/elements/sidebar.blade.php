@@ -65,16 +65,16 @@
                             <span class="nav-text">Chuyến đi</span>
                         </a>
                         <ul aria-expanded="false">
-{{--                            <li><a href="{{ route('trip.admin.index',6) }}"> Chuyến đi Taxi điện</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',8) }}"> Chuyến đi xe hơi</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',11) }}">Chuyến đi xe máy</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',12) }}">Chuyến đi chung</a></li>--}}
-                            <li><a href="{{ route('trip.admin.index',3) }}">Xe ôm Vinfast</a></li>
-                            <li><a href="{{ route('trip.admin.index',4) }}">Tài xế tỉnh</a></li>
-                            <li><a href="{{ route('trip.admin.index',5) }}">Xe hơi</a></li>
-                            <li><a href="{{ route('trip.admin.index',8) }}">Bảo hiểm xe</a></li>
-                            <li><a href="{{ route('trip.admin.index',9) }}">Bike</a></li>
-                            <li><a href="{{ route('trip.admin.index',10) }}">Thuê xe tự lái</a></li>
+                            <li><a href="{{ route('trip.admin.index',6) }}"> Chuyến đi Taxi điện</a></li>
+                            <li><a href="{{ route('trip.admin.index',8) }}"> Chuyến đi xe hơi</a></li>
+                            <li><a href="{{ route('trip.admin.index',11) }}">Chuyến đi xe máy</a></li>
+                            <li><a href="{{ route('trip.admin.index',12) }}">Chuyến đi chung</a></li>
+{{--                            <li><a href="{{ route('trip.admin.index',3) }}">Xe ôm Vinfast</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',4) }}">Tài xế tỉnh</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',5) }}">Xe hơi</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',8) }}">Bảo hiểm xe</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',9) }}">Bike</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',10) }}">Thuê xe tự lái</a></li>--}}
                             <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
 
                         </ul>
@@ -110,7 +110,7 @@
                     </li>
                 @endif
                 <!--  Đại lý BUÔN MA THUỘT -->
-                @if($agency_id !=3 && $role_id !== 8)
+                @if($agency_id !=3 && $role_id !== 8 && $role_id !== null )
 
                     <li class="nav-label">Thông tin</li>
                     <li>
@@ -120,10 +120,15 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('trip.admin.index',0) }}"> Danh sách chuyến đi</a></li>
-                            <li><a href="{{ route('trip.admin.index',2) }}"> Danh sách TX xe máy</a></li>
-                            <li><a href="{{ route('trip.admin.index',1) }}"> Danh sách TX xe hơi</a></li>
-                            <li><a href="{{ route('trip.admin.index',7) }}"> Danh sách chuyến đi (giao đồ ăn)</a></li>
-                            <li><a href="{{ route('trip.admin.index',6) }}"> Danh sách chuyến đi (giao hàng)</a></li>
+{{--                            <li><a href="{{ route('trip.admin.index',1) }}"> Danh sách TX xe máy</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',2) }}"> Danh sách TX xe hơi</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách chuyến đi (giao đồ ăn)</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',4) }}"> Danh sách chuyến đi (giao hàng)</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',2) }}"> Danh sách TX xe máy</a></li>--}}
+{{--                            <li><a href="{{ route('trip.admin.index',1) }}"> Danh sách TX xe hơi</a></li>--}}
+                            <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách xe ôm Vinfast</a></li>
+                            <li><a href="{{ route('trip.admin.index',7) }}"> Danh sách chuyến (giao đồ ăn)</a></li>
+                            <li><a href="{{ route('trip.admin.index',6) }}"> Danh sách chuyến (giao hàng)</a></li>
                             <li><a href="{{ route('trip.admin.cancel') }}">Danh sách chuyến huỷ</a></li>
                             <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
                             <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
