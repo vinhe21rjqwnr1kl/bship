@@ -164,6 +164,7 @@
                                             <br><strong>Đại
                                                 lý:</strong>{{ number_format($page->driver_cost - $page->service_cost) }}
                                             <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
+                                            <br><strong>VAT:</strong>{{ number_format($page->money_vat) }}
                                             <br><strong>Khuyến
                                                 mại:</strong>{{ number_format($page->discount_from_code) }}
                                         </td>
@@ -474,19 +475,6 @@
             }
         }
 
-        async function fetchData(api) {
-            try {
-                const response = await fetch(api);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            } catch (error) {
-                console.error('There was a problem with your fetch operation:', error);
-                throw error;
-            }
-        }
-
         async function handleService(service, api) {
             try {
                 $.ajax({
@@ -518,7 +506,6 @@
             var button = event.relatedTarget;
             var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            {{--var api = '{{ url("/admin/trip/detail") }}/' + service + '/' + id;--}}
             var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
             var api = apiTemp.replace(':service', service).replace(':id', id);
 
@@ -533,7 +520,6 @@
             var button = event.relatedTarget;
             var service = button.getAttribute('data-bs-service');
             var id = button.getAttribute('data-bs-id');
-            {{--var api = '{{ url("/admin/trip/detail") }}/' + service + '/' + id;--}}
             var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
             var api = apiTemp.replace(':service', service).replace(':id', id);
 
