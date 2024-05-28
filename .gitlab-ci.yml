@@ -10,7 +10,7 @@ build:pro:
   script:
     - version=PRODUCTION-${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
     - echo ${version}
-    - tar -zcvf ${version}.tar.gz app resources routes config
+    - tar -zcvf ${version}.tar.gz app resources routes config public
     - ls -la
     - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
     - rm -Rf /home/gitlab-runner/builds/3EtyoFLx3/0/bship1/*
@@ -29,7 +29,7 @@ build:dev:
   script:
     - version=DEV-${CI_PIPELINE_ID}-${GITLAB_USER_LOGIN}-`date "+%Y%m%d_%H%M%S"`
     - echo ${version}
-    - tar -zcvf ${version}.tar.gz app resources routes config
+    - tar -zcvf ${version}.tar.gz app resources routes config public
     - ls -la
     - export RSYNC_PASSWORD=${RSYNC_PASS} && rsync -aurvh --bwlimit=20000 --no-o --no-g ${version}.tar.gz rsync://${RSYNC_USER}@${SERVER}/source-bship/${SERVICE_NAME}/source/
     - rm -Rf /home/gitlab-runner/builds/3EtyoFLx3/0/bship1/*
