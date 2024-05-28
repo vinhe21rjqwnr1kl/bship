@@ -13,7 +13,11 @@ use \App\Http\Controllers\Admin\LogAddMoneyController;
 |
 */
 Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/log-add-money')->group(function () {
-    Route::get('/cashin', [LogAddMoneyController::class, 'index_cashin'])->name('log_add_money.admin.cashin');
-    Route::get('/cashout', [LogAddMoneyController::class, 'index_cashout'])->name('log_add_money.admin.cashout');
+    Route::get('/cashout', [LogAddMoneyController::class, 'cashoutIndex'])->name('log_add_money.admin.cashout');
+    Route::get('/cashout/accept/{id}', [LogAddMoneyController::class, 'cashoutAccept'])->name('log_add_money.admin.cashout.accept');
+    Route::get('/cashout/reject/{id}', [LogAddMoneyController::class, 'cashoutReject'])->name('log_add_money.admin.cashout.reject');
+    Route::get('/cashin', [LogAddMoneyController::class, 'cashinIndex'])->name('log_add_money.admin.cashin');
+    Route::get('/cashin/accept/{id}', [LogAddMoneyController::class, 'cashinAccept'])->name('log_add_money.admin.cashin.accept');
+    Route::get('/cashin/reject/{id}', [LogAddMoneyController::class, 'cashinReject'])->name('log_add_money.admin.cashin.reject');
 });
 
