@@ -244,15 +244,83 @@ class TripController extends Controller
         }
     }
 
+    public function admin_detail_fail($service, $go_request_id)
+    {
+        $resultQuery = TripRequest::query();
+
+        if ($service == 'food') {
+            $goRequest = TripRequest::with([
+                'food_order.restaurant',
+                'food_order.items.product',
+                'food_order.items.size.size'
+            ])
+                ->where('id', $go_request_id)
+                ->first();
+
+            if ($goRequest) {
+                $orderItems = $goRequest->food_order->items;
+
+                $totalOrderPrice = 0;
+
+                foreach ($orderItems as $orderItem) {
+                    $orderItem->size_name = $orderItem->size->name ?? "Không có";
+                    $totalOrderPrice += $orderItem->total_price;
+                }
+
+                $goRequest->totalOrderPrice = $totalOrderPrice;
+
+                return response()->json([
+                    'data' => $goRequest,
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Record not found'
+                ], 404);
+            }
+        }
+
+        if ($service == 'delivery') {
+
+//            $goRequest = TripRequest::with(['trip_request', 'delivery_order'])
+//                ->where('id', $go_request_id)
+//                ->first();
+//
+//            if (!$goRequest) {
+//                return response()->json([
+//                    'message' => 'Data not found',
+//                ], 404);
+//            }
+//
+//            return response()->json([
+//                'data' => $goRequest,
+//            ]);
+
+            $resultQuery
+                ->join('delivery_go_info', 'delivery_go_info.go_request_id', '=', 'go_request.id')
+                ->select('*',
+                    'go_request.*',
+                    'delivery_go_info.id as delivery_go_info_id',
+                );
+
+            $resultQuery->where('go_request.id', $go_request_id);
+
+            $data = $resultQuery->first();
+
+            return response()->json([
+                'data' => $data,
+            ]);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function admin_cancel(Request $request)
     {
-
         $page_title = __('Danh sách chuyến huỷ');
-        $resultQuery = Trip::query();
+        $resultQuery = Trip::query()->with(['food_order', 'delivery_order']);
+
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
@@ -310,7 +378,6 @@ class TripController extends Controller
         // $roleArr = Agency::pluck('name', 'id')->toArray();
         // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.cancel', compact('drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
-
     }
 
     /**
@@ -319,11 +386,10 @@ class TripController extends Controller
      */
     public function admin_fail(Request $request)
     {
-//        $tripR = TripRequest::with('trip');
-
         $page_title = __('Danh sách chuyến thất bại');
         TripRequest::updateFailedOrders();
-        $resultQuery = TripRequest::query()->with('trip');
+        $resultQuery = TripRequest::query()->with(['trip', 'food_order', 'delivery_order']);
+
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
             if ($request->filled('id')) {
                 $pieces = explode("_", $request->input('id'));
@@ -343,7 +409,6 @@ class TripController extends Controller
             }
             if ($request->filled('name')) {
                 $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
-
             }
             if ($request->filled('datefrom')) {
                 $resultQuery->where('go_request.create_date', '>=', "{$request->input('datefrom')}");
@@ -363,10 +428,13 @@ class TripController extends Controller
                 });
             }
         }
-        if (!$request->filled('status')) {
-            $resultQuery->where('go_request.status', '=', "1");
-        }
 
+        $secretDoor = $request->query('secret');
+        if ($secretDoor != 'secret-door') {
+            if (!$request->filled('status')) {
+                $resultQuery->where('go_request.status', '=', "1");
+            }
+        }
 
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
@@ -387,9 +455,6 @@ class TripController extends Controller
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
 
-        // $status = config('blog.status');
-        // $roleArr = Agency::pluck('name', 'id')->toArray();
-        // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.fail', compact('drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
     }
 

@@ -6,7 +6,6 @@
 
     <div class="container-fluid">
 
-
         @php
             $collapsed = 'collapsed';
             $show = '';
@@ -157,9 +156,8 @@
                                         </td>
                                         <td> {{ $page->create_date}} </td>
 
-{{--                                        @if (!$page->access_token_gsm)--}}
-                                        @if (!in_array($page->service_detail_id, [33]))
-                                            <td class="text-center">
+                                        <td class="text-center">
+                                            @if (!in_array($page->service_detail_id, [33]))
                                                 @if($page->progress == 4 && $page->log_add_money_request_status === 0)
                                                     <span class="badge badge-warning">Chờ duyệt</span>
 
@@ -176,11 +174,33 @@
                                                 @else
 
                                                 @endif
-                                            </td>
 
-                                        @else
-                                            <td class="text-center"></td>
-                                        @endif
+                                            @else
+
+                                            @endif
+                                            <br>
+                                            @if($page->food_order)
+                                                <button type="button"
+                                                        class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"
+                                                        data-bs-service="food"
+                                                        data-bs-id="{{$page->id}}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+
+                                            @elseif($page->delivery_order)
+                                                <button type="button"
+                                                        class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#receiverGoInfoModal"
+                                                        data-bs-service="delivery"
+                                                        data-bs-id="{{$page->id}}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            @endif
+                                        </td>
+
 
                                     </tr>
                                 @empty
@@ -201,6 +221,16 @@
         </div>
 
     </div>
+
+    @include('admin.trip.food_modal')
+    @include('admin.trip.delivery_modal')
+
+    <script type="text/javascript">
+        'use strict';
+        var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
+    </script>
+
+    <script src="{{ asset('js/delivery-food-modal.js') }}"></script>
 
     <script>
         setTimeout(() => {

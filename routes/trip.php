@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/trip')->group(fun
     Route::post('/store', [TripController::class, 'admin_store'])->name('trip.admin.store');
     Route::get('/status/{id}', [TripController::class, 'status'])->name('trip.admin.status');
     Route::get('/detail/{service}/{go_id}', [TripController::class, 'admin_detail'])->name('trip.admin.detail');
+    Route::get('/detail/fail/{service}/{go_request_id}', [TripController::class, 'admin_detail_fail'])->name('trip.admin.detail.fail');
 
 
 });

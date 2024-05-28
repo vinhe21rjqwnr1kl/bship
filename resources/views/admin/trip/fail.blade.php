@@ -6,7 +6,6 @@
 
 <div class="container-fluid">
 
-
 	@php
         $collapsed = 'collapsed';
         $show = '';
@@ -104,6 +103,7 @@
 									<th> <strong> Trạng thái tìm </strong> </th>
 									<th> <strong> Trạng thái chuyến </strong> </th>
 									<th> <strong> Thời gian </strong> </th>
+									<th> <strong> Thao tác </strong> </th>
 								</tr>
 							</thead>
 							<tbody>
@@ -180,6 +180,29 @@
 
 										<td> {{ $page->create_date}} </td>
 
+										<td>
+                                            @if($page->food_order)
+                                                <button type="button"
+                                                        class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal"
+                                                        data-bs-service="food"
+                                                        data-bs-id="{{$page->id}}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+
+                                            @elseif($page->delivery_order)
+                                                <button type="button"
+                                                        class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#receiverGoInfoModal"
+                                                        data-bs-service="delivery"
+                                                        data-bs-id="{{$page->id}}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            @endif
+                                        </td>
+
 									</tr>
 								@empty
 									<tr><td class="text-center" colspan="9"><p>Không có dữ liệu.</p></td></tr>
@@ -197,6 +220,16 @@
 	</div>
 
 </div>
+
+@include('admin.trip.food_modal')
+@include('admin.trip.delivery_modal')
+
+<script type="text/javascript">
+    'use strict';
+    var apiTemp = '{{ route("trip.admin.detail.fail", ["service" => ":service", "go_request_id" => ":id"] ) }}';
+</script>
+
+<script src="{{ asset('js/delivery-food-modal.js') }}"></script>
 
 <script>
 	setTimeout(() => {
