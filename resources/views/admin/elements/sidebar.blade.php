@@ -460,6 +460,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
+            <p class="fs-12">Version 1.1.13</p>
         </div>
     </div>
 </div>
