@@ -44,9 +44,9 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3 col-md-4">
-                                <input type="search" name="id" class="form-control" placeholder="Mã chuyến đi" value="{{ old('id', request()->input('id')) }}">
-                            </div>
+{{--                            <div class="mb-3 col-md-4">--}}
+{{--                                <input type="search" name="id" class="form-control" placeholder="Mã chuyến đi" value="{{ old('id', request()->input('id')) }}">--}}
+{{--                            </div>--}}
 
 							<div class="mb-3 col-md-4">
 								<input type="search" name="phone" class="form-control" placeholder="Số điện thoại" value="{{ old('phone', request()->input('phone')) }}">
@@ -94,6 +94,7 @@
 							<thead class="">
 								<tr>
 									<th> <strong> STT</strong> </th>
+{{--									<th> <strong> Mã tạo chuyến</strong> </th>--}}
 									<th> <strong> Mã BSHIP</strong> </th>
 									<th> <strong> Khách hàng </strong> </th>
 									<th> <strong> DV </strong> </th>
@@ -113,6 +114,7 @@
 								@forelse ($drivers as $page)
 									<tr>
 										<td> {{ $i++ }} </td>
+{{--										<td> {{ $page->id }} </td>--}}
 										<td>
                                             @if($page->trip)
                                                 BSHIP_{{ $page->trip->id }}

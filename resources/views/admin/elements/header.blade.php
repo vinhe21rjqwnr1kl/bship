@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse justify-content-between">
                 <div class="header-left">
 					<div class="d-flex align-items-center flex-wrap me-auto">
-						<h3> {{ $page_title }}</h5>
+						<h3> {{ $page_title }}</h3>
 					</div>
                 </div>
                 <ul class="navbar-nav header-right main-notification">
@@ -30,7 +30,7 @@
                         <a class="nav-link bell dz-theme-mode" href="#">
 							<i id="icon-light" class="fas fa-sun"></i>
                             <i id="icon-dark" class="fas fa-moon"></i>
-							
+
                         </a>
 					</li>
 					<li class="nav-item dropdown notification_dropdown">

@@ -429,8 +429,8 @@ class TripController extends Controller
             }
         }
 
-        $secretDoor = $request->query('secret');
-        if ($secretDoor != 'secret-door') {
+        $getAll = $request->query('get');
+        if ($getAll != 'all') {
             if (!$request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "1");
             }
@@ -443,7 +443,7 @@ class TripController extends Controller
         $resultQuery->join('user_data', 'user_data.id', '=', 'go_request.user_id');
         $resultQuery->join('cf_services_detail', 'cf_services_detail.id', '=', 'go_request.service_detail_id');
 
-        $resultQuery->select('*', 'go_request.*', 'go_request.id as go_request_id', 'go_request.status as statusmain',
+        $resultQuery->select('*', 'go_request.*', 'go_request.status as statusmain',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09');
 

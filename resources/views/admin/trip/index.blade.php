@@ -171,7 +171,7 @@
                                         <td>
                                             @if($page->payment_status == "PAID")
                                                 <span class="badge badge-success">Chuyển khoản</span>
-                                                @else
+                                            @else
                                                 <span class="badge badge-warning">Tiền mặt</span>
                                             @endif
 
@@ -241,9 +241,12 @@
                                                 </button>
                                             @endif
                                         </td>
-                                        {{--                                        @if (!$page->access_token_gsm)--}}
-                                        @if (!in_array($page->service_detail_id, [33]))
-                                            <td class="text-center">
+
+                                        <td class="text-center">
+                                            @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
+
+
+                                            @else
                                                 @if($page->progress == 4 && $page->log_add_money_request_status === 0)
                                                     <span class="badge badge-warning">Chờ duyệt</span>
 
@@ -260,11 +263,8 @@
                                                 @else
 
                                                 @endif
-                                            </td>
-
-                                        @else
-                                            <td class="text-center"></td>
-                                        @endif
+                                            @endif
+                                        </td>
 
                                     </tr>
                                 @empty

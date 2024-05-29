@@ -76,7 +76,7 @@ class ExportTrip implements FromCollection, WithHeadings
             DB::raw('if(go_info.go_request_id=1000, "Admin", "User")')
         );
 
-        $resultQuery->orderBy('go_info.' . 'create_date', 'desc');
+        $resultQuery->orderBy('go_info.' . 'create_date', 'asc');
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
         $driveData["agency_id"] = $current_user->agency_id;

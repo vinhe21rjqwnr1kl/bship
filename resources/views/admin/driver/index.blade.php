@@ -50,7 +50,7 @@
                                     <select name="is_active" class="default-select form-control">
                                         <option value="">Trạng thái</option>
                                         <option value="1">Hoạt động</option>
-                                        <option value="0">Ngừng Hoạt động</option>
+                                        <option value="2">Ngừng Hoạt động</option>
 
                                     </select>
                                 </div>
@@ -101,9 +101,10 @@
                                         <td> {{ number_format($page->money) }} </td>
                                         <td> {{ $roleArr[$page->agency_id] }}</td>
                                         <td>
+{{--                                            {{ $page->is_active }}--}}
                                             @if ($page->is_active == '1')
                                                 <span class="badge badge-success">Hoạt động</span>
-                                            @else
+                                            @elseif($page->is_active == '2')
                                                 <span class="badge badge-danger">Ngừng hoạt động</span>
                                             @endif
                                         </td>
