@@ -120,12 +120,6 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('trip.admin.index',0) }}"> Danh sách chuyến đi</a></li>
-{{--                            <li><a href="{{ route('trip.admin.index',1) }}"> Danh sách TX xe máy</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',2) }}"> Danh sách TX xe hơi</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách chuyến đi (giao đồ ăn)</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',4) }}"> Danh sách chuyến đi (giao hàng)</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',2) }}"> Danh sách TX xe máy</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',1) }}"> Danh sách TX xe hơi</a></li>--}}
                             <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách xe ôm Vinfast</a></li>
                             <li><a href="{{ route('trip.admin.index',7) }}"> Danh sách chuyến (giao đồ ăn)</a></li>
                             <li><a href="{{ route('trip.admin.index',6) }}"> Danh sách chuyến (giao hàng)</a></li>
@@ -179,6 +173,17 @@
                             </ul>
                         </li>
                     @endif
+
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-049-copy"></i>
+                            <span class="nav-text">Nạp/rút tiền</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('log_add_money.admin.cashout') }}"> Yêu cầu rút tiền </a></li>
+                            <li><a href="{{ route('log_add_money.admin.cashin') }}"> Yêu cầu nạp tiền </a></li>
+                        </ul>
+                    </li>
 
                     <li class="nav-label">Thông tin đặt lịch</li>
                     <li>
@@ -460,7 +465,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
-            <p>Version 1.1.13</p>
+            <p>Version 1.1.16</p>
         </div>
     </div>
 </div>
