@@ -96,6 +96,7 @@
                                     <th><strong> Tiền </strong></th>
                                     <th><strong> Thông tin </strong></th>
                                     <th><strong> Trạng thái </strong></th>
+                                    <th><strong> Tạo bởi </strong></th>
                                     <th><strong> Thời gian </strong></th>
                                     <th><strong> Thao tác </strong></th>
                                 </tr>
@@ -154,10 +155,27 @@
                                                     class="badge badge-warning"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @endif
                                         </td>
+
+                                        <td>
+                                            @if ($page->go_type == 2)
+                                                <span class="badge badge-warning"> Tài xế</span>
+                                            @else
+                                                @if ($page->go_request_id == 1000)
+                                                    <span class="badge badge-danger"> Admin</span>
+                                                @else
+                                                    <span class="badge badge-success">Khách</span>
+                                                @endif
+                                            @endif
+
+                                        </td>
+
                                         <td> {{ $page->create_date}} </td>
 
                                         <td class="text-center">
-                                            @if (!in_array($page->service_detail_id, [33]))
+                                            @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
+
+
+                                            @else
                                                 @if($page->progress == 4 && $page->log_add_money_request_status === 0)
                                                     <span class="badge badge-warning">Chờ duyệt</span>
 
@@ -174,8 +192,6 @@
                                                 @else
 
                                                 @endif
-
-                                            @else
 
                                             @endif
                                             <br>

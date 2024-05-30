@@ -45,10 +45,12 @@ class DriverController extends Controller
                 $resultQuery->where('name', 'like', "%{$request->input('name')}%");
             }
             if ($request->filled('is_active')) {
-                if ($request->filled('is_active') == 1) {
-                    $resultQuery->where('is_active', '=', 1);
+
+                $isActive = $request->input('is_active');
+                if ($isActive === '1') {
+                    $resultQuery->where('is_active', '=', '1');
                 } else {
-                    $resultQuery->where('is_active', '!=', 1);
+                    $resultQuery->where('is_active', '!=', '1');
                 }
             }
         }
@@ -116,8 +118,8 @@ class DriverController extends Controller
         $resultQuery->where('is_active', '=', 1);
 
         $resultQuery->select('user_driver_data.*', 'user_driver_data.name as user_name');
-        $direction = $request->get('direction') ? $request->get('direction') : 'desc';
-        $sortBy = $request->get('sort') ? $request->get('sort') : 'create_time';
+        $direction = $request->get('direction') ? $request->get('direction') : 'asc';
+        $sortBy = $request->get('sort') ? $request->get('sort') : 'money';
         $resultQuery->orderBy('user_driver_data.' . $sortBy, $direction);
         $sortWith = $request->get('with') ? $request->get('with') : Null;
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));

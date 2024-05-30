@@ -31,7 +31,7 @@
                     <span class="accordion-header-indicator"></span>
 				</div>
 				<div class="card-body collapse accordion__body {{ $show }}" id="rounded-search-sec" data-bs-parent="#search-sec-outer">
-					<form action="{{ route('driver.admin.index') }}" method="get">
+					<form action="{{ route('driver.admin.warn') }}" method="get">
 					@csrf
 						<input type="hidden" name="todo" value="Filter">
 						<div class="row">
@@ -47,15 +47,15 @@
 									<option value="">Trạng thái</option>
 									<option value="1">Hoạt động</option>
 									<option value="0">Ngừng Hoạt động</option>
-									
+
 								</select>
 							</div>
 							<div class="mb-3 col-md-3">
-							<input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2"> 
-								<a href="{{ route('driver.admin.index') }}" class="btn btn-danger">Nhập Lại</a>
-							
+							<input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
+								<a href="{{ route('driver.admin.warn') }}" class="btn btn-danger">Nhập Lại</a>
+
 							</div>
-					
+
 						</div>
 					</form>
 				</div>
@@ -81,7 +81,7 @@
 									<th> <strong> Trạng thái </strong> </th>
 									<th> <strong> Thời gian </strong> </th>
 									<th> <strong> Thao tác </strong> </th>
-								
+
 								</tr>
 							</thead>
 							<tbody>
@@ -97,7 +97,7 @@
 										<td> {{ $page->exp }} </td>
 										<td> {{ $roleArr[$page->agency_id] }}</td>
 
-										<td> 
+										<td>
 											@if ($page->is_active == '1')
 												<span class="badge badge-success">Hoạt động</span>
 											@else
@@ -107,7 +107,7 @@
 										<td> {{ $page->create_time }} </td>
 										<td class="text-center">
 												<a href="{{ route('driver.admin.edit', $page->id) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
-									
+
 										</td>
 									</tr>
 								@empty
