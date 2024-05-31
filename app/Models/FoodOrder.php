@@ -19,11 +19,23 @@ class FoodOrder extends Model
         return $this->hasOne(Trip::class, 'food_order_id', 'id');
     }
 
+    public function tripRequest() : HasOne {
+        return $this->hasOne(TripRequest::class, 'food_order_id', 'id');
+    }
+
     public function restaurant() : BelongsTo {
         return $this->belongsTo(Restaurant::class, 'restaurant_id', 'id');
     }
 
     public function items() : HasMany {
         return $this->hasMany(FoodOrderItem::class, 'food_order_id', 'id');
+    }
+
+    public function user() : BelongsTo {
+        return $this->belongsTo(UserB::class, 'user_id', 'id');
+    }
+
+    public function driver() : BelongsTo {
+        return $this->belongsTo(Driver::class, 'driver_id', 'id');
     }
 }

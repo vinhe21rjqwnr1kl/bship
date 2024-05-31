@@ -130,6 +130,19 @@
                     </li>
                     <li>
                         <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-push-pin"></i>
+                            <span class="nav-text">Đơn hàng</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('orders.admin.index') }}"> Danh sách đơn hàng </a></li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Pending']) }}"> Danh sách đơn hàng (chờ xử lý) </a></li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Confirmed']) }}"> Danh sách đơn hàng (đã xác nhận) </a></li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Delivered']) }}"> Danh sách đơn hàng (đã giao) </a></li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Cancelled']) }}"> Danh sách đơn hàng (đã hủy) </a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                             <i class="flaticon-049-copy"></i>
                             <span class="nav-text">Tài xế</span>
                         </a>
@@ -465,7 +478,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
-            <p>Version 1.1.16</p>
+            <p>Version 1.1.17</p>
         </div>
     </div>
 </div>

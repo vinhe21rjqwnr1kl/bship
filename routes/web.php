@@ -37,3 +37,4 @@ require __DIR__.'/configuration.php';
 require __DIR__.'/delivery_product_size.php';
 require __DIR__.'/delivery_type.php';
 require __DIR__.'/log_add_money.php';
+require __DIR__.'/orders.php';

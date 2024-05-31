@@ -37,7 +37,7 @@
                                     <th> <strong> Hình </strong> </th>
                                     <th> <strong> Thứ tự </strong> </th>
                                     <th> <strong> Trạng thái</strong> </th>
-                            
+
                                     <th class="text-center"> <strong> Thao tác </strong> </th>
                                 </tr>
                             </thead>
@@ -49,11 +49,12 @@
                                 <tr>
                                     <td> {{ $i++ }} </td>
                                     <td> <img src="{{ $banners->url }}" width="70" height="50"></td>
+{{--                                    <td> <img src="https://daily.bship.vn/public/uploads/20240423/d8fa4e87353f13660a17587c10e856ff.jpg" width="70" height="50"></td>--}}
                                     <td> {{ $banners->index }} </td>
-                                    <td> 
+                                    <td>
                                         @if ($banners->status == 1)
                                             <span class="badge badge-success"> Hiển thị </span>
-                                        @else											
+                                        @else
                                             <span class="badge badge-warning"> Không hiển thị</span>
                                         @endif
                                     </td>

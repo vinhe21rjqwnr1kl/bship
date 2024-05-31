@@ -123,14 +123,11 @@ class TripController extends Controller
 
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
-
         $driveData["agency_id"] = $current_user->agency_id;
-
 
         if ($driveData["agency_id"] > 0) {
             $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
         }
-
         if ($service_id > 0) {
             $resultQuery->where('go_info.service_id', '=', $service_id);
 

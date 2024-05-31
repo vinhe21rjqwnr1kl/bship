@@ -289,6 +289,9 @@
 
     <script type="text/javascript">
         'use strict';
+        setTimeout(() => {
+            document.location.reload();
+        }, 60000);
         var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
     </script>
 

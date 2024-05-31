@@ -130,6 +130,7 @@ class CustomerController extends Controller
         $resultQuery->orderBy($sortBy, $direction);
         $sortWith = $request->get('with') ? $request->get('with') : Null;
         $banner = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
         return view('admin.customer.banner', compact('banner','page_title'));
     }
     public function admin_bannerdelete($id)
