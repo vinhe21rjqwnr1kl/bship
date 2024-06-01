@@ -12,7 +12,7 @@
             $show = '';
         @endphp
 
-        @if(!empty(request()->title) || !empty(request()->category) || !empty(request()->user) || !empty(request()->status) || !empty(request()->from) || !empty(request()->to) || !empty(request()->tag) || !empty(request()->visibility) || !empty(request()->publish_on))
+        @if(!empty(request()->user_data) || !empty(request()->driver_data) || !empty(request()->restaurant_data) || !empty(request()->status_data) || !empty(request()->datefrom) || !empty(request()->dateto) || !empty(request()->tags) || !empty(request()->id))
             @php
                 $collapsed = '';
                 $show = 'show';
@@ -46,47 +46,66 @@
                             @csrf
                             <input type="hidden" name="todo" value="Filter">
                             <div class="row">
-                                {{--                                <div class="mb-12 col-md-12">--}}
-                                {{--                                    <div class="parent-tags">--}}
-                                {{--                                        <div class="wrapper-tags">--}}
-                                {{--                                            <input type="hidden" name="tags" id="tags_input"--}}
-                                {{--                                                   value="{{ old('tags', request()->input('tags')) }}">--}}
-                                {{--                                            <input type="text" id="input-tag-search" class="input-tag"--}}
-                                {{--                                                   placeholder="Tìm kiểm chuyến theo tên tỉnh/ thành phố">--}}
-                                {{--                                        </div>--}}
-                                {{--                                        <span class="tags-length">0 Thẻ</span>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="mb-3 col-md-4">--}}
-                                {{--                                    <input type="search" name="goid" class="form-control" placeholder="Mã chuyến đi"--}}
-                                {{--                                           value="{{ old('phone', request()->input('goid')) }}">--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="mb-3 col-md-4">--}}
-                                {{--                                    <input type="search" name="phone" class="form-control" placeholder="Số điện thoại"--}}
-                                {{--                                           value="{{ old('phone', request()->input('phone')) }}">--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="mb-3 col-md-4">--}}
-                                {{--                                    <input type="search" name="name" class="form-control" placeholder="Họ và tên"--}}
-                                {{--                                           value="{{ old('name', request()->input('name')) }}">--}}
-                                {{--                                </div>--}}
+                                <div class="mb-12 col-md-12">
+                                    <div class="parent-tags">
+                                        <div class="wrapper-tags">
+                                            <input type="hidden" name="tags" id="tags_input"
+                                                   value="{{ old('tags', request()->input('tags')) }}">
+                                            <input type="text" id="input-tag-search" class="input-tag"
+                                                   placeholder="Tìm kiểm đơn theo tên tỉnh/ thành phố">
+                                        </div>
+                                        <span class="tags-length">0 Thẻ</span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="search" name="id" class="form-control" placeholder="Mã đơn hàng"
+                                           value="{{ old('id', request()->input('id')) }}">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="search" name="restaurant_data" class="form-control"
+                                           placeholder="Thông tin cửa hàng"
+                                           value="{{ old('restaurant_data', request()->input('restaurant_data')) }}">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="search" name="user_data" class="form-control"
+                                           placeholder="Thông tin khách hàng"
+                                           value="{{ old('user_data', request()->input('user_data')) }}">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="search" name="driver_data" class="form-control"
+                                           placeholder="Thông tin tài xế"
+                                           value="{{ old('driver_data', request()->input('driver_data')) }}">
+                                </div>
                                 <div class="mb-3 col-md-4">
 
-                                    <select name="status" class="default-select form-control">
+                                    <select name="status_data" class="default-select form-control">
+                                        <option value="">-- Trạng thái đơn --</option>
                                         @foreach($statuses as  $status)
                                             <option
-                                                {{ request()->input('status') == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">{{ $status['name'] }}</option>
+                                                {{ request()->input('status_data') == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">
+
+                                                @if($status['name'] == 'Pending')
+                                                    {{ __('Chưa giải quyết') }}
+                                                @elseif($status['name'] == 'Delivered')
+                                                    {{ __('Đã giao hàng') }}
+                                                @elseif($status['name'] == 'Confirmed')
+                                                    {{ __('Đã xác nhận') }}
+                                                @elseif($status['name'] == 'Cancelled')
+                                                    {{ __('Đã hủy') }}
+                                                @endif
+                                            </option>
                                         @endforeach
 
                                     </select>
                                 </div>
-                                {{--                                <div class="mb-3 col-md-4">--}}
-                                {{--                                    <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"--}}
-                                {{--                                           value="{{ old('datefrom', request()->input('datefrom')) }}">--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="mb-3 col-md-4">--}}
-                                {{--                                    <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"--}}
-                                {{--                                           value="{{ old('dateto', request()->input('dateto')) }}">--}}
-                                {{--                                </div>--}}
+                                <div class="mb-3 col-md-4">
+                                    <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
+                                           value="{{ old('datefrom', request()->input('datefrom')) }}">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"
+                                           value="{{ old('dateto', request()->input('dateto')) }}">
+                                </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
                                     {{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}

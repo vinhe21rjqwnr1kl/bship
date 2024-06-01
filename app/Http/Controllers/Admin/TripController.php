@@ -67,7 +67,7 @@ class TripController extends Controller
             if ($request->filled('dateto')) {
                 $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
-            if ($request->filled('progress')) {
+            if ($request->filled('progress') && $request->input('progress') != 0) {
                 $resultQuery->where('progress', 'like', "%{$request->input('progress')}%");
             }
 

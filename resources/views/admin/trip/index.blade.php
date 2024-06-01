@@ -72,6 +72,7 @@
                                 <div class="mb-3 col-md-4">
 
                                     <select name="progress" class="default-select form-control">
+                                        <option value="0">-- Tất cả --</option>
                                         <option
                                             {{ request()->input('progress') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>
                                         <option
@@ -120,7 +121,6 @@
                                 <tr>
                                     <th><strong> STT</strong></th>
                                     <th><strong> Mã BSHIP </strong></th>
-                                    <th><strong> Mã GSM </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
@@ -131,8 +131,9 @@
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Tạo bởi </strong></th>
                                     <th><strong> Thời gian </strong></th>
-                                    <th><strong> Trạng thái </strong></th>
-                                    <th><strong> Thao tác </strong></th>
+                                    <th><strong> Mã GSM </strong></th>
+                                    <th><strong> Hành động </strong></th>
+                                    <th><strong> Hoàn tiền </strong></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -143,7 +144,6 @@
                                     <tr>
                                         <td> {{ $i++ }} </td>
                                         <td> BSHIP_{{ $page->id }} </td>
-                                        <td> {{ $page->order_id_gsm }} </td>
                                         <td>
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -211,6 +211,7 @@
                                         </td>
 
                                         <td> {{ $page->create_date}} </td>
+                                        <td> {{ $page->order_id_gsm }} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->id) }}"
@@ -248,13 +249,13 @@
 
                                             @else
                                                 @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                    <span class="badge badge-warning">Chờ duyệt</span>
+                                                    <span class="badge badge-warning">Chưa duyệt</span>
 
                                                 @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                    <span class="badge badge-success">Thành công</span>
+                                                    <span class="badge badge-success">Đã duyệt</span>
 
                                                 @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                    <span class="badge badge-primary">Thất bại</span>
+                                                    <span class="badge badge-primary">Xóa</span>
 
                                                 @elseif($page->progress == 4)
                                                     <a href="{{ route('driver.admin.payment_create', $page->id) }}"

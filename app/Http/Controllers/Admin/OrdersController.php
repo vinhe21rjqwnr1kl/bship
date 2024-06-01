@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FoodOrder;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -23,8 +24,44 @@ class OrdersController extends Controller
         $resultQuery = FoodOrder::with(['tripRequest', 'restaurant', 'items', 'user', 'driver']);
 
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
-            if ($request->filled('status')) {
-                $resultQuery->where('status', 'like', "%{$request->input('status')}%");
+            $tags = json_decode($request->input("tags"), true);
+            if (!empty($tags)) {
+                $resultQuery->where(function ($query) use ($tags) {
+                    foreach ($tags as $tag) {
+                        $query->orWhere('delivery_address', 'like', "%{$tag}%");
+                    }
+                });
+            }
+            if ($request->filled('id')) {
+                $resultQuery->where('id', '=', $request->input('id'));
+            }
+            if ($request->filled('restaurant_data')) {
+                $resultQuery->whereHas('restaurant', function ($query) use ($request) {
+                    $query->where('name', 'like', "%{$request->input('restaurant_data')}%")
+                        ->orWhere('phone', 'like', $request->input('restaurant_data'));
+                });
+            }
+            if ($request->filled('user_data')) {
+                $resultQuery->whereHas('user', function ($query) use ($request) {
+                    $query->where('name', 'like', "%{$request->input('user_data')}%")
+                        ->orWhere('phone', 'like', $request->input('user_data'));
+                });
+            }
+            if ($request->filled('driver_data')) {
+                $resultQuery->whereHas('driver', function ($query) use ($request) {
+                    $query->where('name', 'like', "%{$request->input('driver_data')}%")
+                        ->orWhere('phone', 'like', $request->input('driver_data'));
+                });
+            }
+            if ($request->filled('datefrom')) {
+                $resultQuery->where('created_at', '>=', "{$request->input('datefrom')}");
+            }
+            if ($request->filled('dateto')) {
+                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+                $resultQuery->where('created_at', '<=', $dateto);
+            }
+            if ($request->filled('status_data')) {
+                $resultQuery->where('status', 'like', "%{$request->input('status_data')}%");
             }
         }
         if ($status > 0) {
@@ -42,7 +79,10 @@ class OrdersController extends Controller
         $driveData["agency_id"] = $current_user->agency_id;
 
         if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
+            $resultQuery->whereHas('driver', function ($query) use ($driveData) {
+                $query->where('driver.agency_id', '=', $driveData["agency_id"]);
+
+            });
         }
         $foodOrders = $resultQuery->paginate(config('Reading.nodes_per_page'));
 

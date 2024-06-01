@@ -46,8 +46,6 @@ class ExportTrip implements FromCollection, WithHeadings
         if ($service_id > 0) {
             $resultQuery->where('go_info.service_id', '=', $service_id);
 
-        } else {
-            $resultQuery->whereNotIn('go_info.service_id', [6, 8, 11, 12]);
         }
 
         $resultQuery->join('user_driver_data', 'user_driver_data.id', '=', 'go_info.driver_id');

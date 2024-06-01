@@ -98,7 +98,8 @@
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Tạo bởi </strong></th>
                                     <th><strong> Thời gian </strong></th>
-                                    <th><strong> Thao tác </strong></th>
+                                    <th><strong> Hành động </strong></th>
+                                    <th><strong> Hoàn tiền </strong></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -172,29 +173,8 @@
                                         <td> {{ $page->create_date}} </td>
 
                                         <td class="text-center">
-                                            @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
 
 
-                                            @else
-                                                @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                    <span class="badge badge-warning">Chờ duyệt</span>
-
-                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                    <span class="badge badge-success">Thành công</span>
-
-                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                    <span class="badge badge-primary">Thất bại</span>
-
-                                                @elseif($page->progress == 4)
-                                                    <a href="{{ route('driver.admin.payment_create', $page->id) }}"
-                                                       class="badge badge-danger">Hoàn tiền</a>
-
-                                                @else
-
-                                                @endif
-
-                                            @endif
-                                            <br>
                                             @if($page->food_order)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
@@ -214,6 +194,30 @@
                                                         data-bs-id="{{$page->id}}">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
+
+
+                                            @else
+                                                @if($page->progress == 4 && $page->log_add_money_request_status === 0)
+                                                    <span class="badge badge-warning">Chưa duyệt</span>
+
+                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
+                                                    <span class="badge badge-success">Đã duyệt</span>
+
+                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
+                                                    <span class="badge badge-primary">Xóa</span>
+
+                                                @elseif($page->progress == 4)
+                                                    <a href="{{ route('driver.admin.payment_create', $page->id) }}"
+                                                       class="badge badge-danger">Hoàn tiền</a>
+
+                                                @else
+
+                                                @endif
+
                                             @endif
                                         </td>
 

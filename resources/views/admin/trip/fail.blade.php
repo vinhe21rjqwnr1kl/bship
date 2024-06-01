@@ -104,7 +104,7 @@
 									<th> <strong> Trạng thái tìm </strong> </th>
 									<th> <strong> Trạng thái chuyến </strong> </th>
 									<th> <strong> Thời gian </strong> </th>
-									<th> <strong> Thao tác </strong> </th>
+									<th> <strong> Hành động </strong> </th>
 								</tr>
 							</thead>
 							<tbody>
