@@ -53,10 +53,10 @@
                         <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
                     </ul>
                 </li>
-                <li>
+                {{--                <li>--}}
 
-                    @else
-                        <!--  Đại lý BUÔN MA THUỘT -->
+            @else
+                <!--  Đại lý BUÔN MA THUỘT -->
                 @if($agency_id ==6 || ($agency_id == 0 && $role_id ==1))
                     <li class="nav-label">Thông tin ( THANH HÀ )</li>
                     <li>
@@ -69,12 +69,12 @@
                             <li><a href="{{ route('trip.admin.index',8) }}"> Chuyến đi xe hơi</a></li>
                             <li><a href="{{ route('trip.admin.index',11) }}">Chuyến đi xe máy</a></li>
                             <li><a href="{{ route('trip.admin.index',12) }}">Chuyến đi chung</a></li>
-{{--                            <li><a href="{{ route('trip.admin.index',3) }}">Xe ôm Vinfast</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',4) }}">Tài xế tỉnh</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',5) }}">Xe hơi</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',8) }}">Bảo hiểm xe</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',9) }}">Bike</a></li>--}}
-{{--                            <li><a href="{{ route('trip.admin.index',10) }}">Thuê xe tự lái</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',3) }}">Xe ôm Vinfast</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',4) }}">Tài xế tỉnh</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',5) }}">Xe hơi</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',8) }}">Bảo hiểm xe</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',9) }}">Bike</a></li>--}}
+                            {{--                            <li><a href="{{ route('trip.admin.index',10) }}">Thuê xe tự lái</a></li>--}}
                             <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
 
                         </ul>
@@ -135,10 +135,14 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('orders.admin.index') }}"> Danh sách đơn hàng </a></li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Pending']) }}"> Chưa giải quyết </a></li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Confirmed']) }}"> Đã xác nhận </a></li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Delivered']) }}"> Đã giao hàng </a></li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Cancelled']) }}"> Đã hủy bỏ </a></li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Pending']) }}"> Chưa giải quyết </a>
+                            </li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Confirmed']) }}"> Đã xác nhận </a>
+                            </li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Delivered']) }}"> Đã giao hàng </a>
+                            </li>
+                            <li><a href="{{ route('orders.admin.index', ['status'=>'Cancelled']) }}"> Đã hủy bỏ </a>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -172,18 +176,23 @@
                             @endif
                         </ul>
                     </li>
-                    @if($role_id ==1)
-{{--                    @if($role_id ==1 && $agency_id==0)--}}
+                    @if($role_id ==1 || $role_id ==2 || $role_id ==3 || $role_id ==8)
+                        {{--                    @if($role_id ==1 && $agency_id==0)--}}
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <i class="flaticon-049-copy"></i>
                                 <span class="nav-text">Khách hàng</span>
                             </a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('admin.usersbutl.index') }}"> Danh sách</a></li>
+
+                                @if($role_id ==1 || $role_id ==2)
+                                    <li><a href="{{ route('admin.usersbutl.index') }}"> Danh sách</a></li>
+                                    <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
+                                    <li><a href="{{ route('admin.point.list-request') }}"> Danh sách cần duyệt </a></li>
+                                @endif
+                                <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
                                 <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
                                 <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>
-                                <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
                             </ul>
                         </li>
                     @endif
@@ -485,5 +494,5 @@
 </div>
 
 <!--**********************************
-	Sidebar End
+Sidebar End
 ***********************************

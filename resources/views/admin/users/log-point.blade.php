@@ -55,7 +55,7 @@
                                     <th> <strong> {{ __('common.s_no') }} </strong> </th>
                                     <th> <strong> SĐT </strong> </th>
                                     <th> <strong> Điểm giao dịch </strong> </th>
-                                    <th> <strong> Điểm sở hữu </strong> </th>
+{{--                                    <th> <strong> Điểm sở hữu </strong> </th>--}}
                                     <th> <strong> Lý do </strong> </th>
                                     <th> <strong> Ngày tạo </strong> </th>
                                 </tr>
@@ -71,10 +71,10 @@
                                         <td>
                                             <span class="badge badge-primary">{{ $log->point }}</span>
                                         </td>
-                                        <td>
-                                            <span class="badge badge-primary">{{ $log->user_data->points }}</span>
-                                        </td>
-                                        <td style="max-width: 500px;"> {!! $log->reason !!} </td>
+{{--                                        <td>--}}
+{{--                                            <span class="badge badge-primary">{{ $log->user_data->points }}</span>--}}
+{{--                                        </td>--}}
+                                        <td style="max-width: 500px;"> {{ $log->reason }} </td>
                                         <td> {{ $log->created_at }} </td>
                                     </tr>
                                 @empty

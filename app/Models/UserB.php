@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Auth;
+//use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Stevebauman\Purify\Facades\Purify;
@@ -14,6 +14,11 @@ class UserB extends Model
     use HasFactory;
 
     protected $table = 'user_data';
+
+    protected $fillable = [
+        'name',
+        'phone'
+    ];
 
 
     /**

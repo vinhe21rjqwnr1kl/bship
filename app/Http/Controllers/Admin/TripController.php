@@ -70,12 +70,30 @@ class TripController extends Controller
             if ($request->filled('progress') && $request->input('progress') != 0) {
                 $resultQuery->where('progress', 'like', "%{$request->input('progress')}%");
             }
+            if ($request->filled('service_type') && $request->input('service_type') != 0) {
+                $resultQuery->where('service_type', '=', $request->input('service_type'));
+            }
 
             $tags = json_decode($request->input("tags"), true);
             if (!empty($tags)) {
                 $resultQuery->where(function ($query) use ($tags) {
                     foreach ($tags as $tag) {
-                        $query->orWhere('go_info.pickup_address', 'like', "%{$tag}%");
+                        $parts = explode(',', $tag);
+                        $city = trim($parts[0]);
+                        $district = isset($parts[1]) ? trim($parts[1]) : null;
+                        $ward = isset($parts[2]) ? trim($parts[2]) : null;
+
+                        // Kiểm tra nếu quận và phường được chỉ định
+                        if ($district && $ward) {
+                            $output = "$ward, $district, $city";
+                            $query->orWhere('go_info.pickup_address', 'like', "%{$output}%");
+                        } elseif ($district) {
+                            // Nếu chỉ có quận được chỉ định
+                            $query->orWhere('go_info.pickup_address', 'like', "%{$district}, {$city}%");
+                        } else {
+                            // Nếu chỉ có thành phố được chỉ định
+                            $query->orWhere('go_info.pickup_address', 'like', "%{$city}%");
+                        }
                     }
                 });
             }
@@ -145,6 +163,8 @@ class TripController extends Controller
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
+
+//        dd($ServicesTypeArr);
 
         if ($request->input('excel') == "Excel") {
             if (!SuperAdminPermissionCheck::isAdmin()) {
@@ -416,11 +436,36 @@ class TripController extends Controller
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
             }
+
+//            $tags = json_decode($request->input("tags"), true);
+//            if (!empty($tags)) {
+//                $resultQuery->where(function ($query) use ($tags) {
+//                    foreach ($tags as $tag) {
+//                        $query->orWhere('go_request.pickup_address', 'like', "%{$tag}%");
+//                    }
+//                });
+//            }
+
             $tags = json_decode($request->input("tags"), true);
             if (!empty($tags)) {
                 $resultQuery->where(function ($query) use ($tags) {
                     foreach ($tags as $tag) {
-                        $query->orWhere('go_request.pickup_address', 'like', "%{$tag}%");
+                        $parts = explode(',', $tag);
+                        $city = trim($parts[0]);
+                        $district = isset($parts[1]) ? trim($parts[1]) : null;
+                        $ward = isset($parts[2]) ? trim($parts[2]) : null;
+
+                        // Kiểm tra nếu quận và phường được chỉ định
+                        if ($district && $ward) {
+                            $output = "$ward, $district, $city";
+                            $query->orWhere('go_request.pickup_address', 'like', "%{$output}%");
+                        } elseif ($district) {
+                            // Nếu chỉ có quận được chỉ định
+                            $query->orWhere('go_request.pickup_address', 'like', "%{$district}, {$city}%");
+                        } else {
+                            // Nếu chỉ có thành phố được chỉ định
+                            $query->orWhere('go_request.pickup_address', 'like', "%{$city}%");
+                        }
                     }
                 });
             }
@@ -511,6 +556,7 @@ class TripController extends Controller
         $driveData["money_butl"] = $request->input('money_butl');
         $driveData["money_km"] = $request->input('money_km');;
         $driveData["money_dv"] = $request->input('money_dv');
+        $driveData["vat_money"] = $request->input('vat_money');
 
         $current_user = auth()->user();
         $driveData["agency_id"] = $current_user->agency_id;
@@ -555,6 +601,7 @@ class TripController extends Controller
             'money_butl' => 'required|regex:/^[0-9]+$/',
             'money_km' => 'required|regex:/^[0-9]+$/',
             'money_dv' => 'required|regex:/^[0-9]+$/',
+            'vat_money' => 'required|regex:/^[0-9]+$/',
         ];
         $validationMsg = [
             'service_detail_id.required' => __('DV không để trống.'),
@@ -578,6 +625,9 @@ class TripController extends Controller
 
             'money_dv.required' => __('Tiền dịch vụ không để trống.'),
             'money_dv.regex' => __('Tiền dịch vụ phải là số.'),
+
+            'vat_money.required' => __('Tiền VAT không để trống.'),
+            'vat_money.regex' => __('Tiền VAT phải là số.'),
 
 
         ];
@@ -603,7 +653,9 @@ class TripController extends Controller
         $trip["go_request_id"] = 1000;
         $trip["discount_from_code"] = $driveData["money_km"];
         $trip["service_cost"] = $driveData["money_dv"];
+        $trip["money_vat"] = $driveData["vat_money"];
         $trip["is_show_app"] = 0;
+
         $trip = Trip::create($trip);
         if ($trip) {
             // lấy thông tin tài xế

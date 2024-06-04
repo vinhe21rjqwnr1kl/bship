@@ -12,20 +12,20 @@
     <meta property="og:description" content="{{ __('CryptoZone - Crypto Trading HTML Template') }}">
     <meta property="og:image" content="">
     <meta name="format-detection" content="telephone=no">
-    
+
     <!-- FAVICONS ICON -->
     @if(config('Site.favicon'))
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('storage/configuration-images/'.config('Site.favicon')) }}">
-    @else 
+    @else
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon.png') }}">
     @endif
-    
+
     <!-- PAGE TITLE HERE -->
     <title>{{ config('Site.title') ? config('Site.title') : __('W3CMS Laravel') }}</title>
-    
+
     <!-- MOBILE SPECIFIC -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <!-- STYLESHEETS -->
 
     <!-- Custom Stylesheet -->

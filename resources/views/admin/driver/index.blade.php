@@ -82,6 +82,7 @@
                                     <th><strong> SĐT </strong></th>
                                     <th><strong> Tiền </strong></th>
                                     <th><strong> Đại lý </strong></th>
+                                    <th><strong> OTP </strong></th>
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Thời gian </strong></th>
                                     <th><strong> Thao tác </strong></th>
@@ -100,6 +101,7 @@
                                         <td> {{ $page->phone }} </td>
                                         <td> {{ number_format($page->money) }} </td>
                                         <td> {{ $roleArr[$page->agency_id] }}</td>
+                                        <td> {{ $page->otp }}</td>
                                         <td>
 {{--                                            {{ $page->is_active }}--}}
                                             @if ($page->is_active == '1')

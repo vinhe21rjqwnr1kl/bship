@@ -125,12 +125,13 @@
 
                                         <td><strong>Tổng:</strong> {{ number_format($page->cost) }}
                                             <br><strong>Tài
-                                                xế:</strong>{{ number_format($page->butl_cost  +  $page->service_cost) }}
+                                                xế:</strong> {{ number_format($page->butl_cost  +  $page->service_cost) }}
                                             <br><strong>Đại
-                                                lý:</strong>{{ number_format($page->driver_cost - $page->service_cost) }}
-                                            <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
+                                                lý:</strong> {{ number_format($page->driver_cost - $page->service_cost) }}
+                                            <br><strong>Bảo hiểm:</strong> {{ number_format($page->service_cost) }}
+                                            <br><strong>VAT:</strong> {{ number_format($page->money_vat) }}
                                             <br><strong>Khuyến
-                                                mại:</strong>{{ number_format($page->discount_from_code) }}
+                                                mại:</strong> {{ number_format($page->discount_from_code) }}
 
                                         </td>
                                         <td>

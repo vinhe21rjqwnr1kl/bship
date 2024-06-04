@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ExportPointRequest;
 use App\Http\Controllers\Controller;
+use App\Models\LogAddPointRequest;
 use App\Models\LogPoint;
 use App\Models\UserB;
+use App\Utils\SuperAdminPermissionCheck;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PointController extends Controller
 {
@@ -145,25 +149,25 @@ class PointController extends Controller
             }
 
             $user = UserB::where('phone', $phone)->first();
-
             if ($user) {
-                $user->points += $point;
-                $user->save();
-
-                $admin = Auth::user()->email;
-
-                LogPoint::create([
-                    'user_data_id' => $user->id,
+                $currentUser = auth()->user();
+                LogAddPointRequest::query()->create([
+                    'from_user_id' => 0,
+                    'to_user_id' => $user->id,
+                    'reason' => $reason,
                     'point' => $point,
-                    'reason' => 'Tặng điểm từ ADMIN. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($reason ?? 'Không có'),
-                    'created_at' => $currentDateTime,
+                    'create_name' => auth()->user()->email,
+                    'status' => '0',
+                    'create_date' => $currentDateTime,
+                    'agency_id' => $currentUser->agency_id,
                 ]);
 
                 DB::commit();
-                return redirect()->back()->with('success', 'Thêm điểm thành công');
+                return redirect()->back()->with('success', 'Tạo yêu cầu thành công');
             } else {
                 return redirect()->back()->with('error', __('Không tìm thấy người dùng, kiểm tra người dùng trước khi giao dịch'));
             }
+
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', __($e->getMessage()));
@@ -232,31 +236,23 @@ class PointController extends Controller
                     return redirect()->back()->with('error', __('Người gửi không có đủ điểm trong tài khoản'));
                 }
 
-                $fromUser->points -= $point;
-                $toUser->points += $point;
-
-                $fromUser->save();
-                $toUser->save();
-
-                $admin = Auth::user()->email;
-
-
-                LogPoint::create([
-                    'user_data_id' => $fromUser->id,
-                    'point' => -$point,
-                    'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($reason ?? 'Không có'),
-                    'created_at' => $currentDateTime
-                ]);
-
-                LogPoint::create([
-                    'user_data_id' => $toUser->id,
+                $currentUser = auth()->user();
+                LogAddPointRequest::query()->create([
+                    'to_user_id' => $toUser->id,
+                    'from_user_id' => $fromUser->id,
+                    'reason' => $reason,
                     'point' => $point,
-                    'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($reason ?? 'Không có'),
-                    'created_at' => $currentDateTime
+                    'create_name' => auth()->user()->email,
+                    'status' => '0',
+                    'create_date' => $currentDateTime,
+                    'agency_id' => $currentUser->agency_id,
                 ]);
+
+                $fromUser->points -= $point;
+                $fromUser->save();
 
                 DB::commit();
-                return redirect()->back()->with('success', 'Giao dịch điểm thành công');
+                return redirect()->back()->with('success', 'Tạo yêu cầu thành công');
             } else {
                 return redirect()->back()->with('error', __('Không tìm thấy người dùng, kiểm tra người dùng trước khi giao dịch'));
             }
@@ -284,4 +280,165 @@ class PointController extends Controller
 
         return view('admin.users.log-point', compact('logPoints', 'page_title'));
     }
+
+    public function point_list_request(Request $request)
+    {
+        $page_title = __('Danh sách cần duyệt');
+        $resultQuery = LogAddPointRequest::query()->with(['from_user', 'to_user']);
+
+        if ($request->filled('from_user_data')) {
+            $resultQuery->whereHas('from_user', function ($query) use ($request) {
+                $query->where('name', $request->from_user_data)
+                    ->orWhere('phone', $request->from_user_data);
+            });
+        }
+        if ($request->filled('to_user_data')) {
+            $resultQuery->whereHas('to_user', function ($query) use ($request) {
+                $query->where('name', $request->to_user_data)
+                    ->orWhere('phone', $request->to_user_data);
+            });
+        }
+
+        $current_user = auth()->user();
+        $driveData["agency_id"] = $current_user->agency_id;
+        if ($driveData["agency_id"] > 0) {
+            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+        }
+
+        $resultQuery->where('status', '=', "0");
+
+        $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
+        $direction = $request->get('direction') ? $request->get('direction') : 'desc';
+        $resultQuery->orderBy($sortBy, $direction);
+        $LogAddPointRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
+        return view('admin.users.point_list_approve', compact('LogAddPointRequest', 'page_title'));
+    }
+
+    public function point_list(Request $request)
+    {
+        $page_title = __('Danh sách yêu cầu nạp điểm');
+        $resultQuery = LogAddPointRequest::query()->with(['from_user', 'to_user']);
+
+        if ($request->filled('from_user_data')) {
+            $resultQuery->whereHas('from_user', function ($query) use ($request) {
+                $query->where('name', $request->from_user_data)
+                    ->orWhere('phone', $request->from_user_data);
+            });
+        }
+        if ($request->filled('to_user_data')) {
+            $resultQuery->whereHas('to_user', function ($query) use ($request) {
+                $query->where('name', $request->to_user_data)
+                    ->orWhere('phone', $request->to_user_data);
+            });
+        }
+
+        $current_user = auth()->user();
+        $driveData["agency_id"] = $current_user->agency_id;
+        if ($driveData["agency_id"] > 0) {
+            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+        }
+
+        $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
+        $direction = $request->get('direction') ? $request->get('direction') : 'desc';
+        $resultQuery->orderBy($sortBy, $direction);
+        $LogAddPointRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
+        if ($request->input('excel') == "Excel") {
+            if (!SuperAdminPermissionCheck::isAdmin()) {
+                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
+            } else {
+                $response = Excel::download(new ExportPointRequest($request), 'ds-yeucau-napdiem.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+                if (ob_get_contents()) ob_end_clean();
+                return $response;
+            }
+        }
+
+        return view('admin.users.point_list', compact('LogAddPointRequest', 'page_title'));
+    }
+
+
+    public function handleAcceptRequest($id)
+    {
+        try {
+            DB::beginTransaction();
+            $log = LogAddPointRequest::query()->where('id', $id)->first();
+
+            if (empty($log)) {
+                return redirect()->back()->with('error', __('Mã yêu cầu không tồn tại'));
+            }
+
+            $log->status = 1;
+            $log->save();
+
+            $fromUser = UserB::query()->where('id', $log->from_user_id)->first();
+            $toUser = UserB::query()->where('id', $log->to_user_id)->first();
+            $admin = auth()->user()->email;
+
+            if (!empty($toUser)) {
+                $toUser->points += $log->point;
+                $toUser->save();
+
+                if (!empty($fromUser)) {
+                    LogPoint::create([
+                        'user_data_id' => $fromUser->id,
+                        'point' => -$log->point,
+                        'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ]);
+                    LogPoint::create([
+                        'user_data_id' => $toUser->id,
+                        'point' => $log->point,
+                        'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                } else {
+                    LogPoint::create([
+                        'user_data_id' => $toUser->id,
+                        'point' => $log->point,
+                        'reason' => 'Tặng điểm từ ADMIN. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ]);
+                }
+                DB::commit();
+            } else {
+                DB::rollBack();
+                return redirect()->back()->with('error', __('Người dùng không tồn tại'));
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+        return redirect()->back()->with('success', __('Xác nhận yêu cầu thành công'));
+    }
+
+    public function handleRemoveRequest($id)
+    {
+        try {
+            DB::beginTransaction();
+            $log = LogAddPointRequest::query()->where('id', $id)->first();
+
+            if (empty($log)) {
+                return redirect()->back()->with('error', __('Mã yêu cầu không tồn tại'));
+            }
+            $log->status = 2;
+            $log->save();
+            $fromUser = UserB::query()->where('id', $log->from_user_id)->first();
+
+            if (!empty($fromUser)) {
+                $fromUser->points += $log->point;
+                $fromUser->save();
+            }
+//            else {
+//                DB::rollBack();
+//                return redirect()->back()->with('error', __('Người dùng không tồn tại'));
+//            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+        return redirect()->back()->with('success', __('Hủy yêu cầu thành công'));
+    }
+
 }

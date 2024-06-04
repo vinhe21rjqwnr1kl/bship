@@ -12,7 +12,7 @@
     <meta name="description" content="@yield('page_description', $page_description ?? '')" />
     <meta name="format-detection" content="telephone=no">
 
-    <title>{{ config('Site.title') ? config('Site.title') : config('dz.name') ; }} | @yield('title', $page_title ?? '')</title>
+    <title>{{ config('Site.title') ? config('Site.title') : config('dz.name') }} | @yield('title', $page_title ?? '')</title>
     <!-- Favicon icon -->
     @if(config('Site.favicon'))
         <link rel="icon" type="image/png" href="{{ asset('storage/configuration-images/'.config('Site.favicon')) }}">
@@ -38,7 +38,41 @@
     @endif
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    <style>
+        /* CSS cho wrapper của phần tìm kiếm */
+        .wrapper-tags {
+            position: relative; /* Đảm bảo phần kết quả tìm kiếm sẽ nằm trong cùng vùng với input */
+        }
 
+        /* CSS cho phần kết quả tìm kiếm */
+        .suggestions {
+            position: absolute; /* Đảm bảo phần kết quả tìm kiếm nằm ngay dưới input */
+            top: 100%; /* Đặt phần kết quả ngay dưới input */
+            left: 0;
+            right: 0;
+            z-index: 1000; /* Đảm bảo phần kết quả tìm kiếm nằm trên các thành phần khác */
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none; /* Xóa đường viền trên để kết hợp liền mạch với input */
+            max-height: 200px; /* Giới hạn chiều cao tối đa của phần kết quả */
+            overflow-y: auto; /* Thêm thanh cuộn nếu kết quả quá dài */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ để phân biệt phần kết quả */
+        }
+
+        /* CSS cho các mục kết quả tìm kiếm */
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s; /* Thêm hiệu ứng chuyển đổi màu nền */
+        }
+
+        /* CSS khi mục kết quả tìm kiếm được hover hoặc chọn */
+        .suggestion-item:hover,
+        .suggestion-item.active {
+            background-color: #f0f0f0;
+        }
+
+    </style>
 
 </head>
 

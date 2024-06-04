@@ -24,14 +24,39 @@ class OrdersController extends Controller
         $resultQuery = FoodOrder::with(['tripRequest', 'restaurant', 'items', 'user', 'driver']);
 
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
+//            $tags = json_decode($request->input("tags"), true);
+//            if (!empty($tags)) {
+//                $resultQuery->where(function ($query) use ($tags) {
+//                    foreach ($tags as $tag) {
+//                        $query->orWhere('delivery_address', 'like', "%{$tag}%");
+//                    }
+//                });
+//            }
+
             $tags = json_decode($request->input("tags"), true);
             if (!empty($tags)) {
                 $resultQuery->where(function ($query) use ($tags) {
                     foreach ($tags as $tag) {
-                        $query->orWhere('delivery_address', 'like', "%{$tag}%");
+                        $parts = explode(',', $tag);
+                        $city = trim($parts[0]);
+                        $district = isset($parts[1]) ? trim($parts[1]) : null;
+                        $ward = isset($parts[2]) ? trim($parts[2]) : null;
+
+                        // Kiểm tra nếu quận và phường được chỉ định
+                        if ($district && $ward) {
+                            $output = "$ward, $district, $city";
+                            $query->orWhere('delivery_address', 'like', "%{$output}%");
+                        } elseif ($district) {
+                            // Nếu chỉ có quận được chỉ định
+                            $query->orWhere('delivery_address', 'like', "%{$district}, {$city}%");
+                        } else {
+                            // Nếu chỉ có thành phố được chỉ định
+                            $query->orWhere('delivery_address', 'like', "%{$city}%");
+                        }
                     }
                 });
             }
+
             if ($request->filled('id')) {
                 $resultQuery->where('id', '=', $request->input('id'));
             }

@@ -52,7 +52,13 @@
                                             <input type="hidden" name="tags" id="tags_input"
                                                    value="{{ old('tags', request()->input('tags')) }}">
                                             <input type="text" id="input-tag-search" class="input-tag"
-                                                   placeholder="Tìm kiểm đơn theo tên tỉnh/ thành phố">
+                                                   placeholder="Tìm kiểm chuyến theo tỉnh/thành, quận/huyện, xã/phường kiểm chuyến theo tên tỉnh/ thành phố">
+
+                                            <div id="search-results" class="suggestions"></div>
+                                            <button type="button" style="cursor: pointer"
+                                                    class="btn btn-xs btn-warning btn-choose">
+                                                chọn
+                                            </button>
                                         </div>
                                         <span class="tags-length">0 Thẻ</span>
                                     </div>
@@ -247,12 +253,10 @@
 
     <script type="text/javascript">
         'use strict';
+        let jsonUrl = "{{ asset('json/data.json') }}";
         {{--        var apiTemp = '{{ route("trip.admin.detail.fail", ["service" => ":service", "go_request_id" => ":id"] ) }}';--}}
-
     </script>
-
     {{--    <script src="{{ asset('js/delivery-food-modal.js') }}"></script>--}}
-
     <script>
         setTimeout(() => {
             document.location.reload();

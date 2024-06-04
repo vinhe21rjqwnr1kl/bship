@@ -12,7 +12,7 @@
             $show = '';
         @endphp
 
-        @if(!empty(request()->title) || !empty(request()->category) || !empty(request()->user) || !empty(request()->status) || !empty(request()->from) || !empty(request()->to) || !empty(request()->tag) || !empty(request()->visibility) || !empty(request()->publish_on))
+        @if(!empty(request()->service_type) || !empty(request()->name) || !empty(request()->phone) || !empty(request()->goid) || !empty(request()->progress) || !empty(request()->tags) || !empty(request()->datefrom) || !empty(request()->dateto))
             @php
                 $collapsed = '';
                 $show = 'show';
@@ -52,7 +52,14 @@
                                             <input type="hidden" name="tags" id="tags_input"
                                                    value="{{ old('tags', request()->input('tags')) }}">
                                             <input type="text" id="input-tag-search" class="input-tag"
-                                                   placeholder="Tìm kiểm chuyến theo tên tỉnh/ thành phố">
+                                                   placeholder="Tìm kiểm chuyến theo tỉnh/thành, quận/huyện, xã/phường">
+
+                                            <div id="search-results" class="suggestions"></div>
+                                            <button type="button" style="cursor: pointer"
+                                                    class="btn btn-xs btn-warning btn-choose">
+                                                chọn
+                                            </button>
+
                                         </div>
                                         <span class="tags-length">0 Thẻ</span>
                                     </div>
@@ -69,8 +76,29 @@
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
 
+                                <div class="mb-3 col-md-4">
+                                    <select name="service_type" class="default-select form-control">
+                                        <option value="0">-- Tất cả --</option>
+                                        @for($i = 1; $i <= count($ServicesTypeArr); $i++)
+                                            <option
+                                                {{ request()->input('service_type') == $i ? 'selected="selected"':'' }} value="{{ $i }}">{{ $ServicesTypeArr[$i] }}</option>
+                                        @endfor
+                                        {{--                                        <option--}}
+                                        {{--                                            {{ request()->input('service-type') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>--}}
+                                        {{--                                        <option--}}
+                                        {{--                                            {{ request()->input('service-type') == 1 ? 'selected="selected"':'' }} value="1">{{ $CfGoProcessArr[1] }}</option>--}}
+                                        {{--                                        <option--}}
+                                        {{--                                            {{ request()->input('service-type') == 2 ? 'selected="selected"':'' }} value="2">{{ $CfGoProcessArr[2] }}</option>--}}
+                                        {{--                                        <option--}}
+                                        {{--                                            {{ request()->input('service-type') == 4 ? 'selected="selected"':'' }} value="4">{{ $CfGoProcessArr[4] }}</option>--}}
+                                        {{--                                        <option--}}
+                                        {{--                                            {{ request()->input('service-type') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>--}}
+
+                                    </select>
+                                </div>
+
+                                <div class="mb-3 col-md-4">
                                     <select name="progress" class="default-select form-control">
                                         <option value="0">-- Tất cả --</option>
                                         <option
@@ -160,13 +188,13 @@
                                         <td>
                                             <strong>Tổng:</strong> {{ number_format($page->cost - $page->discount_from_code) }}
                                             <br><strong>Tài
-                                                xế:</strong>{{ number_format($page->butl_cost  +  $page->service_cost ) }}
+                                                xế:</strong> {{ number_format($page->butl_cost  +  $page->service_cost ) }}
                                             <br><strong>Đại
-                                                lý:</strong>{{ number_format($page->driver_cost - $page->service_cost) }}
-                                            <br><strong>Bảo hiểm:</strong>{{ number_format($page->service_cost) }}
-                                            <br><strong>VAT:</strong>{{ number_format($page->money_vat) }}
+                                                lý:</strong> {{ number_format($page->driver_cost - $page->service_cost) }}
+                                            <br><strong>Bảo hiểm:</strong> {{ number_format($page->service_cost) }}
+                                            <br><strong>VAT:</strong> {{ number_format($page->money_vat) }}
                                             <br><strong>Khuyến
-                                                mại:</strong>{{ number_format($page->discount_from_code) }}
+                                                mại:</strong> {{ number_format($page->discount_from_code) }}
                                         </td>
                                         <td>
                                             @if($page->payment_status == "PAID")
@@ -290,9 +318,13 @@
 
     <script type="text/javascript">
         'use strict';
-        setTimeout(() => {
-            document.location.reload();
-        }, 60000);
+
+        let jsonUrl = "{{ asset('json/data.json') }}";
+
+        // setTimeout(() => {
+        //     document.location.reload();
+        // }, 60000);
+
         var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
     </script>
 

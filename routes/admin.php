@@ -17,7 +17,6 @@ use \App\Http\Controllers\Admin\PointController;
 |
 */
 
-
 Route::middleware(['auth:sanctum', 'verified'])->prefix('admin')->group(function () {
 	Route::get('/', [DashboardController::class, 'dashboard']);
 	Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
@@ -71,10 +70,11 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
     Route::post('/user/store-add-points', [PointController::class, 'storeAddPoint'])->name('admin.point.add.store');
     Route::get('/user/give-points', [PointController::class, 'givePoint'])->name('admin.point.give');
     Route::post('/user/store-give-points', [PointController::class, 'storeGivePoint'])->name('admin.point.give.store');
+
+    Route::get('/user/points', [PointController::class, 'point_list'])->name('admin.point.list');
     Route::get('/user/log-points', [PointController::class, 'log'])->name('admin.point.log');
-
-
-
-
+    Route::get('/user/point-request', [PointController::class, 'point_list_request'])->name('admin.point.list-request');
+    Route::post('/user/point/accept/{id}', [PointController::class, 'handleAcceptRequest'])->name('admin.point.handle-accept');
+    Route::post('/user/point/remove/{id}', [PointController::class, 'handleRemoveRequest'])->name('admin.point.handle-remove');
 
 });

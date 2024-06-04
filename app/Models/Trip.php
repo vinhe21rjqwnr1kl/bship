@@ -37,7 +37,8 @@ class Trip extends Model
         'discount_from_code',
         'service_cost',
         'feedback',
-        'is_show_app'
+        'is_show_app',
+        'money_vat'
 
 	];
 

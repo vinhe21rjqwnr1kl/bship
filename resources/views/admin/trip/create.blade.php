@@ -112,8 +112,17 @@
 											</p>
 										@enderror
 									</div>
-									
-									
+                                    <div class="form-group col-md-4">
+                                        <label for="vat_money">Tiền VAT</label>
+                                        <input type="text" name="vat_money" class="form-control" id="vat_money" placeholder="" value="{{ old('vat_money') }}">
+                                        @error('vat_money')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+
+
 									<div class="col-md-12">
 										<button type="submit" class="btn btn-primary">Thêm</button>
 									</div>
@@ -121,12 +130,12 @@
 							</div>
 						</div>
 					</div>
-		
+
 				</div>
-			</div>	
-			
 			</div>
-		</div>
+
+			</div>
+{{--		</div>--}}
 	</form>
 </div>
 

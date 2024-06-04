@@ -21,6 +21,11 @@ if(!function_exists('pr')){
     }
 }
 
+//Route::get('/', function() {
+//  return redirect()->route('web.home');
+//});
+
+
 require __DIR__.'/acl.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/driver.php';
