@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Voucher extends Model
 {
@@ -30,5 +31,11 @@ class Voucher extends Model
 	{
 	    return $this->belongsToMany(User::class, 'model_has_roles', 'model_id', 'role_id');
 	}
- 
+
+    public function services_detail() : BelongsTo {
+        return $this->belongsTo(CfServiceDetail::class, 'services_detail_id');
+    }
+
+
+
 }

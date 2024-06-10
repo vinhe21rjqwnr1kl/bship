@@ -105,7 +105,7 @@ class OrdersController extends Controller
 
         if ($driveData["agency_id"] > 0) {
             $resultQuery->whereHas('driver', function ($query) use ($driveData) {
-                $query->where('driver.agency_id', '=', $driveData["agency_id"]);
+                $query->where('agency_id', '=', $driveData["agency_id"]);
 
             });
         }

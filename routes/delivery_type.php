@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/delivery-type')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/delivery-type')->group(function () {
     Route::get('/', [DeliveryTypeController::class, 'admin_index'])->name('delivery_type.admin.index');
     Route::get('/create', [DeliveryTypeController::class, 'admin_create'])->name('delivery_type.admin.create');
     Route::get('/edit/{id}', [DeliveryTypeController::class, 'admin_edit'])->name('delivery_type.admin.edit');

@@ -25,16 +25,18 @@
                     <span class="accordion-header-indicator"></span>
                 </div>
                 <div class="card-body collapse accordion__body {{ $show }}" id="rounded-search-sec" data-bs-parent="#search-sec-outer">
-                    {{ Form::model(request()->all(), array('route' => array('admin.voucher.index'), 'method' => 'get')) }}
+                    {{ Form::model(request()->all(), array('route' => array('admin.voucher.listused'), 'method' => 'get')) }}
                         <input type="hidden" name="todo" value="Filter">
                         <div class="row">
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
                                 {{ Form::text('discount_code', null, array('class' => 'form-control', 'placeholder' => __('Mã khuyến mại'))) }}
                             </div>
-                          
-              
+
+
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">
-                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2"> <a href="{{ route('admin.voucher.index') }}" class="btn btn-danger">Nhập Lại</a>
+                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
+                                <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+                                <a href="{{ route('admin.voucher.listused') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>
                         </div>
                     {{ Form::close() }}
@@ -66,7 +68,7 @@
                                     <th> <strong> Ngày dùng </strong> </th>
                                     <th> <strong> Khách hàng </strong> </th>
                                     <th> <strong> Tài xế </strong> </th>
-                                    <th> <strong> Giá trị</strong> </th>                                
+                                    <th> <strong> Giá trị</strong> </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,17 +86,17 @@
                                         <strong>Tên:</strong> {{$voucher->user_name09}}
 										<br><strong>SĐT:</strong> {{$voucher->user_phone09}}</br>
                                     </td>
-                                    <td> 
+                                    <td>
 										<strong>Tên:</strong> {{$voucher->driver_name}}
 										<br><strong>SĐT:</strong> {{$voucher->driver_phone}}
 								    </td>
-                                    <td><strong>Tổng:</strong> {{ number_format($voucher->cost) }} 
-											<br><strong>Tài xế:</strong>{{ number_format($voucher->butl_cost) }} 
-											<br><strong>Đại lý:</strong>{{ number_format($voucher->driver_cost) }} 
-                                            <br><strong>Bảo hiểm:</strong>{{ number_format($voucher->service_cost) }} 
-                                            <br><strong>Khuyến mại:</strong>{{ number_format($voucher->discount_from_code) }} 
+                                    <td><strong>Tổng:</strong> {{ number_format($voucher->cost) }}
+											<br><strong>Tài xế:</strong>{{ number_format($voucher->butl_cost) }}
+											<br><strong>Đại lý:</strong>{{ number_format($voucher->driver_cost) }}
+                                            <br><strong>Bảo hiểm:</strong>{{ number_format($voucher->service_cost) }}
+                                            <br><strong>Khuyến mại:</strong>{{ number_format($voucher->discount_from_code) }}
 										</td>
-                             
+
                                 </tr>
                                 @empty
                                     <tr>

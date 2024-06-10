@@ -12,7 +12,7 @@ use \App\Http\Controllers\Admin\LogAddMoneyController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/log-add-money')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/log-add-money')->group(function () {
     Route::get('/cashout', [LogAddMoneyController::class, 'cashoutIndex'])->name('log_add_money.admin.cashout');
     Route::get('/cashout/accept/{id}', [LogAddMoneyController::class, 'cashoutAccept'])->name('log_add_money.admin.cashout.accept');
     Route::get('/cashout/reject/{id}', [LogAddMoneyController::class, 'cashoutReject'])->name('log_add_money.admin.cashout.reject');

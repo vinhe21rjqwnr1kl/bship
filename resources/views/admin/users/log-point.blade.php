@@ -55,6 +55,8 @@
                                     <th> <strong> {{ __('common.s_no') }} </strong> </th>
                                     <th> <strong> SĐT </strong> </th>
                                     <th> <strong> Điểm giao dịch </strong> </th>
+                                    <th> <strong> Điểm trước </strong> </th>
+                                    <th> <strong> Điểm sau </strong> </th>
 {{--                                    <th> <strong> Điểm sở hữu </strong> </th>--}}
                                     <th> <strong> Lý do </strong> </th>
                                     <th> <strong> Ngày tạo </strong> </th>
@@ -70,6 +72,12 @@
                                         <td> {{ $log->user_data->phone }} </td>
                                         <td>
                                             <span class="badge badge-primary">{{ $log->point }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-primary">{{ $log->current_point }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-primary">{{ $log->new_point }}</span>
                                         </td>
 {{--                                        <td>--}}
 {{--                                            <span class="badge badge-primary">{{ $log->user_data->points }}</span>--}}

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
+use App\Exports\ExportVoucherUsed;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -59,7 +60,7 @@ class VoucherController extends Controller
         if($request->input('excel')=="Excel")
         {
             $response = Excel::download(new ExportVoucher($request), 'dskhuyenmai.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-            ob_end_clean();
+            if (ob_get_contents()) ob_end_clean();
             return $response;
         }
 
@@ -245,6 +246,14 @@ class VoucherController extends Controller
         'user_driver_data.phone as driver_phone',
         'user_data.name as user_name09',
         'user_data.phone as user_phone09');
+
+        if($request->input('excel')=="Excel")
+        {
+            $response = Excel::download(new ExportVoucherUsed($request), 'dskhuyenmaidasudung.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            if (ob_get_contents()) ob_end_clean();
+            return $response;
+        }
+
         $vouchers = $resultQuery->paginate(config('Reading.nodes_per_page'));
         return view('admin.voucher.listused', compact('vouchers','ServicesArr','ServicesTypeArr','page_title'));
     }

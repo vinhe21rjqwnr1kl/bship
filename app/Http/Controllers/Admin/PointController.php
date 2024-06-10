@@ -273,6 +273,13 @@ class PointController extends Controller
             });
         }
 
+        //check thuoc dai ly
+        $current_user = auth()->user();
+        $current_user_agency = $current_user->agency_id;
+        if ($current_user_agency > 0) {
+            $resultQuery->where('agency_id', '=', $current_user_agency);
+        }
+
         $sortBy = $request->get('sort') ? $request->get('sort') : 'created_at';
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $resultQuery->orderBy($sortBy, $direction);
@@ -299,10 +306,11 @@ class PointController extends Controller
             });
         }
 
+        //check thuoc dai ly
         $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
-        if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+        $current_user_agency = $current_user->agency_id;
+        if ($current_user_agency > 0) {
+            $resultQuery->where('agency_id', '=', $current_user_agency);
         }
 
         $resultQuery->where('status', '=', "0");
@@ -333,10 +341,11 @@ class PointController extends Controller
             });
         }
 
+        //check thuoc dai ly
         $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
-        if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+        $current_user_agency = $current_user->agency_id;
+        if ($current_user_agency > 0) {
+            $resultQuery->where('agency_id', '=', $current_user_agency);
         }
 
         $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
@@ -376,26 +385,36 @@ class PointController extends Controller
             $admin = auth()->user()->email;
 
             if (!empty($toUser)) {
+                $toUsercurrentPoint = $toUser->points;
+                $toUsernewPoint = $toUser->points + $log->point;
                 $toUser->points += $log->point;
                 $toUser->save();
 
                 if (!empty($fromUser)) {
+                    $fromUsercurrentPoint = $fromUser->points;
+                    $fromUsernewPoint = $fromUser->points - $log->point;
                     LogPoint::create([
                         'user_data_id' => $fromUser->id,
                         'point' => -$log->point,
+                        'current_point' => $fromUsercurrentPoint,
+                        'new_point' => $fromUsernewPoint,
                         'reason' => 'Chuyển cho người dùng ' . $toUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
                         'created_at' => date('Y-m-d H:i:s'),
                     ]);
                     LogPoint::create([
                         'user_data_id' => $toUser->id,
-                        'point' => $log->point,
+                        'point' => +$log->point,
+                        'current_point' => $toUsercurrentPoint,
+                        'new_point' => $toUsernewPoint,
                         'reason' => 'Nhận từ người dùng ' . $fromUser->phone . '. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
                         'created_at' => date('Y-m-d H:i:s')
                     ]);
                 } else {
                     LogPoint::create([
                         'user_data_id' => $toUser->id,
-                        'point' => $log->point,
+                        'point' => +$log->point,
+                        'current_point' => $toUsercurrentPoint,
+                        'new_point' => $toUsernewPoint,
                         'reason' => 'Tặng điểm từ ADMIN. ADMIN giao dịch: ' . $admin . '. Lời nhắn: ' . ($log->reason ?? 'Không có'),
                         'created_at' => date('Y-m-d H:i:s'),
                     ]);

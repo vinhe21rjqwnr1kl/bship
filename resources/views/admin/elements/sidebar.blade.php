@@ -53,10 +53,10 @@
                         <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
                     </ul>
                 </li>
-                {{--                <li>--}}
+                <li>
 
-            @else
-                <!--  Đại lý BUÔN MA THUỘT -->
+                    @else
+                        <!--  Đại lý BUÔN MA THUỘT -->
                 @if($agency_id ==6 || ($agency_id == 0 && $role_id ==1))
                     <li class="nav-label">Thông tin ( THANH HÀ )</li>
                     <li>
@@ -110,7 +110,7 @@
                     </li>
                 @endif
                 <!--  Đại lý BUÔN MA THUỘT -->
-                @if($agency_id !=3 && $role_id !== 8 && $role_id !== null )
+                @if($agency_id !=3 && $role_id !== null )
 
                     <li class="nav-label">Thông tin</li>
                     <li>
@@ -119,94 +119,133 @@
                             <span class="nav-text">Chuyến đi</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('trip.admin.index',0) }}"> Danh sách chuyến đi</a></li>
-                            <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách xe ôm Vinfast</a></li>
-                            <li><a href="{{ route('trip.admin.index',7) }}"> Danh sách chuyến (giao đồ ăn)</a></li>
-                            <li><a href="{{ route('trip.admin.index',6) }}"> Danh sách chuyến (giao hàng)</a></li>
-                            <li><a href="{{ route('trip.admin.cancel') }}">Danh sách chuyến huỷ</a></li>
-                            <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
-                            <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
+                            @can('Controllers > TripController > admin_index')
+                                <li><a href="{{ route('trip.admin.index',0) }}"> Danh sách chuyến đi</a></li>
+                                <li><a href="{{ route('trip.admin.index',3) }}"> Danh sách xe ôm Vinfast</a></li>
+                                <li><a href="{{ route('trip.admin.index',7) }}"> Danh sách chuyến (giao đồ ăn)</a></li>
+                                <li><a href="{{ route('trip.admin.index',6) }}"> Danh sách chuyến (giao hàng)</a></li>
+                            @endcan
+                            @can('Controllers > TripController > admin_cancel')
+                                <li><a href="{{ route('trip.admin.cancel') }}">Danh sách chuyến huỷ</a></li>
+                            @endcan
+                            @can('Controllers > TripController > admin_fail')
+                                <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
+                            @endcan
+                            @can('Controllers > TripController > admin_create')
+                                <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
+                            @endcan
                         </ul>
                     </li>
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-381-push-pin"></i>
-                            <span class="nav-text">Đơn hàng</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ route('orders.admin.index') }}"> Danh sách đơn hàng </a></li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Pending']) }}"> Chưa giải quyết </a>
-                            </li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Confirmed']) }}"> Đã xác nhận </a>
-                            </li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Delivered']) }}"> Đã giao hàng </a>
-                            </li>
-                            <li><a href="{{ route('orders.admin.index', ['status'=>'Cancelled']) }}"> Đã hủy bỏ </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-049-copy"></i>
-                            <span class="nav-text">Tài xế</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ route('driver.admin.index') }}"> Danh sách tài xế</a></li>
-                            <li><a href="{{ route('driver.admin.create') }}">Thêm tài xế</a></li>
-                            <li><a href="{{ route('driver.admin.warn') }}"> Tài xế sắp hết tiền</a></li>
-                            <li><a href="{{ route('driver.admin.online') }}">Tài xế online</a></li>
-                            <li><a href="{{ route('driver.admin.onlinemap') }}">Tài xế online (map)</a></li>
-                            <li><a href="{{ route('driver.admin.log') }}">Tra cứu tiền</a></li>
+                    @can('Controllers > OrdersController > admin_index')
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-381-push-pin"></i>
+                                <span class="nav-text">Đơn hàng</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('orders.admin.index') }}"> Danh sách đơn hàng </a></li>
+                                <li><a href="{{ route('orders.admin.index', ['status'=>'Pending']) }}"> Chưa giải
+                                        quyết </a>
+                                </li>
+                                <li><a href="{{ route('orders.admin.index', ['status'=>'Confirmed']) }}"> Đã xác
+                                        nhận </a>
+                                </li>
+                                <li><a href="{{ route('orders.admin.index', ['status'=>'Delivered']) }}"> Đã giao
+                                        hàng </a>
+                                </li>
+                                <li><a href="{{ route('orders.admin.index', ['status'=>'Cancelled']) }}"> Đã hủy bỏ </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endcan
+                    @can('Controllers > DriverController > admin_index')
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-049-copy"></i>
+                                <span class="nav-text">Tài xế</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('driver.admin.index') }}"> Danh sách tài xế</a></li>
+                                <li><a href="{{ route('driver.admin.create') }}">Thêm tài xế</a></li>
+                                <li><a href="{{ route('driver.admin.warn') }}"> Tài xế sắp hết tiền</a></li>
+                                <li><a href="{{ route('driver.admin.online') }}">Tài xế online</a></li>
+                                <li><a href="{{ route('driver.admin.onlinemap') }}">Tài xế online (map)</a></li>
+                                <li><a href="{{ route('driver.admin.log') }}">Tra cứu tiền</a></li>
+                            </ul>
+                        </li>
+                    @endcan
+                    @can('Controllers > DriverController > admin_index')
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-088-tools"></i>
+                                <span class="nav-text">Nạp tiền tài xế</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                @can('Controllers > DriverController > payment')
+                                    <li><a href="{{ route('driver.admin.payment') }}">Danh sách yêu cầu</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > payment_create')
+                                    <li><a href="{{ route('driver.admin.payment_create') }}">Tạo yêu cầu</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > payment_approve')
+                                    <li><a href="{{ route('driver.admin.payment_approve') }}">Danh sách cần duyệt</a>
+                                    </li>
+                                @endcan
+                                @can('Controllers > DriverController > payment_log')
+                                    <li><a href="{{ route('driver.admin.payment_log') }}">Lịch sử nạp tiền</a></li>
+                                @endcan
 
-
-                        </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-088-tools"></i>
-                            <span class="nav-text">Nạp tiền tài xế</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ route('driver.admin.payment') }}">Danh sách yêu cầu</a></li>
-                            <li><a href="{{ route('driver.admin.payment_create') }}">Tạo yêu cầu</a></li>
-                            @if($role_id == 1 or $role_id == 2 )
-
-                                <li><a href="{{ route('driver.admin.payment_approve') }}">Danh sách cần duyệt</a></li>
-                                <li><a href="{{ route('driver.admin.payment_log') }}">Lịch sử nạp tiền</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    @if($role_id ==1 || $role_id ==2 || $role_id ==3 || $role_id ==8)
-                        {{--                    @if($role_id ==1 && $agency_id==0)--}}
+                            </ul>
+                        </li>
+                    @endcan
+                    @can('Controllers > UsersController > index')
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <i class="flaticon-049-copy"></i>
                                 <span class="nav-text">Khách hàng</span>
                             </a>
                             <ul aria-expanded="false">
-
-                                @if($role_id ==1 || $role_id ==2)
+                                @can('Controllers > UsersController > indexbutl')
                                     <li><a href="{{ route('admin.usersbutl.index') }}"> Danh sách</a></li>
+                                @endcan
+                                @can('Controllers > PointController > log')
                                     <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
+                                @endcan
+                                @can('Controllers > PointController > point_list_request')
                                     <li><a href="{{ route('admin.point.list-request') }}"> Danh sách cần duyệt </a></li>
-                                @endif
-                                <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
-                                <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
-                                <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>
+                                @endcan
+                                {{--                                @endif--}}
+                                @can('Controllers > PointController > point_list')
+                                    <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
+                                @endcan
+                                @can('Controllers > PointController > addPoint')
+                                    <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
+                                @endcan
+                                @can('Controllers > PointController > givePoint')
+                                    <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>
+                                @endcan
                             </ul>
                         </li>
-                    @endif
+                    @endcan
 
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-049-copy"></i>
-                            <span class="nav-text">Nạp/rút tiền</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ route('log_add_money.admin.cashout') }}"> Yêu cầu rút tiền </a></li>
-                            <li><a href="{{ route('log_add_money.admin.cashin') }}"> Yêu cầu nạp tiền </a></li>
-                        </ul>
-                    </li>
+                    @can('Controllers > LogAddMoneyController > cashoutIndex')
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-049-copy"></i>
+                                <span class="nav-text">Nạp/rút tiền</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                @can('Controllers > LogAddMoneyController > cashoutIndex')
+                                    <li><a href="{{ route('log_add_money.admin.cashout') }}"> Yêu cầu rút tiền </a>
+                                    </li>
+                                @endcan
+                                @can('Controllers > LogAddMoneyController > cashinIndex')
+                                    <li><a href="{{ route('log_add_money.admin.cashin') }}"> Yêu cầu nạp tiền </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
 
                     <li class="nav-label">Thông tin đặt lịch</li>
                     <li>
@@ -221,7 +260,6 @@
                             <li><a href="{{ route('booking.admin.image') }}">Danh sách hình ảnh</a></li>
                         </ul>
                     </li>
-
 
                     @if($role_id ==1)
                         <li class="nav-label">Cài đặt quản lý</li>
@@ -243,7 +281,8 @@
                                 <span class="nav-text">Cài đặt vận chuyển</span>
                             </a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('delivery_size.admin.index') }}">Danh sách kích thước sản phẩm vận
+                                <li><a href="{{ route('delivery_size.admin.index') }}">Danh sách kích thước sản phẩm
+                                        vận
                                         chuyển</a></li>
                                 <li><a href="{{ route('delivery_type.admin.index') }}">Danh sách loại vận chuyển</a>
                                 </li>
@@ -260,7 +299,8 @@
                                 <li><a href="{{ route('price.admin.group') }}">Danh sách nhóm</a></li>
                                 <li><a href="{{ route('price.admin.gservice') }}">Nhóm - dịch vụ</a></li>
                                 <li><a href="{{ route('price.admin.detailservice') }}">Dịch vụ cha -> con</a></li>
-                                <li><a href="{{ route('price.admin.agencyservice') }}">Cài đặt dv cho đại lý</a></li>
+                                <li><a href="{{ route('price.admin.agencyservice') }}">Cài đặt dv cho đại lý</a>
+                                </li>
                                 <li><a href="{{ route('price.admin.cityservice') }}">Mở dv theo thành phố</a></li>
                             </ul>
                         </li>
@@ -284,14 +324,12 @@
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
                                         <a href="{{ route('admin.voucher.index') }}">Danh sách</a>
                                     </li>
-
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'create') ? 'mm-active' : '' }}">
                                         <a href="{{ route('admin.voucher.create') }}">Thêm khuyến mại</a>
                                     </li>
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'create') ? 'mm-active' : '' }}">
                                         <a href="{{ route('admin.voucher.listused') }}">Khuyến mại đã dùng</a>
                                     </li>
-
                                 </ul>
                             </li>
                         @endif
@@ -315,7 +353,6 @@
                                         <a href="{{ route('custumer.admin.notifirebase') }}">Thông báo quảng cáo</a>
                                     </li>
                                 </ul>
-
                             </li>
                             <li>
                                 <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -330,7 +367,6 @@
                                         <a href="{{ route('custumer.admin.bannercreate') }}">Thêm banner</a>
                                     </li>
                                 </ul>
-
                             </li>
                         @endif
                         <li class="nav-label">Cài đặt đại lý</li>
@@ -344,6 +380,12 @@
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
 
                                         <a href="{{ route('admin.users.index') }}">Danh sách tài khoản</a>
+                                    </li>
+                                @endcan
+                                @can('Controllers > UsersController > index')
+                                    <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
+
+                                        <a href="{{ route('admin.users.vendor') }}">Danh sách cửa hàng</a>
                                     </li>
                                 @endcan
                                 @can('Controllers > UsersController > create')
@@ -375,11 +417,13 @@
                                 @can('Controllers > UsersController > index')
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
 
-                                        <a href="{{ route('booking.admin.supplier') }}">Danh sách đại lý đặt lịch</a>
+                                        <a href="{{ route('booking.admin.supplier') }}">Danh sách đại lý đặt
+                                            lịch</a>
                                     </li>
                                     <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
 
-                                        <a href="{{ route('booking.admin.suppliercreate') }}">Thêm đại lý đặt lịch</a>
+                                        <a href="{{ route('booking.admin.suppliercreate') }}">Thêm đại lý đặt
+                                            lịch</a>
                                     </li>
                                 @endcan
                             </ul>
@@ -468,20 +512,6 @@
                             </li>
                         @endif
                     @endif
-                @elseif($role_id === 8)
-
-                    <li class="nav-label">Thông tin</li>
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-381-push-pin"></i>
-                            <span class="nav-text">Chuyến đi</span>
-                        </a>
-                        <ul aria-expanded="false">
-
-                            <li><a href="{{ route('trip.admin.cancel') }}">Danh sách chuyến huỷ</a></li>
-                            <li><a href="{{ route('trip.admin.fail') }}">Danh sách tìm thất bại</a></li>
-                        </ul>
-                    </li>
                 @endif
             @endif
 

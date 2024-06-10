@@ -136,9 +136,9 @@
                             <div class="row border-top mt-3">
                                 <div class="mt-3">
                                     {{--                                    <button class="btn btn-success">Cập nhật</button>--}}
-                                    @can('Controllers > UsersController > create')
+{{--                                    @can('Controllers > UsersController > create')--}}
                                         <button type="submit" class="btn btn-primary">{{ __('Cập nhật') }}</button>
-                                    @endcan
+{{--                                    @endcan--}}
                                 </div>
                             </div>
                         </div>

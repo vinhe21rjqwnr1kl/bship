@@ -652,9 +652,18 @@ class PriceController extends Controller
     {
 
         $page_title = __('Cập nhật Cache');
+        $body = [
+            "cmd" =>"doReloadConfig",
+            "data" => ""
+        ];
+
+        $urlReloadService = env("URL_API_USER") . "ButlAppServlet/app/services";
+        $urlReloadConfig = env("URL_API_SOCKET") . "api/v1/web/reloadConfig";
+
+        $response = Http::post($urlReloadService, $body);
+        $response2 = Http::get($urlReloadConfig);
 
         return view('admin.price.cache', compact('page_title'));
-
     }
 
     /**
@@ -789,13 +798,13 @@ class PriceController extends Controller
             'name' => 'required',
             'is_show' => 'required',
             'is_active' => 'required',
-            'policy_content' => 'required',
+//            'policy_content' => 'required',
         ];
         $validationMsg = [
             'name.required' => __('Không để trống.'),
             'is_show.required' => __('Không để trống.'),
             'is_active.required' => __('Không để trống.'),
-            'policy_content.required' => __('Không để trống.'),
+//            'policy_content.required' => __('Không để trống.'),
         ];
         $this->validate($request, $validation, $validationMsg);
         $CfServiceMain = CfServiceType::findorFail($id);

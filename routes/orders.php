@@ -13,7 +13,7 @@ use \App\Http\Controllers\Admin\TransactionsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/orders')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/orders')->group(function () {
     Route::get('/{status?}', [OrdersController::class, 'admin_index'])->name('orders.admin.index');
     Route::get('{id}/details', [OrdersController::class, 'admin_details'])->name('orders.admin.details');
     Route::post('{id}/update', [OrdersController::class, 'admin_update'])->name('orders.admin.update');

@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')->group(function () {
 
 
 	/*Route for configurations*/
@@ -41,7 +41,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin')->group(function
 });
 
 Route::controller(HomeController::class)->group(function () {
-	
+
 	try {
 		if(Schema::hasTable('configurations'))
 		{
@@ -49,19 +49,19 @@ Route::controller(HomeController::class)->group(function () {
 			$rewritereplace = config('menu.permalink_structure_rewritecode');
 			$rewritecode 	= config('menu.permalink_structure');
 			$link 			= str_replace( $rewritecode, $rewritereplace, $permalink );
-			
+
 			if(empty($link) || Str::contains(URL::current(), 'install'))
 			{
 				$link = '/';
 			}
-			
+
 		    $pageLink = '/{slug}';
 
 		    if(empty($permalink) || Str::contains(URL::current(), 'install'))
 		    {
 		    	$pageLink = '?page_id={page_id?}';
 		    }
-		    
+
 		    Route::get('/category/{slug?}', 'blogcategory')->name('permalink.category_action');
 			Route::get('/author/{name?}', 'author')->name('permalink.author_action');
 			Route::get('/tag/{slug?}', 'blogtag')->name('permalink.blogtag_action');
@@ -71,7 +71,7 @@ Route::controller(HomeController::class)->group(function () {
 			Route::match(['get','post'],'/contact', 'contact')->name('front.contact');
 
 			Route::match(['get','post'],'/', 'all')->name('permalink.action');
-		    
+
 		   	Route::match(['get','post'],$pageLink, 'detail')->name('permalink.page_action');
 			if ($link != '/' || $_GET || $_POST ) {
 		   		Route::match(['get','post'],$link, 'detail')->name('permalink.action');
@@ -79,8 +79,8 @@ Route::controller(HomeController::class)->group(function () {
 
 		}
 	} catch (Exception $e) {
-            
-    }	
 
-	
+    }
+
+
 });

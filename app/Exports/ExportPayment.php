@@ -21,7 +21,7 @@
     public function collection()
     {
 
-        $request = $this->request  ;  
+        $request = $this->request  ;
 
 
         $resultQuery            = LogAddMoney::query();
@@ -48,7 +48,7 @@
         'log_add_money.reason',
         'log_add_money.time'
         );
-        //check tai xe thuoc dai ly 
+        //check tai xe thuoc dai ly
         $current_user 	= auth()->user();
         $driveData["agency_id"]   = $current_user->agency_id;
 
@@ -63,6 +63,6 @@
         return ["Mã nạp tiền", "Tên TX", "SĐT TX", "Tiền", "Tiền hiện tại",  "Tiền sau khi thay đổi ",  "Lí do ",  "Thời gian "];
     }
 }
-?>
+
 
 

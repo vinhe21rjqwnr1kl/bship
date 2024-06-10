@@ -16,9 +16,12 @@ class LogAddMoneyController extends Controller
         $page_title = __('Danh sách yêu cầu rút tiền');
 
         $resultQuery = LogAddMoneyCashout::query();
+//      check tai xe thuoc dai ly
+        $current_user = auth()->user();
+        $driveData["agency_id"] = $current_user->agency_id;
 
         $resultQuery->with(['user_data', 'user_driver_data'])
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request, $driveData) {
                 $query->where(function ($subQuery) use ($request) {
                     $subQuery->whereHas('user_data', function ($userDataQuery) use ($request) {
                         $userDataQuery->where('user_type', 1); // Check if user_type is 1 (customer)
@@ -32,9 +35,12 @@ class LogAddMoneyController extends Controller
                             });
                         }
                     });
-                })->orWhere(function ($subQuery) use ($request) {
-                    $subQuery->whereHas('user_driver_data', function ($userDriverDataQuery) use ($request) {
+                })->orWhere(function ($subQuery) use ($request, $driveData) {
+                    $subQuery->whereHas('user_driver_data', function ($userDriverDataQuery) use ($request, $driveData) {
                         $userDriverDataQuery->where('user_type', 2); // Check if user_type is 2 (driver)
+                        if ($driveData["agency_id"] > 0) {
+                            $userDriverDataQuery->where('agency_id', '=', $driveData["agency_id"]);
+                        }
                         if ($request->filled('phone')) {
                             $userDriverDataQuery->where('phone', 'like', "%{$request->input('phone')}%");
                         }
@@ -48,12 +54,6 @@ class LogAddMoneyController extends Controller
                 });
             });
 
-        //check tai xe thuoc dai ly
-        $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
-        if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
-        }
         $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $resultQuery->orderBy($sortBy, $direction);
@@ -67,9 +67,12 @@ class LogAddMoneyController extends Controller
         $page_title = __('Danh sách yêu cầu nạp tiền');
 
         $resultQuery = LogAddMoneyCashin::query();
+//      check tai xe thuoc dai ly
+        $current_user = auth()->user();
+        $driveData["agency_id"] = $current_user->agency_id;
 
         $resultQuery->with(['user_data', 'user_driver_data'])
-            ->where(function ($query) use ($request) {
+            ->where(function ($query) use ($request,$driveData) {
                 $query->where(function ($subQuery) use ($request) {
                     $subQuery->whereHas('user_data', function ($userDataQuery) use ($request) {
                         $userDataQuery->where('user_type', 1); // Check if user_type is 1 (customer)
@@ -83,9 +86,12 @@ class LogAddMoneyController extends Controller
                             });
                         }
                     });
-                })->orWhere(function ($subQuery) use ($request) {
-                    $subQuery->whereHas('user_driver_data', function ($userDriverDataQuery) use ($request) {
+                })->orWhere(function ($subQuery) use ($request,$driveData) {
+                    $subQuery->whereHas('user_driver_data', function ($userDriverDataQuery) use ($request,$driveData) {
                         $userDriverDataQuery->where('user_type', 2); // Check if user_type is 2 (driver)
+                        if ($driveData["agency_id"] > 0) {
+                            $userDriverDataQuery->where('agency_id', '=', $driveData["agency_id"]);
+                        }
                         if ($request->filled('phone')) {
                             $userDriverDataQuery->where('phone', 'like', "%{$request->input('phone')}%");
                         }
@@ -99,12 +105,6 @@ class LogAddMoneyController extends Controller
                 });
             });
 
-        //check tai xe thuoc dai ly
-        $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
-        if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
-        }
         $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $resultQuery->orderBy($sortBy, $direction);

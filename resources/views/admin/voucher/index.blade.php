@@ -36,7 +36,7 @@
                             </div>
 
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-6 text-sm-end">
-{{--                                 <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2"> --}}
+                                 <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
                                 <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
                                  <a href="{{ route('admin.voucher.index') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>

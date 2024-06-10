@@ -26,6 +26,7 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
 
 	/*Route for users*/
 	Route::get('/users', [UsersController::class, 'index'])->name('admin.users.index');
+	Route::get('/users-vendor', [UsersController::class, 'index_vendor'])->name('admin.users.vendor');
 	Route::get('/users/create', [UsersController::class, 'create'])->name('admin.users.create');
 	Route::post('/users/store', [UsersController::class, 'store'])->name('admin.users.store');
 	Route::get('/users/edit/{id}', [UsersController::class, 'edit'])->name('admin.users.edit');

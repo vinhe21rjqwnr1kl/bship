@@ -28,7 +28,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $page_title = __('Danh sách tài khoản');
-        $resultQuery = User::query();
+        $resultQuery = User::query()->whereHas('roles');
 
         if($request->filled('name')) {
             $resultQuery->where('name', 'like', "%{$request->input('name')}%");
@@ -55,6 +55,36 @@ class UsersController extends Controller
         return view('admin.users.index', compact('users', 'roleArr','page_title'));
     }
 
+    public function index_vendor(Request $request) {
+        $page_title = __('Danh sách tài khoản cửa hàng');
+        $resultQuery = User::query()->with('roles')->whereDoesntHave('roles');
+
+        if($request->filled('name')) {
+            $resultQuery->where('name', 'like', "%{$request->input('name')}%");
+        }
+
+        if($request->filled('email')) {
+            $resultQuery->where('email', 'like', "%{$request->input('email')}%");
+        }
+
+        if($request->filled('role'))
+        {
+            $resultQuery->whereHas('roles', function($query) use($request) {
+                $query->where('id', '=', $request->input('role'));
+            });
+        }
+
+        $sortBy = $request->get('sort') ? $request->get('sort') : 'id';
+        $direction = $request->get('direction') ? $request->get('direction') : 'desc';
+        $resultQuery->orderBy($sortBy, $direction);
+
+        $users = $resultQuery->paginate(config('Reading.nodes_per_page'));
+
+        $roleArr = UserRole::pluck('name', 'id')->prepend(__('Nhóm'),'');
+        return view('admin.users.index-vendor', compact('users', 'roleArr','page_title'));
+
+    }
+
     /**
      * Show the form for creating a new user.
      *
@@ -63,7 +93,7 @@ class UsersController extends Controller
     public function create()
     {
         $page_title = __('Tạo tài khoản');
-        $roles = Role::get();
+        $roles = Role::get()->except([1]);
         $agencys = Agency::get();
         return view('admin.users.create', compact('roles','agencys','page_title'));
     }
@@ -126,7 +156,7 @@ class UsersController extends Controller
     {
         $page_title = __('Thay đổi thông tin');
         $user = User::findorFail($id);
-        $roles = Role::get();
+        $roles = Role::get()->except([1]);
         $userRoles = User::get_roles($id);
         $agencys = Agency::get();
 

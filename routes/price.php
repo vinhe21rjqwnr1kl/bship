@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\PriceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/price')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/price')->group(function () {
     //giá theo kilomet
     Route::get('/km', [PriceController::class, 'admin_km'])->name('price.admin.km');
     Route::get('/kmedit/{id}', [PriceController::class, 'admin_kmedit'])->name('price.admin.kmedit');

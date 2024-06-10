@@ -8,7 +8,7 @@
         $show = '';
     @endphp
 
-    @if(!empty(request()->name) || !empty(request()->email) || !empty(request()->role))
+    @if(!empty(request()->name) || !empty(request()->phone) || !empty(request()->dateto) || !empty(request()->datefrom))
         @php
             $collapsed = '';
             $show = 'show';
@@ -33,6 +33,16 @@
                             </div>
                             <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
 							{{ Form::text('phone', null, array('class' => 'form-control', 'placeholder' => __('Số điện thoại'))) }}
+                            </div>
+
+
+                            <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
+                                <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
+                                       value="{{ old('datefrom', request()->input('datefrom')) }}">
+                            </div>
+                            <div class="form-group col-sm-6 col-md-3 col-lg-4 col-xl-3">
+                                <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"
+                                       value="{{ old('dateto', request()->input('dateto')) }}">
                             </div>
 
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">

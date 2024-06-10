@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\ExportDriversList;
 use App\Exports\ExportPaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Utils\SuperAdminPermissionCheck;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Driver;
 use App\Models\User;
@@ -19,6 +21,8 @@ use App\Models\LogAddMoney;
 use App\Models\CfServiceDetail;
 use App\Models\Trip;
 use App\Rules\EditorEmptyCheckRule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -150,84 +154,138 @@ class DriverController extends Controller
      */
     public function admin_store(Request $request)
     {
-        $driveData["name"] = $request->input('name');
-        $driveData["phone"] = $request->input('phone');
-        $driveData["birthday"] = $request->input('birthday');
-        $driveData["email"] = $request->input('email');
-        $driveData["gplx_level"] = $request->input('gplx_level');
-        $driveData["gplx_number"] = $request->input('gplx_number');
-        $driveData["cmnd"] = $request->input('cmnd');
-        $driveData["exp"] = $request->input('exp');
-        $driveData["is_active"] = 1;
-        $driveData["day_lock"] = $request->input('day_lock');
-        $driveData["car_num"] = $request->input('car_num');
-        $driveData["car_info"] = $request->input('car_info');
+        try {
+            DB::beginTransaction();
+            $driveData["name"] = $request->input('name');
+            $driveData["phone"] = $request->input('phone');
+            $driveData["birthday"] = $request->input('birthday');
+            $driveData["email"] = $request->input('email');
+            $driveData["gplx_level"] = $request->input('gplx_level');
+            $driveData["gplx_number"] = $request->input('gplx_number');
+            $driveData["cmnd"] = $request->input('cmnd');
+            $driveData["exp"] = $request->input('exp');
+            $driveData["is_active"] = 1;
+            $driveData["day_lock"] = $request->input('day_lock');
+            $driveData["car_num"] = $request->input('car_num');
+            $driveData["car_info"] = $request->input('car_info');
 
-        $current_user = auth()->user();
-        $driveData["agency_id"] = $current_user->agency_id;
+            $current_user = auth()->user();
+            $driveData["agency_id"] = $current_user->agency_id;
 
-        $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
-        if (!empty($check_phone)) {
-            return redirect()->route('driver.admin.create')->with('error', __('Số điện thoại đã tồn tại.'));
-        }
-        $validation = [
-            'name' => 'required',
-            'phone' => 'required|regex:/^[0-9]{10}+$/',
-            'email' => 'required|email',
-            'gplx_level' => 'required',
-            'gplx_number' => 'required|regex:/^[0-9]+$/',
-            'exp' => 'required|regex:/^[0-9]+$/',
-            'cmnd' => 'required|regex:/^[0-9]+$/',
-        ];
-        $validationMsg = [
-            'name.required' => __('Tên tài xế không để trống.'),
-            'phone.required' => __('Số điện thoại tài xế không để trống.'),
-            'phone.regex' => __('Số điện thoại tài xế phải là số.'),
-            'email.required' => __('Email tài xế không để trống.'),
-            'email.email' => __('Email tài xế không đúng định dạng.'),
-            'gplx_level.required' => __('Hạng GPLX của tài xế không để trống.'),
-            'gplx_number.required' => __('Số GPLX tài xế không để trống.'),
-            'gplx_number.regex' => __('Số GPLX tài xế phải là số.'),
-            'exp.required' => __('Số năm kinh nghiệm tài xế không để trống.'),
-            'exp.regex' => __('Số năm kinh nghiệm tài xế phải là số.'),
-            'cmnd.required' => __('Số CMND tài xế không để trống.'),
-            'cmnd.regex' => __('Số CMND tài xế phải là số.'),
+            $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
+            if (!empty($check_phone)) {
+                return redirect()->route('driver.admin.create')->with('error', __('Số điện thoại đã tồn tại.'));
+            }
+            $validation = [
+                'name' => 'required',
+                'phone' => 'required|regex:/^[0-9]{10}+$/',
+                'email' => 'required|email',
+                'gplx_level' => 'required',
+                'gplx_number' => 'required|regex:/^[0-9]+$/',
+                'exp' => 'required|regex:/^[0-9]+$/',
+                'cmnd' => 'required|regex:/^[0-9]+$/',
+            ];
+            $validationMsg = [
+                'name.required' => __('Tên tài xế không để trống.'),
+                'phone.required' => __('Số điện thoại tài xế không để trống.'),
+                'phone.regex' => __('Số điện thoại tài xế phải là số.'),
+                'email.required' => __('Email tài xế không để trống.'),
+                'email.email' => __('Email tài xế không đúng định dạng.'),
+                'gplx_level.required' => __('Hạng GPLX của tài xế không để trống.'),
+                'gplx_number.required' => __('Số GPLX tài xế không để trống.'),
+                'gplx_number.regex' => __('Số GPLX tài xế phải là số.'),
+                'exp.required' => __('Số năm kinh nghiệm tài xế không để trống.'),
+                'exp.regex' => __('Số năm kinh nghiệm tài xế phải là số.'),
+                'cmnd.required' => __('Số CMND tài xế không để trống.'),
+                'cmnd.regex' => __('Số CMND tài xế phải là số.'),
 
-        ];
-        $this->validate($request, $validation, $validationMsg);
-        $appUrl = config('app.url');
+            ];
+            $this->validate($request, $validation, $validationMsg);
+            $appUrl = config('app.url');
 
-        $blog_metas = collect($request->data['BlogMeta'])->sortKeys()->all();
-        if (!empty($blog_metas)) {
-            foreach ($blog_metas as $blog_meta) {
-                if (!empty($blog_meta['value'])) {
-                    $OriginalName = $blog_meta['value']->getClientOriginalName();
-                    $fileName = time() . '_' . $OriginalName;
-                    $blog_meta['value']->storeAs('public/driver', $fileName);
-                    $blog_meta['value'] = $fileName;
-                    //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
-                    if ($blog_meta["title"] == 'avatar') {
-                        $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'cmnd') {
-                        $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'cmnd_s') {
-                        $driveData["cmnd_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'gplx') {
-                        $driveData["gplx_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'gplx_s') {
-                        $driveData["gplx_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+            $blog_metas = collect($request->data['BlogMeta'])->sortKeys()->all();
+            if (!empty($blog_metas)) {
+                foreach ($blog_metas as $blog_meta) {
+                    if (!empty($blog_meta['value'])) {
+                        $OriginalName = $blog_meta['value']->getClientOriginalName();
+                        $fileName = time() . '_' . $OriginalName;
+                        $blog_meta['value']->storeAs('public/driver', $fileName);
+                        $blog_meta['value'] = $fileName;
+                        //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
+                        if ($blog_meta["title"] == 'avatar') {
+                            $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'cmnd') {
+                            $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'cmnd_s') {
+                            $driveData["cmnd_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'gplx') {
+                            $driveData["gplx_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'gplx_s') {
+                            $driveData["gplx_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
                     }
                 }
             }
+
+            $blog = Driver::query()->create($driveData);
+
+            $msgResponse = $this->syncGsm($blog);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', __('Tạo tài xế thành công. ') . $msgResponse);
+
+
+//            $configuration = Configuration::query()->where('name', 'gsm_config')->first();
+//            $accessToken = json_decode($configuration->value)->access_token;
+//            $xClient = json_decode($configuration->value)->gsm_username;
+//
+//            $msgResponse = '';
+//            $phoneCode = '+84';
+//            $fullPhoneNumber = $phoneCode . substr($driveData["phone"], 1);
+//
+//            $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+//
+//            $headers = [
+//                'Content-Type' => 'application/json',
+//                'x-client-id' => $xClient,
+//                'Authorization' => 'Bearer ' . $accessToken,
+//            ];
+//
+//            $body = [
+//                'phone_number' => $fullPhoneNumber,
+//                'region_code' => 'VNM',
+//                'phone_number_code' => $phoneCode,
+//                'full_name' => $driveData["name"],
+//                'language_code' => 'vi',
+//                'email' => $driveData["email"],
+//                'sap_profile_id' => $blog->id,
+//                'city_id' => $blog->agency_id
+//            ];
+//
+//            $response = Http::withHeaders($headers)->post($url, $body);
+//
+//            dd($headers, $url, $body, $response->json());
+//            // Xử lý phản hồi
+//            $responseBody = $response->json();
+//            if ($responseBody) {
+//                if (isset($responseBody['error'])) {
+//                    $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['error'];
+//                } elseif (isset($responseBody['data'])) {
+//                    $blog->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+//                } else {
+//                    $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['message'];
+//
+//                }
+//            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', __('An error occurred: ') . $e->getMessage());
         }
-
-
-        $blog = Driver::create($driveData);
-        return redirect()->back()->with('success', __('Thêm tài xế thành công.'));
     }
 
     /**
@@ -262,100 +320,262 @@ class DriverController extends Controller
      */
     public function admin_update(Request $request, $id)
     {
-        $driveData["name"] = $request->input('name');
-        $driveData["phone"] = $request->input('phone');
-        $driveData["birthday"] = $request->input('birthday');
-        $driveData["email"] = $request->input('email');
-        $driveData["gplx_level"] = $request->input('gplx_level');
-        $driveData["gplx_number"] = $request->input('gplx_number');
-        $driveData["exp"] = $request->input('exp');
-        $driveData["is_active"] = $request->input('is_active');
-        $driveData["cmnd"] = $request->input('cmnd');
-        $driveData["day_lock"] = $request->input('day_lock');
-        $driveData["find_index"] = $request->input('find_index');
-        $driveData["car_num"] = $request->input('car_num');
-        $driveData["car_info"] = $request->input('car_info');
+        try {
+            $driveData["name"] = $request->input('name');
+            $driveData["phone"] = $request->input('phone');
+            $driveData["birthday"] = $request->input('birthday');
+            $driveData["email"] = $request->input('email');
+            $driveData["gplx_level"] = $request->input('gplx_level');
+            $driveData["gplx_number"] = $request->input('gplx_number');
+            $driveData["exp"] = $request->input('exp');
+            $driveData["is_active"] = $request->input('is_active');
+            $driveData["cmnd"] = $request->input('cmnd');
+            $driveData["day_lock"] = $request->input('day_lock');
+            $driveData["find_index"] = $request->input('find_index');
+            $driveData["car_num"] = $request->input('car_num');
+            $driveData["car_info"] = $request->input('car_info');
 
 
-        if ($driveData["is_active"] == 2) {
-            $driveData["access_token"] = '';
-            $driveData["active_token"] = '';
-        }
-        if ($driveData["day_lock"]) {
-            $driveData["access_token"] = '';
-            $driveData["active_token"] = '';
-        }
-
-
-        $validation = [
-            'name' => 'required',
-            'phone' => 'required|regex:/^[0-9]{10}+$/',
-            'email' => 'required|email',
-            'gplx_level' => 'required',
-            'gplx_number' => 'required|regex:/^[0-9]+$/',
-            'exp' => 'required|regex:/^[0-9]+$/',
-            'cmnd' => 'required|regex:/^[0-9]+$/',
-        ];
-
-        $validationMsg = [
-            'name.required' => __('Tên tài xế không để trống.'),
-            'phone.required' => __('Số điện thoại tài xế không để trống.'),
-            'phone.regex' => __('Số điện thoại tài xế phải là số.'),
-            'email.required' => __('Email tài xế không để trống.'),
-            'email.email' => __('Email tài xế không đúng định dạng.'),
-            'gplx_level.required' => __('Hạng GPLX của tài xế không để trống.'),
-            'gplx_number.required' => __('Số GPLX tài xế không để trống.'),
-            'gplx_number.regex' => __('Số GPLX tài xế phải là số.'),
-            'exp.required' => __('Số năm kinh nghiệm tài xế không để trống.'),
-            'exp.regex' => __('Số năm kinh nghiệm tài xế phải là số.'),
-            'cmnd.required' => __('Số CMND tài xế không để trống.'),
-            'cmnd.regex' => __('Số CMND tài xế phải là số.'),
-
-        ];
-        $this->validate($request, $validation, $validationMsg);
-        $appUrl = config('app.url');
-
-        $blog_metas = collect($request->data['BlogMeta'])->sortKeys()->all();
-        if (!empty($blog_metas)) {
-            foreach ($blog_metas as $blog_meta) {
-                if (!empty($blog_meta['value'])) {
-                    $OriginalName = $blog_meta['value']->getClientOriginalName();
-                    $fileName = time() . '_' . $OriginalName;
-                    $blog_meta['value']->storeAs('public/driver', $fileName);
-                    $blog_meta['value'] = $fileName;
-                    //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
-                    if ($blog_meta["title"] == 'avatar') {
-                        $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'cmnd') {
-                        $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'cmnd_s') {
-                        $driveData["cmnd_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'gplx') {
-                        $driveData["gplx_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-                    }
-                    if ($blog_meta["title"] == 'gplx_s') {
-                        $driveData["gplx_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-
-                    }
-                }
-
-
+            if ($driveData["is_active"] == 2) {
+                $driveData["access_token"] = '';
+                $driveData["active_token"] = '';
+            }
+            if ($driveData["day_lock"]) {
+                $driveData["access_token"] = '';
+                $driveData["active_token"] = '';
             }
 
-        }
 
-        $driver = Driver::findorFail($id);
-        if ($driveData["find_index"] != $driver->find_index) {
-            $driveData["access_token"] = '';
-            $driveData["active_token"] = '';
-        }
+            $validation = [
+                'name' => 'required',
+                'phone' => 'required|regex:/^[0-9]{10}+$/',
+                'email' => 'required|email',
+                'gplx_level' => 'required',
+                'gplx_number' => 'required|regex:/^[0-9]+$/',
+                'exp' => 'required|regex:/^[0-9]+$/',
+                'cmnd' => 'required|regex:/^[0-9]+$/',
+            ];
 
-        $driver->fill($driveData)->save();
-        return redirect()->back()->with('success', __('Cập nhật tài xế thành công.'));
+            $validationMsg = [
+                'name.required' => __('Tên tài xế không để trống.'),
+                'phone.required' => __('Số điện thoại tài xế không để trống.'),
+                'phone.regex' => __('Số điện thoại tài xế phải là số.'),
+                'email.required' => __('Email tài xế không để trống.'),
+                'email.email' => __('Email tài xế không đúng định dạng.'),
+                'gplx_level.required' => __('Hạng GPLX của tài xế không để trống.'),
+                'gplx_number.required' => __('Số GPLX tài xế không để trống.'),
+                'gplx_number.regex' => __('Số GPLX tài xế phải là số.'),
+                'exp.required' => __('Số năm kinh nghiệm tài xế không để trống.'),
+                'exp.regex' => __('Số năm kinh nghiệm tài xế phải là số.'),
+                'cmnd.required' => __('Số CMND tài xế không để trống.'),
+                'cmnd.regex' => __('Số CMND tài xế phải là số.'),
+
+            ];
+            $this->validate($request, $validation, $validationMsg);
+            $appUrl = config('app.url');
+
+            $blog_metas = collect($request->data['BlogMeta'])->sortKeys()->all();
+            if (!empty($blog_metas)) {
+                foreach ($blog_metas as $blog_meta) {
+                    if (!empty($blog_meta['value'])) {
+                        $OriginalName = $blog_meta['value']->getClientOriginalName();
+                        $fileName = time() . '_' . $OriginalName;
+                        $blog_meta['value']->storeAs('public/driver', $fileName);
+                        $blog_meta['value'] = $fileName;
+                        //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
+                        if ($blog_meta["title"] == 'avatar') {
+                            $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'cmnd') {
+                            $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'cmnd_s') {
+                            $driveData["cmnd_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'gplx') {
+                            $driveData["gplx_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                        if ($blog_meta["title"] == 'gplx_s') {
+                            $driveData["gplx_image_s"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+                        }
+                    }
+                }
+            }
+
+            $driver = Driver::findorFail($id);
+            if ($driveData["find_index"] != $driver->find_index) {
+                $driveData["access_token"] = '';
+                $driveData["active_token"] = '';
+            }
+
+            $driver->fill($driveData)->save();
+
+            $msgResponse = $this->syncGsm($driver);
+
+            return redirect()->back()->with('success', __('Cập nhật tài xế thành công. ') . $msgResponse);
+
+
+//      Đồng bộ GSM
+//        $configuration = Configuration::query()->where('name', 'gsm_config')->first();
+//        $accessToken = json_decode($configuration->value)->access_token;
+//        $xClient = json_decode($configuration->value)->gsm_username;
+//
+//        $msgResponse = '';
+//        $phoneCode = '+84';
+//        $fullPhoneNumber = $phoneCode . substr($driveData["phone"], 1);
+//
+//        $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+//
+//        $headers = [
+//            'Content-Type' => 'application/json',
+//            'x-client-id' => $xClient,
+//            'Authorization' => 'Bearer ' . $accessToken,
+//        ];
+//
+//        $body = [
+//            'phone_number' => $fullPhoneNumber,
+//            'region_code' => 'VNM',
+//            'phone_number_code' => $phoneCode,
+//            'full_name' => $driveData["name"],
+//            'language_code' => 'vi',
+//            'email' => $driveData["email"],
+//            'sap_profile_id' => $driver->id,
+//            'city_id' => $driver->agency_id
+//        ];
+//        if ($driver->user_gsm_id) {
+//            $body['user_id'] = $driver->user_gsm_id;
+//        }
+//
+//        $response = Http::withHeaders($headers)->post($url, $body);
+//        // Xử lý phản hồi
+//        $responseBody = $response->json();
+//        if ($responseBody) {
+//            if (isset($responseBody['error'])) {
+//                $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['error'];
+//            } else if (isset($responseBody['data'])) {
+//                $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+//            } else {
+//                $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['message'];
+//            }
+//        }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('An error occurred: ') . $e->getMessage());
+        }
     }
+
+    public function syncDriverGsm($id)
+    {
+        try {
+            $driver = Driver::query()->where('id', $id)->first();
+            if (!$driver) {
+                return redirect()->back()->with('error', __('Không tìm thấy tài xế'));
+            }
+
+            $configuration = Configuration::query()->where('name', 'gsm_config')->first();
+            if (!$configuration) {
+                return redirect()->back()->with('error', __('Configuration not found'));
+            }
+
+            $configValue = json_decode($configuration->value);
+            $accessToken = $configValue->access_token;
+            $xClient = $configValue->gsm_username;
+
+            $phoneCode = '+84';
+            $fullPhoneNumber = $phoneCode . substr($driver->phone, 1);
+
+//            $url = env('GSM_API_URL', 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create');
+            $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+
+            $headers = [
+                'Content-Type' => 'application/json',
+                'x-client-id' => $xClient,
+                'Authorization' => 'Bearer ' . $accessToken,
+            ];
+
+            $body = [
+                'phone_number' => $fullPhoneNumber,
+                'region_code' => 'VNM',
+                'phone_number_code' => $phoneCode,
+                'full_name' => $driver->name,
+                'language_code' => 'vi',
+                'email' => $driver->email,
+                'sap_profile_id' => $driver->id,
+                'city_id' => $driver->agency_id
+            ];
+            if ($driver->user_gsm_id) {
+                $body['user_id'] = $driver->user_gsm_id;
+            }
+
+            $response = Http::withHeaders($headers)->post($url, $body);
+
+//            dd($headers, $url, $body, $response->json());
+
+            // Xử lý phản hồi
+            $responseBody = $response->json();
+            if (isset($responseBody['error'])) {
+                return redirect()->back()->with('error', $responseBody['error']);
+            } elseif (isset($responseBody['data'])) {
+                $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+                return redirect()->back()->with('success', 'Đồng bộ thành công');
+            } else {
+                return redirect()->back()->with('error', $responseBody['message'] ?? 'Unknown error');
+            }
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('Lỗi đồng bộ GSM: ') . $e->getMessage() ?? 'Unknown error');
+        }
+    }
+
+    private function syncGsm($driver)
+    {
+        $configuration = Configuration::query()->where('name', 'gsm_config')->first();
+        if (!$configuration) {
+            return __('Configuration not found');
+        }
+
+        $configValue = json_decode($configuration->value);
+        $accessToken = $configValue->access_token;
+        $xClient = $configValue->gsm_username;
+
+//        $phoneCode = env('PHONE_CODE', '+84');
+        $phoneCode = '+84';
+        $fullPhoneNumber = $phoneCode . substr($driver->phone, 1);
+//        $url = env('GSM_API_URL', 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create');
+        $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'x-client-id' => $xClient,
+            'Authorization' => 'Bearer ' . $accessToken,
+        ];
+
+        $body = [
+            'phone_number' => $fullPhoneNumber,
+            'region_code' => 'VNM',
+            'phone_number_code' => $phoneCode,
+            'full_name' => $driver->name,
+            'language_code' => 'vi',
+            'email' => $driver->email,
+            'sap_profile_id' => $driver->id,
+            'city_id' => $driver->agency_id
+        ];
+        if ($driver->user_gsm_id) {
+            $body['user_id'] = $driver->user_gsm_id;
+        }
+
+        $response = Http::withHeaders($headers)->post($url, $body);
+        $responseBody = $response->json();
+
+        if (isset($responseBody['error'])) {
+            return __('Lỗi đồng bộ GSM: ') . $responseBody['error'];
+        } elseif (isset($responseBody['data'])) {
+            $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+            return __('Đồng bộ GSM thành công.');
+        } else {
+            return __('Lỗi đồng bộ GSM: ') . ($responseBody['message'] ?? 'Unknown error');
+        }
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -437,7 +657,6 @@ class DriverController extends Controller
         $roleArr = Agency::pluck('name', 'id')->toArray();
         $roleArr[0] = "Công ty BUTL";
 
-
         return view('admin.driver.online', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
 
@@ -456,6 +675,13 @@ class DriverController extends Controller
         }
         if ($request->filled('name')) {
             $resultQuery->where('user_name', 'like', "%{$request->input('name')}%");
+        }
+        if ($request->filled('datefrom')) {
+            $resultQuery->where('create_date', '>=', "{$request->input('datefrom')}");
+        }
+        if ($request->filled('dateto')) {
+            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+            $resultQuery->where('create_date', '<=', $dateto);
         }
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
@@ -721,7 +947,8 @@ class DriverController extends Controller
             $resultQuery->where('time', '>=', "{$request->input('datefrom')}");
         }
         if ($request->filled('dateto')) {
-            $resultQuery->where('time', '<', "{$request->input('dateto')}");
+            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+            $resultQuery->where('time', '<=', $dateto);
         }
         //check tai xe thuoc dai ly
         $current_user = auth()->user();

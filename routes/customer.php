@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\CustomerController;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('admin/customer')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/customer')->group(function () {
     Route::get('/', [CustomerController::class, 'admin_index'])->name('customer.admin.index');
 
 

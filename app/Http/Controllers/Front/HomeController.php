@@ -19,10 +19,12 @@ class HomeController extends Controller
 {
     public function all(Request $request)
     {
+        return redirect()->route('admin.dashboard');
+
         if(config('Reading.show_on_front') == 'Page')
         {
             $homepage = Page::where('slug', 'like', config('Reading.home_page'))->first();
-            
+
             if (!empty($homepage)) {
                 $request->slug = config('Reading.home_page');
                 return $this->detail($request);
@@ -45,7 +47,7 @@ class HomeController extends Controller
         $single = false;
         $blog   = Blog::select('id', 'title', 'content', 'user_id', 'excerpt', 'comment', 'password','visibility', 'publish_on');
         if($request->route('year'))
-        { 
+        {
             $blog->whereYear('publish_on', '=', $request->year);
             $single = true;
         }
@@ -112,7 +114,7 @@ class HomeController extends Controller
             }else {
                 $blogs   = Blog::with('blog_meta', 'blog_seo', 'blog_categories', 'blog_tags', 'user')->where('status', '=', 1)->where('visibility', '!=', 'Pr')->latest();
             }
-            
+
             if($single)
             {
                 $blogs = $blogs->where('id', '!=', $blog->id)->limit(2)->get();
@@ -219,8 +221,8 @@ class HomeController extends Controller
         $blogs = !empty($blog_tag->blog) ? $blog_tag->blog()->paginate(config('Reading.nodes_per_page')) : array();
         return view('tag',compact('blog_tag','blogs'));
     }
-	
-	
+
+
 	/*
 	* Created By : Chandan Singh.
 	* Created On : 30 / 10 / 2022.
@@ -231,13 +233,13 @@ class HomeController extends Controller
     {
 
         if(!optional(Auth::user())->hasRole(config('constants.roles.admin'))) {
-            
+
             $user = User::with(['blog' => function($query) {
                 $query->where('visibility', '!=', 'Pr');
             }])
             ->where('name', '=', $request->name)
             ->firstOrFail();
-            
+
         }else {
             $user = User::with('blog')->where('name', '=', $request->name)->firstOrFail();
         }
@@ -270,14 +272,14 @@ class HomeController extends Controller
         }
         $blogs = $blogs->paginate(config('Reading.nodes_per_page'));
 
-        if($blogs->isEmpty()){  
+        if($blogs->isEmpty()){
             abort(404);
         }
 
         return view('archive',compact('blogs','year','month'));
     }
 
-	
+
 	/*
 	* Created By : Chandan Singh.
 	* Created On : 29 / 10 / 2022.
@@ -384,7 +386,7 @@ class HomeController extends Controller
 
             return redirect()->back()->with('error', __('There are some problem in form submition.'));
         }
-        
+
         return view('contact');
     }
 }

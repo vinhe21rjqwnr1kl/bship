@@ -80,10 +80,10 @@
                                 <div class="mb-3 col-md-4">
                                     <select name="service_type" class="default-select form-control">
                                         <option value="0">-- Tất cả --</option>
-                                        @for($i = 1; $i <= count($ServicesTypeArr); $i++)
+                                        @foreach($ServicesTypeArr as $key => $serviceType)
                                             <option
-                                                {{ request()->input('service_type') == $i ? 'selected="selected"':'' }} value="{{ $i }}">{{ $ServicesTypeArr[$i] }}</option>
-                                        @endfor
+                                                {{ request()->input('service_type') == $key ? 'selected="selected"':'' }} value="{{ $key }}">{{ $ServicesTypeArr[$key] }}</option>
+                                        @endforeach
                                         {{--                                        <option--}}
                                         {{--                                            {{ request()->input('service-type') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>--}}
                                         {{--                                        <option--}}

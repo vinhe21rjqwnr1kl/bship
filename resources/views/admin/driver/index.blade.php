@@ -86,6 +86,7 @@
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Thời gian </strong></th>
                                     <th><strong> Thao tác </strong></th>
+                                    <th><strong> Sync GSM </strong></th>
                                     <th><strong> Dịch vụ </strong></th>
 
                                 </tr>
@@ -115,6 +116,17 @@
                                             <a href="{{ route('driver.admin.edit', $page->id) }}"
                                                class="btn btn-primary shadow btn-xs sharp me-1"><i
                                                     class="fas fa-pencil-alt"></i></a>
+                                        </td>
+                                        <td class="text-center">
+{{--                                            <a href="{{ route('driver.admin.sync-driver-gsm', $page->id) }}"--}}
+{{--                                               class="btn btn-primary shadow btn-xs sharp me-1"><i--}}
+{{--                                                    class="fas fa-sync"></i></a>--}}
+                                            <form action="{{ route('driver.admin.sync-driver-gsm', $page->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary shadow btn-xs sharp me-1">
+                                                    <i class="fas fa-sync"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('driver.admin.drservice', $page->id) }}"
