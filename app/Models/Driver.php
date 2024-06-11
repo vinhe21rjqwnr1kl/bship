@@ -39,10 +39,7 @@ class Driver extends Model
         'car_num',
         'car_info',
         'create_time',
-
-
-
-
+        'user_gsm_id'
     ];
 
     /**
@@ -55,11 +52,10 @@ class Driver extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function agency() :BelongsTo {
+    public function agency(): BelongsTo
+    {
         return $this->belongsTo(Agency::class, 'agency_id', 'id');
     }
-
-
 
 
 }

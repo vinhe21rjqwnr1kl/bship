@@ -247,19 +247,21 @@
                         </li>
                     @endcan
 
-                    <li class="nav-label">Thông tin đặt lịch</li>
-                    <li>
-                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-381-push-pin"></i>
-                            <span class="nav-text">Đặt lịch</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ route('booking.admin.order') }}"> Danh sách đặt lịch</a></li>
-                            <li><a href="{{ route('booking.admin.comment') }}">Danh sách bình luận</a></li>
-                            <li><a href="{{ route('booking.admin.service') }}">Danh sách dịch vụ</a></li>
-                            <li><a href="{{ route('booking.admin.image') }}">Danh sách hình ảnh</a></li>
-                        </ul>
-                    </li>
+                    @if($role_id == 1)
+                        <li class="nav-label">Thông tin đặt lịch</li>
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-381-push-pin"></i>
+                                <span class="nav-text">Đặt lịch</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('booking.admin.order') }}"> Danh sách đặt lịch</a></li>
+                                <li><a href="{{ route('booking.admin.comment') }}">Danh sách bình luận</a></li>
+                                <li><a href="{{ route('booking.admin.service') }}">Danh sách dịch vụ</a></li>
+                                <li><a href="{{ route('booking.admin.image') }}">Danh sách hình ảnh</a></li>
+                            </ul>
+                        </li>
+                    @endif
 
                     @if($role_id ==1)
                         <li class="nav-label">Cài đặt quản lý</li>
@@ -518,7 +520,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
-            <p>Version 1.1.17</p>
+            <p>Version 1.1.17.2</p>
         </div>
     </div>
 </div>

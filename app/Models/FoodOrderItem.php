@@ -27,5 +27,10 @@ class FoodOrderItem extends Model
         return $this->belongsTo(FoodProductSize::class, 'food_product_size_id', 'id');
     }
 
+    public function food_order_item_toppings()
+    {
+        return $this->hasMany(FoodOrderItemTopping::class, 'food_order_item_id');
+    }
+
 
 }

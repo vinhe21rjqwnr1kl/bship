@@ -36,112 +36,115 @@
                          data-bs-parent="#search-sec-outer">
                         <form action="{{ route('orders.admin.update', $details->id) }}" method="POST">
                             @csrf
-                        <div class="">
-                            <div class="row align-items-start">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <h5>Thông tin chung</h5>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div>
-                                            <label>Khách hàng: </label>
-                                            @if($details->user)
-                                                <strong>{{$details->user->name}}</strong><br>
-                                                <label>Phone: </label>
-                                                <strong>{{$details->user->phone}}</strong>
-
-                                            @else
-                                                <strong>Không tìm thấy khách hàng</strong>
-                                            @endif
+                            <div class="">
+                                <div class="row align-items-start">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <h5>Thông tin chung</h5>
                                         </div>
-                                        <div>
-                                            <label>Tài xế: </label>
-                                            @if($details->driver)
-                                                <strong>{{$details->driver->name}}</strong><br>
-                                                <label>Phone: </label>
-                                                <strong>{{$details->driver->phone}}</strong>
+                                        <div class="mb-3">
+                                            <div>
+                                                <label>Khách hàng: </label>
+                                                @if($details->user)
+                                                    <strong>{{$details->user->name}}</strong><br>
+                                                    <label>Phone: </label>
+                                                    <strong>{{$details->user->phone}}</strong>
 
-                                            @else
-                                                <strong>Không tìm thấy tài xế</strong>
-                                            @endif
+                                                @else
+                                                    <strong>Không tìm thấy khách hàng</strong>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <label>Tài xế: </label>
+                                                @if($details->driver)
+                                                    <strong>{{$details->driver->name}}</strong><br>
+                                                    <label>Phone: </label>
+                                                    <strong>{{$details->driver->phone}}</strong>
+
+                                                @else
+                                                    <strong>Không tìm thấy tài xế</strong>
+                                                @endif
+                                            </div>
+
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Ngày đặt hàng</label><br>
+                                            <input class="form-control" type="datetime-local" name="create_at"
+                                                   value="{{ $details->created_at }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Trạng thái</label><br>
+                                            <div>
+                                                <select name="status" class="default-select form-control">
+                                                    @foreach($statuses as  $status)
+                                                        <option
+                                                                {{ $details->status == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">
+                                                            @if($status['name'] == 'Pending')
+                                                                {{ __('Chưa giải quyết') }}
+                                                            @elseif($status['name'] == 'Delivered')
+                                                                {{ __('Đã giao hàng') }}
+                                                            @elseif($status['name'] == 'Confirmed')
+                                                                {{ __('Đã xác nhận') }}
+                                                            @elseif($status['name'] == 'Cancelled')
+                                                                <span
+                                                                        class="badge badge-danger">{{ __('Đã hủy') }}</span>
+                                                            @endif
+                                                        </option>
+                                                    @endforeach
+
+                                                </select>
+                                            </div>
                                         </div>
 
                                     </div>
-                                    <div class="mb-3">
-                                        <label>Ngày đặt hàng</label><br>
-                                        <input class="form-control" type="datetime-local" name="create_at"
-                                               value="{{ $details->created_at }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Trạng thái</label><br>
-                                        <div>
-                                            <select name="status" class="default-select form-control">
-                                                @foreach($statuses as  $status)
-                                                    <option
-                                                            {{ $details->status == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">
-                                                        @if($status['name'] == 'Pending')
-                                                            {{ __('Chưa giải quyết') }}
-                                                        @elseif($status['name'] == 'Delivered')
-                                                            {{ __('Đã giao hàng') }}
-                                                        @elseif($status['name'] == 'Confirmed')
-                                                            {{ __('Đã xác nhận') }}
-                                                        @elseif($status['name'] == 'Cancelled')
-                                                            <span class="badge badge-danger">{{ __('Đã hủy') }}</span>
-                                                        @endif
-                                                    </option>
-                                                @endforeach
-
-                                            </select>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <h5>Địa chỉ giao hàng</h5>
                                         </div>
-                                    </div>
-
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <h5>Địa chỉ giao hàng</h5>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div>{{ $details->delivery_address }}</div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <h5>Tiền chuyến</h5>
-                                    </div>
-                                    <div class="mb-3">
-                                        <div>
-                                            @if($details->tripRequest)
-                                                <strong>Phương thức thanh toán: </strong>
-                                                <span>{{$details->payment_method}}</span><br>
-                                                <strong>Tổng: </strong>
-                                                <span>{{number_format($details->tripRequest->cost)}}</span><br>
-                                                <strong>Tài xế: </strong>
-                                                <span>{{number_format($details->tripRequest->driver_cost)}}</span><br>
-                                                <strong>Đại lý: </strong>
-                                                <span>{{number_format($details->tripRequest->butl_cost)}}</span><br>
-                                                <strong>Khuyến mãi: </strong>
-                                                <span>{{number_format($details->tripRequest->discount_cost)}}</span><br>
-                                                <strong>VAT: </strong>
-                                                <span>{{number_format($details->tripRequest->money_vat)}}</span>
-                                            @endif
+                                        <div class="mb-3">
+                                            <div>{{ $details->delivery_address }}</div>
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <h5>Tiền chuyến</h5>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div>
+                                                @if($details->tripRequest)
+                                                    <strong>Phương thức thanh toán: </strong>
+                                                    <span>{{$details->payment_method}}</span><br>
+                                                    <strong>Tổng: </strong>
+                                                    <span>{{number_format($details->tripRequest->cost)}}</span><br>
+                                                    <strong>Tài xế: </strong>
+                                                    <span>{{number_format($details->tripRequest->driver_cost)}}</span>
+                                                    <br>
+                                                    <strong>Đại lý: </strong>
+                                                    <span>{{number_format($details->tripRequest->butl_cost)}}</span><br>
+                                                    <strong>Khuyến mãi: </strong>
+                                                    <span>{{number_format($details->tripRequest->discount_cost)}}</span>
+                                                    <br>
+                                                    <strong>VAT: </strong>
+                                                    <span>{{number_format($details->tripRequest->money_vat)}}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row border-top">
-                                <div class="mt-3">
-                                    <strong>Ghi chú: </strong><span>{{$details->note}}</span>
+                                <div class="row border-top">
+                                    <div class="mt-3">
+                                        <strong>Ghi chú: </strong><span>{{$details->note}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row border-top mt-3">
-                                <div class="mt-3">
-                                    {{--                                    <button class="btn btn-success">Cập nhật</button>--}}
-{{--                                    @can('Controllers > UsersController > create')--}}
+                                <div class="row border-top mt-3">
+                                    <div class="mt-3">
+                                        {{--                                    <button class="btn btn-success">Cập nhật</button>--}}
+                                        {{--                                    @can('Controllers > UsersController > create')--}}
                                         <button type="submit" class="btn btn-primary">{{ __('Cập nhật') }}</button>
-{{--                                    @endcan--}}
+                                        {{--                                    @endcan--}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </form>
                     </div>
                 </div>
@@ -161,7 +164,8 @@
                                     <tr>
                                         <th><strong> Hình ảnh </strong></th>
                                         <th><strong> Sản phẩm </strong></th>
-                                        <th><strong> Tiền </strong></th>
+                                        <th><strong> Topping </strong></th>
+                                        <th><strong> Đơn giá </strong></th>
                                         <th><strong> Số lượng </strong></th>
                                         <th><strong> Tổng </strong></th>
                                         {{--                                    <th> <strong> Hoàn trả </strong> </th>--}}
@@ -170,21 +174,38 @@
                                     </thead>
                                     <tbody>
                                     @if($details->items)
-
                                         @forelse ($details->items as $item)
                                             <tr>
                                                 {{--                                        <td> {{ $i++ }} </td>--}}
                                                 @if($item->product)
-
                                                     <td>
                                                         <img src="{{ $item->product->img_url }}"
                                                              alt="{{ $item->product->name }}"
                                                              class="img-fluid rounded" style="max-width: 11rem;">
                                                     </td>
                                                     <td> {{ $item->product->name }}</td>
+                                                    <td>
+                                                        @if($item->food_order_item_toppings)
+                                                            @foreach($item->food_order_item_toppings as $key => $topping )
+                                                                {{ $topping->topping->name }}
+                                                                : {{ number_format($topping->additional_price) }}
+                                                                <br>
+                                                            @endforeach
+                                                        @endif
+                                                    </td>
                                                     <td> {{ number_format($item->price) }}</td>
                                                     <td> x {{ $item->quantity }}</td>
-                                                    <td> {{ number_format($item->price * $item->quantity) }}</td>
+
+                                                    @php
+                                                        $totalPrice = $item->price * $item->quantity;
+                                                        $totalTopping = 0;
+                                                        foreach ($item->food_order_item_toppings as $key => $topping) {
+                                                            $totalTopping += $topping->additional_price;
+                                                        }
+                                                        $total = $totalPrice + ($totalTopping * $item->quantity);
+                                                    @endphp
+
+                                                    <td> {{ number_format($total) }}</td>
                                                     <td> {{ $item->note }}</td>
                                                     {{--                                        <td></td>--}}
                                                 @endif

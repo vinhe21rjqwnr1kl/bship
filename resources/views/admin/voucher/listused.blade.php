@@ -62,6 +62,7 @@
                             <thead>
                                 <tr>
                                     <th> <strong> STT</strong> </th>
+                                    <th> <strong> Mã chuyến</strong> </th>
                                     <th> <strong> Loại </strong> </th>
 									<th> <strong> Dịch vụ </strong> </th>
                                     <th> <strong> Mã KM</strong> </th>
@@ -78,6 +79,7 @@
                                 @forelse ($vouchers as $voucher)
                                 <tr>
                                     <td> {{ $i++ }} </td>
+                                    <td> BSHIP_{{ $voucher->go_info_id }} </td>
                                	    <td>{{ $ServicesArr[$voucher->service_id] }} </td>
 									<td> {{ $ServicesTypeArr[$voucher->service_type] }} </td>
                                     <td> {{ $voucher->discount_code }} </td>

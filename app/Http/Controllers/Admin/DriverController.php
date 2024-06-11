@@ -85,6 +85,8 @@ class DriverController extends Controller
             }
         }
 
+//        return $drivers;
+
         return view('admin.driver.index', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
 
@@ -479,12 +481,9 @@ class DriverController extends Controller
             $configValue = json_decode($configuration->value);
             $accessToken = $configValue->access_token;
             $xClient = $configValue->gsm_username;
-
             $phoneCode = '+84';
             $fullPhoneNumber = $phoneCode . substr($driver->phone, 1);
-
-//            $url = env('GSM_API_URL', 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create');
-            $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+            $url = env('URL_API_GSM') . 'driver/create';
 
             $headers = [
                 'Content-Type' => 'application/json',
@@ -499,23 +498,22 @@ class DriverController extends Controller
                 'full_name' => $driver->name,
                 'language_code' => 'vi',
                 'email' => $driver->email,
-                'sap_profile_id' => $driver->id,
-                'city_id' => $driver->agency_id
+                'sap_profile_id' => "BUTL_" . $driver->id,
+                'city_id' => $driver->agency_id == 1 ? 59 : 50,
             ];
-            if ($driver->user_gsm_id) {
+            if ($driver->user_gsm_id && $driver->user_gsm_id != 1) {
                 $body['user_id'] = $driver->user_gsm_id;
             }
 
             $response = Http::withHeaders($headers)->post($url, $body);
-
-//            dd($headers, $url, $body, $response->json());
 
             // Xử lý phản hồi
             $responseBody = $response->json();
             if (isset($responseBody['error'])) {
                 return redirect()->back()->with('error', $responseBody['error']);
             } elseif (isset($responseBody['data'])) {
-                $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+                $userId = $responseBody['data']['user_id'];
+                $driver->update(['user_gsm_id' => $userId]);
                 return redirect()->back()->with('success', 'Đồng bộ thành công');
             } else {
                 return redirect()->back()->with('error', $responseBody['message'] ?? 'Unknown error');
@@ -536,12 +534,9 @@ class DriverController extends Controller
         $configValue = json_decode($configuration->value);
         $accessToken = $configValue->access_token;
         $xClient = $configValue->gsm_username;
-
-//        $phoneCode = env('PHONE_CODE', '+84');
         $phoneCode = '+84';
         $fullPhoneNumber = $phoneCode . substr($driver->phone, 1);
-//        $url = env('GSM_API_URL', 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create');
-        $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
+        $url = env('URL_API_GSM') . 'driver/create';
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -556,10 +551,10 @@ class DriverController extends Controller
             'full_name' => $driver->name,
             'language_code' => 'vi',
             'email' => $driver->email,
-            'sap_profile_id' => $driver->id,
-            'city_id' => $driver->agency_id
+            'sap_profile_id' => 'BUTL_' . $driver->id,
+            'city_id' => $driver->agency_id == 1 ? 59 : 50,
         ];
-        if ($driver->user_gsm_id) {
+        if ($driver->user_gsm_id && $driver->user_gsm_id != 1) {
             $body['user_id'] = $driver->user_gsm_id;
         }
 
@@ -569,7 +564,8 @@ class DriverController extends Controller
         if (isset($responseBody['error'])) {
             return __('Lỗi đồng bộ GSM: ') . $responseBody['error'];
         } elseif (isset($responseBody['data'])) {
-            $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
+            $userId = $responseBody['data']['user_id'];
+            $driver->update(['user_gsm_id' => $userId]);
             return __('Đồng bộ GSM thành công.');
         } else {
             return __('Lỗi đồng bộ GSM: ') . ($responseBody['message'] ?? 'Unknown error');
@@ -785,16 +781,20 @@ class DriverController extends Controller
         $driveData["phone"] = $request->input('phone');
         $driveData["money"] = $request->input('money');
         $driveData["reason"] = $request->input('reason');
+        $driveData["type"] = $request->input('type');
         $validation = [
             'money' => 'required|regex:/^[0-9-]+$/',
             'phone' => 'required|regex:/^[0-9]{10}+$/',
             'reason' => 'required',
+            'type' => 'required',
+
         ];
         $validationMsg = [
-            'money.required' => __('Vui lòng nhập số tiền.'),
-            'phone.required' => __('Số điện thoại tài xế không để trống.'),
-            'phone.regex' => __('Số điện thoại tài xế phải là số.'),
-            'reason.required' => __('Lí do nạp tiền không để trống.'),
+            'money.required' => __('Vui lòng nhập số tiền'),
+            'phone.required' => __('Số điện thoại tài xế không để trống'),
+            'phone.regex' => __('Số điện thoại tài xế phải là số'),
+            'reason.required' => __('Lí do nạp tiền không để trống'),
+            'type.required' => __('Không để trống'),
 
         ];
         $this->validate($request, $validation, $validationMsg);

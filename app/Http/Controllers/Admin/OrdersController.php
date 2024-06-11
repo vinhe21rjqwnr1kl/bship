@@ -127,7 +127,7 @@ class OrdersController extends Controller
             array('id' => 4, 'name' => __('Cancelled'))
         );
 
-        $details = FoodOrder::with(['tripRequest', 'restaurant', 'items.product', 'items.size.size', 'user', 'driver'])->findOrFail($id);
+        $details = FoodOrder::with(['tripRequest', 'restaurant', 'items.product', 'items.size.size', 'items.food_order_item_toppings', 'items.food_order_item_toppings.topping', 'user', 'driver'])->findOrFail($id);
 
 //        return $details;
 

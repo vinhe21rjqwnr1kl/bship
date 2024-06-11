@@ -19,6 +19,7 @@ class LogAddMoneyRequest extends Model
 		'agency_id',
         'reason',
         'status',
+        'type',
 		'create_name',
 	];
 

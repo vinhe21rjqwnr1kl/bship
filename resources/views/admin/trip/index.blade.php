@@ -77,26 +77,18 @@
                                            value="{{ old('name', request()->input('name')) }}">
                                 </div>
 
-                                <div class="mb-3 col-md-4">
-                                    <select name="service_type" class="default-select form-control">
-                                        <option value="0">-- Tất cả --</option>
-                                        @foreach($ServicesTypeArr as $key => $serviceType)
-                                            <option
-                                                {{ request()->input('service_type') == $key ? 'selected="selected"':'' }} value="{{ $key }}">{{ $ServicesTypeArr[$key] }}</option>
-                                        @endforeach
-                                        {{--                                        <option--}}
-                                        {{--                                            {{ request()->input('service-type') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>--}}
-                                        {{--                                        <option--}}
-                                        {{--                                            {{ request()->input('service-type') == 1 ? 'selected="selected"':'' }} value="1">{{ $CfGoProcessArr[1] }}</option>--}}
-                                        {{--                                        <option--}}
-                                        {{--                                            {{ request()->input('service-type') == 2 ? 'selected="selected"':'' }} value="2">{{ $CfGoProcessArr[2] }}</option>--}}
-                                        {{--                                        <option--}}
-                                        {{--                                            {{ request()->input('service-type') == 4 ? 'selected="selected"':'' }} value="4">{{ $CfGoProcessArr[4] }}</option>--}}
-                                        {{--                                        <option--}}
-                                        {{--                                            {{ request()->input('service-type') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>--}}
+                                @if($service_id == 0)
+                                    <div class="mb-3 col-md-4">
+                                        <select name="service_type" class="default-select form-control">
+                                            <option value="0">-- Tất cả --</option>
+                                            @foreach($ServicesTypeArr as $key => $serviceType)
+                                                <option
+                                                    {{ request()->input('service_type') == $key ? 'selected="selected"':'' }} value="{{ $key }}">{{ $ServicesTypeArr[$key] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
 
-                                    </select>
-                                </div>
 
                                 <div class="mb-3 col-md-4">
                                     <select name="progress" class="default-select form-control">
@@ -185,7 +177,7 @@
                                         <td>
                                             {{ $ServicesTypeArr[$page->service_type] }} </td>
 
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tổng:</strong> {{ number_format($page->cost - $page->discount_from_code) }}
                                             <br><strong>Tài
                                                 xế:</strong> {{ number_format($page->butl_cost  +  $page->service_cost ) }}
@@ -204,7 +196,7 @@
                                             @endif
 
                                         </td>
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Số KM:</strong> {{ $page->distance/1000 }}
                                             <br><strong>Đón:</strong> {{ $page->pickup_address }}
                                             <br><strong>Đến:</strong> {{ $page->drop_address }}
@@ -239,7 +231,7 @@
                                         </td>
 
                                         <td> {{ $page->create_date}} </td>
-                                        <td> {{ $page->order_id_gsm }} </td>
+                                        <td style="max-width: 100px; word-wrap: break-word;"> {{ $page->order_id_gsm }} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->id) }}"
