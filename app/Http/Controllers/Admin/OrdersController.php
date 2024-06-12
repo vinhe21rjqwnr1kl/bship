@@ -21,7 +21,7 @@ class OrdersController extends Controller
         );
 
 
-        $resultQuery = FoodOrder::with(['tripRequest', 'restaurant', 'items', 'user', 'driver']);
+        $resultQuery = FoodOrder::with(['tripRequest', 'trip', 'restaurant', 'items', 'user', 'driver']);
 
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
 //            $tags = json_decode($request->input("tags"), true);
@@ -106,7 +106,6 @@ class OrdersController extends Controller
         if ($driveData["agency_id"] > 0) {
             $resultQuery->whereHas('driver', function ($query) use ($driveData) {
                 $query->where('agency_id', '=', $driveData["agency_id"]);
-
             });
         }
         $foodOrders = $resultQuery->paginate(config('Reading.nodes_per_page'));

@@ -138,12 +138,12 @@
                                 <thead class="">
                                 <tr>
                                     <th><strong> STT</strong></th>
-                                    <th><strong> Mã Đơn hàng </strong></th>
+                                    <th><strong> Mã </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Cửa hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> Tiền </strong></th>
-                                    <th><strong> Phương thức </strong></th>
+                                    {{--                                    <th><strong> Phương thức </strong></th>--}}
                                     <th><strong> Địa chỉ giao hàng </strong></th>
                                     <th><strong> Trạng thái đơn </strong></th>
                                     <th><strong> Đã thêm </strong></th>
@@ -157,64 +157,72 @@
                                 @forelse ($foodOrders as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> {{ $page->id }} </td>
-                                        <td>
+                                        <td style="min-width: 135px; word-wrap: break-word;">
+                                            <strong>Mã đơn: </strong>{{ $page->id }}<br>
+                                            @if($page->trip)
+                                                <strong>Mã chuyến:</strong> BSHIP_{{ $page->trip->id }}
+                                            @endif
+                                        </td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             @if($page->user)
                                                 <strong>Tên:</strong> {{ $page->user->name }}<br>
-                                                <strong>Phone:</strong> {{ $page->user->phone }}
+                                                <strong>SĐT:</strong> {{ $page->user->phone }}
                                             @else
                                                 <strong>Không tìm thấy khách hàng</strong>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="min-width: 350px; word-wrap: break-word;">
                                             @if($page->restaurant)
                                                 <strong>Tên:</strong> {{ $page->restaurant->name }}<br>
-                                                <strong>Phone:</strong> {{ $page->restaurant->phone }}<br>
+                                                <strong>SĐT:</strong> {{ $page->restaurant->phone }}<br>
                                                 <strong>Địa chỉ:</strong> {{ $page->restaurant->address }}
                                             @else
                                                 <strong>Không tìm thấy cửa hàng</strong>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             @if($page->driver)
                                                 <strong>Tên:</strong> {{ $page->driver->name }}<br>
-                                                <strong>Phone:</strong> {{ $page->driver->phone }}<br>
+                                                <strong>SĐT:</strong> {{ $page->driver->phone }}<br>
                                             @else
                                                 <strong>Không tìm thấy tài xế</strong>
                                             @endif
                                         </td>
 
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             @if($page->tripRequest)
                                                 <strong>Tổng:</strong> {{ number_format($page->tripRequest->cost) }}<br>
                                                 <strong>Tài
                                                     xế:</strong> {{ number_format($page->tripRequest->driver_cost) }}
                                                 <br>
                                                 <strong>Đại
-                                                    lý:</strong> {{ number_format($page->tripRequest->butl_cost) }}
+                                                    lý:</strong> {{ number_format($page->tripRequest->butl_cost) }}<br>
                                                 <strong>Khuyến
                                                     mãi:</strong> {{ number_format($page->tripRequest->discount_cost) }}
+                                                <br>
                                                 <strong>VAT:</strong> {{ number_format($page->tripRequest->money_vat) }}
                                             @else
                                                 <strong>Không tìm được chuyến</strong>
                                             @endif
                                         </td>
-                                        <td>
-                                            <span class="badge badge-warning">{{ $page->payment_method }}</span>
+                                        <td style="min-width: 350px; word-wrap: break-word;">
+                                            {{ $page->delivery_address }}
                                         </td>
-                                        <td>{{ $page->delivery_address }}</td>
                                         <td>
                                             @if($page->status == 'Pending')
-                                                <span class="badge badge-warning">{{ __('Chưa giải quyết') }}</span>
+                                                <span
+                                                    class="badge badge-warning mt-1">{{ __('Chưa giải quyết') }}</span>
                                             @elseif($page->status == 'Delivered')
-                                                <span class="badge badge-success">{{ __('Đã giao hàng') }}</span>
+                                                <span class="badge badge-success mt-1">{{ __('Đã giao hàng') }}</span>
                                             @elseif($page->status == 'Confirmed')
-                                                <span class="badge badge-success">{{ __('Đã xác nhận') }}</span>
+                                                <span class="badge badge-success mt-1">{{ __('Đã xác nhận') }}</span>
                                             @elseif($page->status == 'Cancelled')
-                                                <span class="badge badge-danger">{{ __('Đã hủy') }}</span>
+                                                <span class="badge badge-danger mt-1">{{ __('Đã hủy') }}</span>
                                             @endif
+
+                                            <span class="badge badge-warning mt-1">{{ $page->payment_method }}</span>
                                         </td>
-                                        <td>{{ $page->created_at }}</td>
+                                        <td style="min-width: 135px; word-wrap: break-word;">{{ $page->created_at }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('orders.admin.details', ['id' => $page->id]) }}"
                                                class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i

@@ -49,7 +49,6 @@
                                                     <strong>{{$details->user->name}}</strong><br>
                                                     <label>Phone: </label>
                                                     <strong>{{$details->user->phone}}</strong>
-
                                                 @else
                                                     <strong>Không tìm thấy khách hàng</strong>
                                                 @endif
@@ -60,12 +59,10 @@
                                                     <strong>{{$details->driver->name}}</strong><br>
                                                     <label>Phone: </label>
                                                     <strong>{{$details->driver->phone}}</strong>
-
                                                 @else
                                                     <strong>Không tìm thấy tài xế</strong>
                                                 @endif
                                             </div>
-
                                         </div>
                                         <div class="mb-3">
                                             <label>Ngày đặt hàng</label><br>
@@ -78,7 +75,7 @@
                                                 <select name="status" class="default-select form-control">
                                                     @foreach($statuses as  $status)
                                                         <option
-                                                                {{ $details->status == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">
+                                                            {{ $details->status == $status['name'] ? 'selected="selected"':'' }} value="{{ $status['name'] }}">
                                                             @if($status['name'] == 'Pending')
                                                                 {{ __('Chưa giải quyết') }}
                                                             @elseif($status['name'] == 'Delivered')
@@ -87,15 +84,13 @@
                                                                 {{ __('Đã xác nhận') }}
                                                             @elseif($status['name'] == 'Cancelled')
                                                                 <span
-                                                                        class="badge badge-danger">{{ __('Đã hủy') }}</span>
+                                                                    class="badge badge-danger">{{ __('Đã hủy') }}</span>
                                                             @endif
                                                         </option>
                                                     @endforeach
-
                                                 </select>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="col">
                                         <div class="mb-3">
@@ -138,10 +133,9 @@
                                 </div>
                                 <div class="row border-top mt-3">
                                     <div class="mt-3">
-                                        {{--                                    <button class="btn btn-success">Cập nhật</button>--}}
-                                        {{--                                    @can('Controllers > UsersController > create')--}}
-                                        <button type="submit" class="btn btn-primary">{{ __('Cập nhật') }}</button>
-                                        {{--                                    @endcan--}}
+                                        @can('Controllers > OrdersController > admin_update')
+                                            <button type="submit" class="btn btn-primary">{{ __('Cập nhật') }}</button>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
