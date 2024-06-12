@@ -31,8 +31,9 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/dr
     Route::get('/payment_create_info/{go_id?}/{phone?}', [DriverController::class, 'payment_create_info'])->name('driver.admin.payment_create_info');
 
     Route::get('/payment_approve', [DriverController::class, 'payment_approve'])->name('driver.admin.payment_approve');
-    Route::get('/payment_addmoney/{id}', [DriverController::class, 'payment_addmoney'])->name('driver.admin.payment_addmoney');
-    Route::get('/payment_remove/{id}', [DriverController::class, 'payment_remove'])->name('driver.admin.payment_remove');
+    Route::post('/payment_addmoney/{id}', [DriverController::class, 'payment_addmoney'])->name('driver.admin.payment_addmoney');
+    Route::post('/payment_remove/{id}', [DriverController::class, 'payment_remove'])->name('driver.admin.payment_remove');
+    Route::post('/payment_remove_user/{id}', [DriverController::class, 'payment_remove_user'])->name('driver.admin.payment_remove_user');
     Route::get('/payment_log', [DriverController::class, 'payment_log'])->name('driver.admin.payment_log');
 
     //tai xe đăng  ký  chạy  dịch  vu  nàoo

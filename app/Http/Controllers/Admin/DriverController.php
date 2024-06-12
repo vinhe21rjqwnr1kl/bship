@@ -841,7 +841,7 @@ class DriverController extends Controller
                 }
             }
             $blog = LogAddMoneyRequest::create($driveData);
-            return redirect()->route('trip.admin.index', 0)->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
+            return redirect()->route('driver.admin.payment', 0)->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
         }
 
     }
@@ -878,11 +878,6 @@ class DriverController extends Controller
         return view('admin.driver.payment_list_approve', compact('LogAddMoneyRequest', 'page_title'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function payment_addmoney(Request $request, $id)
     {
         $page_title = __('Danh sách cần duyệt');
@@ -935,20 +930,35 @@ class DriverController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function payment_remove(Request $request, $id)
+    public function handle_payment_remove($id, $isUser = false)
     {
-        $page_title = __('Danh sách cần duyệt');
         $request = LogAddMoneyRequest::findorFail($id);
+
+        if ($isUser) {
+            $userRequest = $request->create_name;
+            $currentUser = auth()->user()->email;
+            if ($currentUser != $userRequest) {
+                return redirect()->route('driver.admin.payment')->with('warning', __('Yêu cầu không hợp lệ.'));
+            }
+        }
+
         $requestData["status"] = 2;
         $request->fill($requestData)->save();
-        return redirect()->route('driver.admin.payment_approve')->with('success', __('Xoá yêu cầu nạp tiền thành công.'));
 
+        $route = $isUser ? 'driver.admin.payment' : 'driver.admin.payment_approve';
+        return redirect()->route($route)->with('success', __('Xoá yêu cầu nạp tiền thành công.'));
     }
+
+    public function payment_remove($id)
+    {
+        return $this->handle_payment_remove($id);
+    }
+
+    public function payment_remove_user($id)
+    {
+        return $this->handle_payment_remove($id, true);
+    }
+
 
     /**
      * Show the form for creating a new user.
