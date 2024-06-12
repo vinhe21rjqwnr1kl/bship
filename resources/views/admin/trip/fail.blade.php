@@ -43,7 +43,6 @@
                                                    value="{{ old('tags', request()->input('tags')) }}">
                                             <input type="text" class="input-tag" id="input-tag-search"
                                                    placeholder="Tìm kiểm chuyến theo tỉnh/thành, quận/huyện, xã/phường kiểm chuyến theo tên tỉnh/ thành phố">
-
                                             <div id="search-results" class="suggestions"></div>
                                             <button type="button" style="cursor: pointer"
                                                     class="btn btn-xs btn-warning btn-choose">
@@ -65,10 +64,8 @@
                                 <div class="mb-3 col-md-4">
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
-
                                 </div>
                                 <div class="mb-3 col-md-4">
-
                                     <select name="status" class="default-select form-control">
                                         <option
                                             {{ request()->input('status') == 1 ? 'selected="selected"':'' }} value="1">
@@ -83,8 +80,6 @@
                                             Đang nhập địa chỉ
                                         </option>
                                     </select>
-
-
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
@@ -121,12 +116,12 @@
                                     <th><strong> Mã BSHIP</strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> DV </strong></th>
-                                    <th><strong> Loại </strong></th>
+                                    {{--                                    <th><strong> Loại </strong></th>--}}
                                     <th><strong> Tiền </strong></th>
                                     <th><strong> Thông tin </strong></th>
-                                    <th><strong> Trạng thái tìm </strong></th>
-                                    <th><strong> Trạng thái chuyến </strong></th>
                                     <th><strong> Thời gian </strong></th>
+                                    <th><strong> Trạng thái </strong></th>
+                                    {{--                                    <th><strong> Trạng thái chuyến </strong></th>--}}
                                     <th><strong> Hành động </strong></th>
                                 </tr>
                                 </thead>
@@ -143,17 +138,18 @@
                                                 BSHIP_{{ $page->trip->id }}
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
                                         </td>
 
-                                        <td>{{ $ServicesArr[$page->service_id] }}
+                                        <td style="min-width: 120px; word-wrap: break-word;">
+                                            {{ $ServicesArr[$page->service_id] }}<br>
+                                            {{ $ServicesTypeArr[$page->service_type] }}
                                         </td>
-                                        <td>
-                                            {{ $ServicesTypeArr[$page->service_type] }} </td>
 
-                                        <td><strong>Tổng:</strong> {{ number_format($page->cost) }}
+                                        <td style="min-width: 150px; word-wrap: break-word;">
+                                            <strong>Tổng:</strong> {{ number_format($page->cost) }}
                                             <br><strong>Tài
                                                 xế:</strong> {{ number_format($page->butl_cost  +  $page->service_cost) }}
                                             <br><strong>Đại
@@ -164,7 +160,7 @@
                                                 mại:</strong> {{ number_format($page->discount_from_code) }}
 
                                         </td>
-                                        <td>
+                                        <td style="min-width: 350px; word-wrap: break-word;">
                                             <strong>Số KM:</strong> {{ $page->distance/1000 }}
                                             <br><strong>Đón:</strong> {{ $page->pickup_address }}
                                             <br><strong>Đến:</strong> {{ $page->drop_address }}
@@ -172,41 +168,37 @@
                                                 <br><strong>Đến:</strong> {{ $page->drop_second_address }}
                                             @else
                                             @endif
-
-                                        </td>
-                                        <td>
-
-                                            @if ($page->statusmain == 2)
-                                                <span class="badge badge-success"> Tạo chuyến thành công</span>
-                                            @elseif($page->statusmain == 1)
-                                                <span class="badge badge-danger"> Không tìm thấy tx</span>
-                                            @else
-                                                <span class="badge badge-warning"> Đang tìm</span>
+                                            @if($page->trip->order_id_gsm)
+                                                <br><br><strong>Mã GSM: </strong>{{ $page->trip->order_id_gsm }}
                                             @endif
                                         </td>
 
-                                        <td>
-                                            @if($page->trip)
+                                        <td style="min-width: 135px; word-wrap: break-word;"> {{ $page->create_date}} </td>
 
+                                        <td>
+                                            @if ($page->statusmain == 2)
+                                                <span class="badge badge-success mt-1"> Tạo chuyến thành công</span>
+                                            @elseif($page->statusmain == 1)
+                                                <span class="badge badge-danger mt-1"> Không tìm thấy tx</span>
+                                            @else
+                                                <span class="badge badge-warning mt-1"> Đang tìm</span>
+                                            @endif
+
+                                            @if($page->trip)
                                                 @if ($page->trip->progress == 3)
                                                     <span
-                                                        class="badge badge-success"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                        class="badge badge-success mt-1"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
                                                 @elseif($page->trip->progress == 4)
                                                     <span
-                                                        class="badge badge-danger"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                        class="badge badge-danger mt-1"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
                                                 @else
                                                     <span
-                                                        class="badge badge-warning"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
+                                                        class="badge badge-warning mt-1"> {{ $CfGoProcessArr[$page->trip->progress] }}</span>
                                                 @endif
-
                                             @else
 
                                             @endif
-
-
                                         </td>
-
-                                        <td> {{ $page->create_date}} </td>
 
                                         <td>
                                             @if($page->food_order)
@@ -230,7 +222,6 @@
                                                 </button>
                                             @endif
                                         </td>
-
                                     </tr>
                                 @empty
                                     <tr>
@@ -248,7 +239,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     @include('admin.trip.food_modal')

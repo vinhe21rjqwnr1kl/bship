@@ -53,13 +53,11 @@
                                                    value="{{ old('tags', request()->input('tags')) }}">
                                             <input type="text" id="input-tag-search" class="input-tag"
                                                    placeholder="Tìm kiểm chuyến theo tỉnh/thành, quận/huyện, xã/phường">
-
                                             <div id="search-results" class="suggestions"></div>
                                             <button type="button" style="cursor: pointer"
                                                     class="btn btn-xs btn-warning btn-choose">
                                                 chọn
                                             </button>
-
                                         </div>
                                         <span class="tags-length">0 Thẻ</span>
                                     </div>
@@ -89,7 +87,6 @@
                                     </div>
                                 @endif
 
-
                                 <div class="mb-3 col-md-4">
                                     <select name="progress" class="default-select form-control">
                                         <option value="0">-- Tất cả --</option>
@@ -103,7 +100,6 @@
                                             {{ request()->input('progress') == 4 ? 'selected="selected"':'' }} value="4">{{ $CfGoProcessArr[4] }}</option>
                                         <option
                                             {{ request()->input('progress') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>
-
                                     </select>
                                 </div>
                                 <div class="mb-3 col-md-4">
@@ -119,9 +115,7 @@
                                     <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
                                         Lại</a>
-
                                 </div>
-
                             </div>
                         </form>
                     </div>
@@ -133,7 +127,6 @@
             <!-- Column starts -->
             <div class="col-xl-12">
                 <div class="card">
-
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-responsive-lg mb-0">
@@ -144,16 +137,16 @@
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
-                                    <th><strong> Loại </strong></th>
+                                    {{--                                    <th><strong> Loại </strong></th>--}}
                                     <th><strong> Tiền </strong></th>
-                                    <th><strong> Phương thức </strong></th>
+                                    {{--                                    <th><strong> Phương thức </strong></th>--}}
                                     <th><strong> Thông tin </strong></th>
-                                    <th><strong> Trạng thái </strong></th>
-                                    <th><strong> Tạo bởi </strong></th>
+                                    {{--                                    <th><strong> Tạo bởi </strong></th>--}}
                                     <th><strong> Thời gian </strong></th>
-                                    <th><strong> Mã GSM </strong></th>
+                                    {{--                                    <th><strong> Mã GSM </strong></th>--}}
+                                    <th><strong> Trạng thái </strong></th>
                                     <th><strong> Hành động </strong></th>
-                                    <th><strong> Hoàn tiền </strong></th>
+                                    {{--                                    <th><strong> Hoàn tiền </strong></th>--}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -164,19 +157,18 @@
                                     <tr>
                                         <td> {{ $i++ }} </td>
                                         <td> BSHIP_{{ $page->id }} </td>
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
                                         </td>
-                                        <td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tên:</strong> {{$page->driver_name}}
                                             <br><strong>SĐT:</strong> {{$page->driver_phone}}
                                         </td>
-                                        <td>{{ $ServicesArr[$page->service_id] }}
+                                        <td style="min-width: 120px; word-wrap: break-word;">
+                                            {{ $ServicesArr[$page->service_id] }} <br>
+                                            {{ $ServicesTypeArr[$page->service_type] }}
                                         </td>
-                                        <td>
-                                            {{ $ServicesTypeArr[$page->service_type] }} </td>
-
                                         <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tổng:</strong> {{ number_format($page->cost - $page->discount_from_code) }}
                                             <br><strong>Tài
@@ -188,15 +180,8 @@
                                             <br><strong>Khuyến
                                                 mại:</strong> {{ number_format($page->discount_from_code) }}
                                         </td>
-                                        <td>
-                                            @if($page->payment_status == "PAID")
-                                                <span class="badge badge-success">Chuyển khoản</span>
-                                            @else
-                                                <span class="badge badge-warning">Tiền mặt</span>
-                                            @endif
 
-                                        </td>
-                                        <td style="min-width: 150px; word-wrap: break-word;">
+                                        <td style="min-width: 350px; word-wrap: break-word;">
                                             <strong>Số KM:</strong> {{ $page->distance/1000 }}
                                             <br><strong>Đón:</strong> {{ $page->pickup_address }}
                                             <br><strong>Đến:</strong> {{ $page->drop_address }}
@@ -204,41 +189,48 @@
                                                 <br><strong>Đến:</strong> {{ $page->drop_second_address }}
                                             @else
                                             @endif
+                                            @if($page->order_id_gsm)
+                                                <br><br><strong>Mã GSM: </strong>{{ $page->order_id_gsm }}
+                                            @endif
                                         </td>
+
+                                        <td style="min-width: 135px; word-wrap: break-word;"> {{ $page->create_date}} </td>
+
                                         <td>
                                             @if ($page->progress == 3)
                                                 <span
-                                                    class="badge badge-success"> {{ $CfGoProcessArr[$page->progress] }}</span>
+                                                    class="badge badge-success mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @elseif($page->progress == 4)
                                                 <span
-                                                    class="badge badge-danger"> {{ $CfGoProcessArr[$page->progress] }}</span>
+                                                    class="badge badge-danger mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @else
                                                 <span
-                                                    class="badge badge-warning"> {{ $CfGoProcessArr[$page->progress] }}</span>
+                                                    class="badge badge-warning mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @endif
-                                        </td>
-                                        <td>
+
                                             @if ($page->go_type == 2)
-                                                <span class="badge badge-warning"> Tài xế</span>
+                                                <span class="badge badge-warning mt-1"> Tài xế</span>
                                             @else
                                                 @if ($page->go_request_id == 1000)
-                                                    <span class="badge badge-danger"> Admin</span>
+                                                    <span class="badge badge-danger mt-1"> Admin</span>
                                                 @else
-                                                    <span class="badge badge-success">Khách</span>
+                                                    <span class="badge badge-success mt-1">Khách</span>
                                                 @endif
                                             @endif
 
+                                            @if($page->payment_status == "PAID")
+                                                <span class="badge badge-success mt-1">Chuyển khoản</span>
+                                            @else
+                                                <span class="badge badge-warning mt-1">Tiền mặt</span>
+                                            @endif
                                         </td>
-
-                                        <td> {{ $page->create_date}} </td>
-                                        <td style="max-width: 100px; word-wrap: break-word;"> {{ $page->order_id_gsm }} </td>
                                         <td class="text-center">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->id) }}"
                                                    class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i
                                                         class="fas fa-pencil-alt"></i></a>
                                             @else
-                                                Liên hệ Admin<br/>
+
                                             @endif
 
                                             @if($page->food_order)
@@ -261,30 +253,28 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                             @endif
+                                            <div class="mt-2">
+                                                @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
+
+                                                @else
+                                                    @if($page->progress == 4 && $page->log_add_money_request_status === 0)
+                                                        <span class="badge badge-warning">Chưa duyệt</span>
+                                                    @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
+                                                        <span class="badge badge-success">Đã duyệt</span>
+                                                    @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
+                                                        <span class="badge badge-primary">Xóa</span>
+                                                    @elseif($page->progress == 4)
+                                                        <a href="{{ route('driver.admin.payment_create', $page->id) }}"
+                                                           class="badge badge-danger">Hoàn tiền</a>
+                                                    @else
+
+                                                    @endif
+                                                @endif
+                                            </div>
                                         </td>
 
                                         <td class="text-center">
-                                            @if (in_array($page->service_detail_id, [33]) && $page->go_request_id != 1000)
 
-
-                                            @else
-                                                @if($page->progress == 4 && $page->log_add_money_request_status === 0)
-                                                    <span class="badge badge-warning">Chưa duyệt</span>
-
-                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 1)
-                                                    <span class="badge badge-success">Đã duyệt</span>
-
-                                                @elseif($page->progress == 4 && $page->log_add_money_request_status === 2)
-                                                    <span class="badge badge-primary">Xóa</span>
-
-                                                @elseif($page->progress == 4)
-                                                    <a href="{{ route('driver.admin.payment_create', $page->id) }}"
-                                                       class="badge badge-danger">Hoàn tiền</a>
-
-                                                @else
-
-                                                @endif
-                                            @endif
                                         </td>
 
                                     </tr>
