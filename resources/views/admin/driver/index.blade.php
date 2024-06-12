@@ -142,7 +142,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('driver.admin.drservice', $page->id) }}"
-                                               class="btn btn-primary">Đăng ký</a>
+                                               class="badge badge-primary">Đăng ký</a>
                                         </td>
 
                                     </tr>

@@ -717,6 +717,15 @@ class DriverController extends Controller
         }
 
         $page_title = __('Tạo yêu cầu nạp tiền');
+
+        $type_payments = array(
+            array('id' => 'cashin', 'name' => __('Nạp ví tài xế')),
+            array('id' => 'refund', 'name' => __('Hoàn ví cuốc hủy')),
+            array('id' => 'donate', 'name' => __('Tặng/thưởng')),
+            array('id' => 'cashout', 'name' => __('Rút ví ngưng hợp tác')),
+            array('id' => 'other', 'name' => __('Khác'))
+        );
+
         $phone = '';
         $reason = '';
         $money = 0;
@@ -731,7 +740,7 @@ class DriverController extends Controller
             $reason = 'Nạp tiền cho Cuốc Hủy BUTL_' . $id . ' lúc ' . $go_info->create_date;
             $info_string = $driver->name;
         }
-        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'page_title'));
+        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'type_payments', 'page_title'));
     }
 
     /**
@@ -749,6 +758,15 @@ class DriverController extends Controller
         }
 
         $page_title = __('Tạo yêu cầu nạp tiền');
+
+        $type_payments = array(
+            array('id' => 'cashin', 'name' => __('Nạp ví tài xế')),
+            array('id' => 'refund', 'name' => __('Hoàn ví cuốc hủy')),
+            array('id' => 'donate', 'name' => __('Tặng/thưởng')),
+            array('id' => 'cashout', 'name' => __('Rút ví ngưng hợp tác')),
+            array('id' => 'other', 'name' => __('Khác'))
+        );
+
         $driveData["phone"] = $phone;
         if ($phone) {
             $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
@@ -763,9 +781,13 @@ class DriverController extends Controller
             $driveData["user_name"] = $check_phone->name;
             $driveData["cmnd"] = $check_phone->cmnd;
             $info_string = 'Tên tài xế: ' . $driveData["user_name"] . ' --- CMND: ' . $driveData["cmnd"];
+//            dd($check_phone);
+            if($check_phone->is_active == 2) {
+                $info_string .= ". Tài khoản ngưng hoạt động không thể tạo yêu cầu";
+            }
         }
         $phone = $driveData["phone"];
-        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'page_title'));
+        return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'type_payments', 'page_title'));
     }
 
     public function payment_store(Request $request)
@@ -800,9 +822,10 @@ class DriverController extends Controller
         $this->validate($request, $validation, $validationMsg);
         $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
         if (empty($check_phone)) {
-            return redirect()->route('driver.admin.payment')->with('error', __('Số điện thoại tài xế không tồn tại.'));
+            return redirect()->back()->with('error', __('Số điện thoại tài xế không tồn tại.'));
+        } else if($check_phone->is_active == 2) {
+            return redirect()->back()->with('error', __('Trạng thái tài xế không hoạt động, không thể tạo yêu cầu nạp tiền'));
         } else {
-
             $driveData["user_id"] = $check_phone->id;
             $driveData["user_name"] = $check_phone->name;
             $driveData["user_phone"] = $check_phone->phone;
@@ -814,7 +837,7 @@ class DriverController extends Controller
             // kiểm tra agency có quản lý tài xế không ?
             if ($current_user->agency_id > 0) {
                 if ($current_user->agency_id != $check_phone->agency_id) {
-                    return redirect()->route('driver.admin.payment')->with('error', __('Bạn không quản lí tài xế không tồn tại.'));
+                    return redirect()->back()->with('error', __('Bạn không quản lí tài xế không tồn tại.'));
                 }
             }
             $blog = LogAddMoneyRequest::create($driveData);

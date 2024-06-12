@@ -35,19 +35,21 @@
                                     </div>
                                     <div class="form-group col-6" style="padding-top:30px;">
                                         <a href="javascript:check();" class="btn btn-primary">Kiểm tra tài xế</a>
-
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Loại</label>
+                                        <label>Loại <span
+                                                class="text-danger">*(Chọn đúng loại của đơn yêu cầu nạp tiền)</span></label>
                                         <select name="type" class="default-select form-control">
-                                            <option value="" >-- Chọn --</option>
-                                            <option
-                                                {{ request()->input('type') == 'cashin_driver' ? 'selected="selected"':'' }} value="cashin_driver">{{ __("Nạp ví tài xế") }}</option>
-                                            <option
-                                                {{ request()->input('type') == 'cashout_driver' ? 'selected="selected"':'' }} value="cashout_driver">{{ __("Rút ví tài xế") }}</option>
-                                            <option
-                                                {{ request()->input('type') == 'refund_driver' ? 'selected="selected"':'' }} value="refund_driver">{{ __("Hoàn ví tài xế") }}</option>
+                                            <option value="">-- Chọn --</option>
+                                            @if($type_payments)
+                                                @foreach($type_payments as  $type)
+                                                    <option
+                                                        {{ request()->input('type') == $type['id'] ? 'selected="selected"':'' }} value="{{ $type['id'] }}">
+                                                        {{ __($type['name']) }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
                                         </select>
 
                                         @error('type')
@@ -58,7 +60,8 @@
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Số tiền</label>
+                                        <label>Số tiền <br><span
+                                                class="text-danger">Ví dụ nạp ví: 300000 <br>Ví dụ trừ ví: -300000</span></label>
                                         <input type="text" name="money" id="money" class="form-control"
                                                value="{{ $money }}">
                                         @error('money')
