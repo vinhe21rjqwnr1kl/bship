@@ -179,7 +179,7 @@
 
                                         </td>
 
-                                        <td class="text-center">
+                                        <td class="text-center" style="min-width: 120px; word-wrap: break-word;">
                                             @if($page->food_order)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"

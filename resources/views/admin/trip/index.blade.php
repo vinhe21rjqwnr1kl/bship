@@ -207,7 +207,7 @@
                                                 <span
                                                     class="badge badge-warning mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
                                             @endif
-
+                                            <br>
                                             @if ($page->go_type == 2)
                                                 <span class="badge badge-warning mt-1"> Tài xế</span>
                                             @else
@@ -224,7 +224,7 @@
                                                 <span class="badge badge-warning mt-1">Tiền mặt</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="min-width: 120px; word-wrap: break-word;">
                                             @if($userId ==1)
                                                 <a href="{{ route('trip.admin.status', $page->id) }}"
                                                    class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i

@@ -168,7 +168,7 @@
                                                 <br><strong>Đến:</strong> {{ $page->drop_second_address }}
                                             @else
                                             @endif
-                                            @if($page->trip->order_id_gsm)
+                                            @if($page->trip && $page->trip->order_id_gsm)
                                                 <br><br><strong>Mã GSM: </strong>{{ $page->trip->order_id_gsm }}
                                             @endif
                                         </td>
@@ -200,7 +200,7 @@
                                             @endif
                                         </td>
 
-                                        <td>
+                                        <td class="text-center" style="min-width: 120px; word-wrap: break-word;">
                                             @if($page->food_order)
                                                 <button type="button"
                                                         class="btn btn-primary shadow btn-xs sharp me-1 mt-2"
