@@ -47,4 +47,5 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/dr
     Route::get('/percent/{driver_id}/{service_detail_id}/{percent}', [DriverController::class, 'admin_percent'])->name('driver.admin.percent');
 
     Route::post('/sync-driver-gsm/{id}', [DriverController::class, 'syncDriverGsm'])->name('driver.admin.sync-driver-gsm');
+//
 });
