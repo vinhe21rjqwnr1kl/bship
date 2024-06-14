@@ -191,12 +191,12 @@
                                                     <td> x {{ $item->quantity }}</td>
 
                                                     @php
-                                                        $totalPrice = $item->price * $item->quantity;
+                                                        $totalItems = $item->price * $item->quantity;
                                                         $totalTopping = 0;
                                                         foreach ($item->food_order_item_toppings as $key => $topping) {
                                                             $totalTopping += $topping->additional_price;
                                                         }
-                                                        $total = $totalPrice + ($totalTopping * $item->quantity);
+                                                        $total = $totalItems + ($totalTopping * $item->quantity);
                                                     @endphp
 
                                                     <td> {{ number_format($total) }}</td>

@@ -23,12 +23,36 @@ function renderTableProductsOrder(data) {
 
     data.forEach(function (item) {
         var row = document.createElement('tr');
+        var productName = '<strong>' +item.product.name + '</strong>';
+        var totalItem = item.price * item.quantity;
+        var totalToppings = 0;
+
+        // if (item.food_order_item_toppings) {
+        //     var toppings = item.food_order_item_toppings.map(function (topping) {
+        //         return topping.name;
+        //     }).join(', ');
+        //     productName += ' (Toppings: ' + toppings + ')';
+        // }
+
+        if (item.food_order_item_toppings) {
+            var toppings = item.food_order_item_toppings.map(function (item) {
+            totalToppings += item.additional_price;
+                return item.topping.name + ' (' + formatter.format(item.additional_price) + ')';
+            }).join(', ');
+            productName += ' <br> ' + toppings;
+        }
+
+        var totalPrice = totalItem + (totalToppings * item.quantity);
+
         row.innerHTML =
-            '<td>' + item.product.name + '</td>' +
-            '<td>' + item.size_name + '</td>' +
-            '<td>' + item.quantity + '</td>' +
-            '<td>' + formatter.format(item.price) + '</td>' +
-            '<td><img src="' + item.product.img_url + '" alt="' + item.product.name + '"class="img-fluid rounded" style="max-width: 150px;"></td>';
+            '<td>'
+            // + item.product.name +
+                + productName +
+            '</td>' +
+            '<td style="min-width: 120px; word-wrap: break-word;">' + item.size_name + '</td>' +
+            '<td style="min-width: 120px; word-wrap: break-word;">' + formatter.format(item.price) + ' x ' + item.quantity + '</td>' +
+            '<td style="min-width: 120px; word-wrap: break-word;">' + formatter.format(totalPrice) + '</td>' +
+            '<td><img src="' + item.product.img_url + '" alt="' + item.product.name + '"class="img-fluid rounded" style="max-width: 120px;"></td>';
         tableBody.appendChild(row);
     });
 }

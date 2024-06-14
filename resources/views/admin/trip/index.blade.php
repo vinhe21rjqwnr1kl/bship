@@ -137,7 +137,6 @@
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
-                                    {{--                                    <th><strong> Loại </strong></th>--}}
                                     <th><strong> Tiền </strong></th>
                                     {{--                                    <th><strong> Phương thức </strong></th>--}}
                                     <th><strong> Thông tin </strong></th>
@@ -272,11 +271,6 @@
                                                 @endif
                                             </div>
                                         </td>
-
-                                        <td class="text-center">
-
-                                        </td>
-
                                     </tr>
                                 @empty
                                     <tr>

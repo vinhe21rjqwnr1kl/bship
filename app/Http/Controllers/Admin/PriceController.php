@@ -660,10 +660,12 @@ class PriceController extends Controller
         $urlReloadService = env("URL_API_USER") . "ButlAppServlet/app/services";
         $urlReloadConfig = env("URL_API_SOCKET") . "api/v1/web/reloadConfig";
 
-        $response = Http::post($urlReloadService, $body);
-        $response2 = Http::get($urlReloadConfig);
+        $response = Http::post($urlReloadService, $body)->json();
+        $response2 = Http::get($urlReloadConfig)->json();
 
-        return view('admin.price.cache', compact('page_title'));
+//        dd($response, $response2);
+
+        return view('admin.price.cache', compact('page_title', 'response', 'response2'));
     }
 
     /**

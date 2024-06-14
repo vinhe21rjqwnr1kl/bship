@@ -215,7 +215,11 @@ class DriverController extends Controller
                         $blog_meta['value'] = $fileName;
                         //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
                         if ($blog_meta["title"] == 'avatar') {
+
                             $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+//                            $fullUrl = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+//                            $path = str_replace($appUrl, '', $fullUrl);
+//                            $driveData["avatar_img"] = $path;
                         }
                         if ($blog_meta["title"] == 'cmnd') {
                             $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
@@ -387,6 +391,9 @@ class DriverController extends Controller
                         //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
                         if ($blog_meta["title"] == 'avatar') {
                             $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+//                            $fullUrl = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
+//                            $path = str_replace($appUrl, '', $fullUrl);
+//                            $driveData["avatar_img"] = $path;
                         }
                         if ($blog_meta["title"] == 'cmnd') {
                             $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
@@ -782,7 +789,7 @@ class DriverController extends Controller
             $driveData["cmnd"] = $check_phone->cmnd;
             $info_string = 'Tên tài xế: ' . $driveData["user_name"] . ' --- CMND: ' . $driveData["cmnd"];
 //            dd($check_phone);
-            if($check_phone->is_active == 2) {
+            if ($check_phone->is_active == 2) {
                 $info_string .= ". Tài khoản ngưng hoạt động không thể tạo yêu cầu";
             }
         }
@@ -823,7 +830,7 @@ class DriverController extends Controller
         $check_phone = Driver::firstWhere('phone', $driveData["phone"]);
         if (empty($check_phone)) {
             return redirect()->back()->with('error', __('Số điện thoại tài xế không tồn tại.'));
-        } else if($check_phone->is_active == 2) {
+        } else if ($check_phone->is_active == 2) {
             return redirect()->back()->with('error', __('Trạng thái tài xế không hoạt động, không thể tạo yêu cầu nạp tiền'));
         } else {
             $driveData["user_id"] = $check_phone->id;

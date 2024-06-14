@@ -54,6 +54,7 @@ class ExportTrip implements FromCollection, WithHeadings
         $resultQuery->join('cf_service_main', 'cf_service_main.id', '=', 'go_info.service_id');
         $resultQuery->join('cf_services_type', 'cf_services_detail.service_type', '=', 'cf_services_type.id');
         $resultQuery->join('cf_go_process', 'cf_go_process.id', '=', 'go_info.progress');
+        $resultQuery->leftJoin('t_discount_used', 't_discount_used.go_info_id', '=', 'go_info.id');
 
 
         $resultQuery->select('go_info.id',
@@ -71,7 +72,8 @@ class ExportTrip implements FromCollection, WithHeadings
             'user_driver_data.phone as driver_phone',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09',
-            DB::raw('if(go_info.go_request_id=1000, "Admin", "User")')
+            DB::raw('if(go_info.go_request_id=1000, "Admin", "User")'),
+            't_discount_used.discount_code',
         );
 
         $resultQuery->orderBy('go_info.' . 'create_date', 'asc');
@@ -89,6 +91,6 @@ class ExportTrip implements FromCollection, WithHeadings
     {
         return ["Mã Chuyến", "Loại", "Dịch vụ", "Trạng thái ", "Đi Từ", "Đến", "Kilomet", "Tổng tiền", "Tiền Đại lý",
             "Tiền Tài xế", "Tiền Bảo Hiểm", "Tiền Khuyến mãi", "Hình thức thanh toán", "Ngày tạo", "Tên Tx", "SĐT Tài xế",
-            "Tên khách hàng", "SĐT khách hàng", "Tạo bởi"];
+            "Tên khách hàng", "SĐT khách hàng", "Tạo bởi", "Mã giảm giá"];
     }
 }

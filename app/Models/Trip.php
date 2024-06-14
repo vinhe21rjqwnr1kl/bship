@@ -60,6 +60,10 @@ class Trip extends Model
         return $this->hasOne(DeliveryOrder::class, 'go_id', 'id');
     }
 
+    public function discount_used() : HasOne {
+        return $this->hasOne(VoucherUsed::class, 'go_info_id', 'id');
+    }
+
 
 
 
