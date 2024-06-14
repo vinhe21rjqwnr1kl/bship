@@ -8,7 +8,7 @@ function renderTableInfo(data) {
     var restaurantPhone = exampleModal.querySelector('.restaurant-phone');
     var totalOrderPrice = exampleModal.querySelector('#total-order-price');
     totalOrderPrice.textContent = '';
-    totalOrderPrice.textContent = formatter.format(data.totalOrderPrice);
+    totalOrderPrice.textContent = formatter.format(data.food_order.price);
     restaurantName.textContent = '';
     restaurantAddress.textContent = '';
     restaurantPhone.textContent = '';

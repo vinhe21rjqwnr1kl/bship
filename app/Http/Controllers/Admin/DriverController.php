@@ -391,9 +391,9 @@ class DriverController extends Controller
                         //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
                         if ($blog_meta["title"] == 'avatar') {
                             $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-//                            $fullUrl = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-//                            $path = str_replace($appUrl, '', $fullUrl);
-//                            $driveData["avatar_img"] = $path;
+//                            dd($appUrl);
+//                            dd($driveData["avatar_img"]);
+
                         }
                         if ($blog_meta["title"] == 'cmnd') {
                             $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
