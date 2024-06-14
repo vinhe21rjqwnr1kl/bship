@@ -119,7 +119,7 @@
                                             <br><strong>SĐT:</strong> {{$page->driver_phone}}
                                         </td>
                                         <td style="min-width: 120px; word-wrap: break-word;">
-                                            {{ $ServicesArr[$page->service_id] }}<br>
+                                            {{ $ServicesArr[$page->service_id] }}<hr>
                                             {{ $ServicesTypeArr[$page->service_type] }}
                                         </td>
 
