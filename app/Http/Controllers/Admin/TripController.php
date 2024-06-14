@@ -241,7 +241,9 @@ class TripController extends Controller
             $goRequest = TripRequest::with([
                 'food_order.restaurant',
                 'food_order.items.product',
-                'food_order.items.size.size'
+                'food_order.items.size.size',
+                'food_order.items.food_order_item_toppings',
+                'food_order.items.food_order_item_toppings.topping'
             ])
                 ->where('id', $go_request_id)
                 ->first();
