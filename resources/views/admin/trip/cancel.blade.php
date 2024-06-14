@@ -109,7 +109,7 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td> BSHIP_{{ $page->id }} </td>
+                                        <td > BSHIP_{{ $page->id }} </td>
                                         <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}

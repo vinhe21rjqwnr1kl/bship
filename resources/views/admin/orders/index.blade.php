@@ -117,9 +117,7 @@
                                     {{--                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">--}}
                                     <a href="{{ route('orders.admin.index') }}" class="btn btn-danger">Nhập
                                         Lại</a>
-
                                 </div>
-
                             </div>
                         </form>
                     </div>
@@ -138,15 +136,15 @@
                                 <thead class="">
                                 <tr>
                                     <th><strong> STT</strong></th>
-                                    <th><strong> Mã </strong></th>
+                                    <th><strong> Mã đơn </strong></th>
                                     <th><strong> Khách hàng </strong></th>
                                     <th><strong> Cửa hàng </strong></th>
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> Tiền </strong></th>
                                     {{--                                    <th><strong> Phương thức </strong></th>--}}
                                     <th><strong> Địa chỉ giao hàng </strong></th>
-                                    <th><strong> Trạng thái đơn </strong></th>
                                     <th><strong> Đã thêm </strong></th>
+                                    <th><strong> Trạng thái đơn </strong></th>
                                     <th><strong> Hoạt động </strong></th>
                                 </tr>
                                 </thead>
@@ -208,7 +206,8 @@
                                         <td style="min-width: 350px; word-wrap: break-word;">
                                             {{ $page->delivery_address }}
                                         </td>
-                                        <td>
+                                        <td style="min-width: 135px; word-wrap: break-word;">{{ $page->created_at }}</td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             @if($page->status == 'Pending')
                                                 <span
                                                     class="badge badge-warning mt-1">{{ __('Chưa giải quyết') }}</span>
@@ -222,8 +221,7 @@
 
                                             <span class="badge badge-warning mt-1">{{ $page->payment_method }}</span>
                                         </td>
-                                        <td style="min-width: 135px; word-wrap: break-word;">{{ $page->created_at }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="min-width: 120px; word-wrap: break-word;">
                                             <a href="{{ route('orders.admin.details', ['id' => $page->id]) }}"
                                                class="btn btn-primary shadow btn-xs sharp me-1 mt-2"><i
                                                     class="fas fa-eye"></i></a>

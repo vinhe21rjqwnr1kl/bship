@@ -133,7 +133,7 @@
                                     <tr>
                                         <td> {{ $i++ }} </td>
                                         {{--										<td> {{ $page->id }} </td>--}}
-                                        <td>
+                                        <td style="min-width: 100px; word-wrap: break-word;">
                                             @if($page->trip)
                                                 BSHIP_{{ $page->trip->id }}
                                             @endif
