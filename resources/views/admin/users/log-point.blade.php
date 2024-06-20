@@ -71,13 +71,13 @@
                                         <td> {{ $i++ }} </td>
                                         <td> {{ $log->user_data->phone }} </td>
                                         <td>
-                                            <span class="badge badge-primary">{{ $log->point }}</span>
+                                            {{ $log->point }}
                                         </td>
                                         <td>
-                                            <span class="badge badge-primary">{{ $log->current_point }}</span>
+                                            {{ $log->current_point }}
                                         </td>
                                         <td>
-                                            <span class="badge badge-primary">{{ $log->new_point }}</span>
+                                            {{ $log->new_point }}
                                         </td>
 {{--                                        <td>--}}
 {{--                                            <span class="badge badge-primary">{{ $log->user_data->points }}</span>--}}

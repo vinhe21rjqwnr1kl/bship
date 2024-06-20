@@ -66,9 +66,10 @@
                                 <thead>
                                 <tr>
                                     <th><strong> {{ __('common.s_no') }} </strong></th>
-                                    <th><strong> Tên tài xế</strong></th>
-                                    <th><strong> Số điện thoại </strong></th>
+                                    <th><strong> Tên TX</strong></th>
+                                    <th><strong> SĐT </strong></th>
                                     <th><strong> Tiền</strong></th>
+                                    <th><strong> Loại</strong></th>
                                     <th><strong> Thông tin </strong></th>
                                     <th><strong> Người tạo </strong></th>
                                     <th><strong> Thời gian </strong></th>
@@ -86,7 +87,8 @@
                                         <td> {{ $i++ }} </td>
                                         <td> {{ $user->user_name }} </td>
                                         <td> {{ $user->user_phone }} </td>
-                                        <td> {{ number_format($user->money) }} </td>
+                                        <td> {{ number_format($user->money) }}
+                                        <td> {{ $user->type }} </td>
                                         <td> {{ $user->reason }} </td>
                                         <td> {{ $user->create_name }} </td>
                                         <td> {{ $user->create_date }} </td>

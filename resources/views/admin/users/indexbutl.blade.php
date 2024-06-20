@@ -62,8 +62,8 @@
                                     <th> <strong> SĐT </strong> </th>
                                     <th> <strong> HĐH </strong> </th>
                                     <th> <strong> Điểm </strong> </th>
-                                    <th> <strong> Trạng thái </strong> </th>
                                     <th> <strong> Ngày tạo </strong> </th>
+                                    <th> <strong> Trạng thái </strong> </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,16 +78,18 @@
                                     <td> {{ $user->email }} </td>
                                     <td> {{ $user->phone }} </td>
                                     <td> {{ $user->platform }} </td>
-                                    <td>  <span class="badge badge-primary">{{ $user->points }}</span>  </td>
+                                    <td> {{ $user->points }} </td>
+                                    <td> {{ $user->create_time }} </td>
+
                                     <td>
 
                                              @if ($user->is_active == '1')
 												<span class="badge badge-success">Hoạt động</span>
 											@else
 												<span class="badge badge-danger">Ngừng hoạt động</span>
-											@endif</td>
+											@endif
+                                    </td>
 
-                                    <td> {{ $user->create_time }} </td>
 
                                     <td class="text-center">
 												<a href="{{ route('admin.usersbutl.edit', $user->id) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>

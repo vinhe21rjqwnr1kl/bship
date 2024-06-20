@@ -70,8 +70,8 @@
                             <thead>
                                 <tr>
                                     <th> <strong> {{ __('common.s_no') }} </strong> </th>
-                                    <th> <strong> Tên  tài xế</strong> </th>
-                                    <th> <strong> Số điện thoại </strong> </th>
+                                    <th> <strong> Tên TX</strong> </th>
+                                    <th> <strong> SĐT </strong> </th>
                                     <th> <strong> Tiền thêm</strong> </th>
                                     <th> <strong> Tiền trước</strong> </th>
                                     <th> <strong> Tiền sau</strong> </th>
