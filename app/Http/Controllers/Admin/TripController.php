@@ -407,7 +407,7 @@ class TripController extends Controller
             }
             if ($request->filled('dateto')) {
                 $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_info.create_date', '<=', $dateto);
+                $resultQuery->where('go_request.create_date', '<=', $dateto);
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
