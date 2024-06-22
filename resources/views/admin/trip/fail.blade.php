@@ -81,9 +81,13 @@
                                         </option>
                                     </select>
                                 </div>
+                                <?php
+                                $today = date('Y-m-d');
+                                ?>
+
                                 <div class="mb-3 col-md-4">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
-                                           value="{{ old('datefrom', request()->input('datefrom')) }}">
+                                           value="{{ old('datefrom', request()->input('datefrom', $today)) }}">
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"

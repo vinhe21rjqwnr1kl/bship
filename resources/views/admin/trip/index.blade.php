@@ -102,9 +102,13 @@
                                             {{ request()->input('progress') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>
                                     </select>
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <?php
+                                $today = date('Y-m-d');
+                                ?>
+
+                                <div class="mb-3 col-md-3">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
-                                           value="{{ old('datefrom', request()->input('datefrom')) }}">
+                                           value="{{ old('datefrom', request()->input('datefrom', $today)) }}">
                                 </div>
                                 <div class="mb-3 col-md-4">
                                     <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"

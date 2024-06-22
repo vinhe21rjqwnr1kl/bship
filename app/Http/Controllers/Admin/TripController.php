@@ -66,7 +66,7 @@ class TripController extends Controller
             }
             if ($request->filled('dateto')) {
 //                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_info.create_date', '<=', $request->input('dateto'));
+                $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
             if ($request->filled('progress') && $request->input('progress') != 0) {
                 $resultQuery->where('progress', 'like', "%{$request->input('progress')}%");
@@ -99,6 +99,12 @@ class TripController extends Controller
                 });
             }
         }
+
+        $currentDate = date('Y-m-d');
+        if (!$request->filled('datefrom')) {
+            $resultQuery->where('go_info.create_date', '>=', $currentDate);
+        }
+
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
         $resultQuery->orderBy('go_info.' . $sortBy, $direction);
@@ -328,12 +334,18 @@ class TripController extends Controller
             }
             if ($request->filled('dateto')) {
 //                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_info.create_date', '<=', $request->input('dateto'));
+                $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
 //            if ($request->filled('progress')) {
 //                $resultQuery->where('progress', '=', "{$request->input('progress')}");
 //            }
         }
+
+        $currentDate = date('Y-m-d');
+        if (!$request->filled('datefrom')) {
+            $resultQuery->where('go_info.create_date', '>=', $currentDate);
+        }
+
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
         $sortBy = $request->get('sort') ? $request->get('sort') : 'create_date';
         $resultQuery->orderBy('go_info.' . $sortBy, $direction);
@@ -407,7 +419,7 @@ class TripController extends Controller
             }
             if ($request->filled('dateto')) {
 //                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_request.create_date', '<=', $request->input('dateto'));
+                $resultQuery->where('go_request.create_date', '<', "{$request->input('dateto')}");
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
@@ -452,6 +464,11 @@ class TripController extends Controller
             if (!$request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "1");
             }
+        }
+
+        $currentDate = date('Y-m-d');
+        if (!$request->filled('datefrom')) {
+            $resultQuery->where('go_request.create_date', '>=', $currentDate);
         }
 
         $direction = $request->get('direction') ? $request->get('direction') : 'desc';
