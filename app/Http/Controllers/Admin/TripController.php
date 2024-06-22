@@ -65,8 +65,8 @@ class TripController extends Controller
                 $resultQuery->where('go_info.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_info.create_date', '<=', $dateto);
+//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+                $resultQuery->where('go_info.create_date', '<=', $request->input('dateto'));
             }
             if ($request->filled('progress') && $request->input('progress') != 0) {
                 $resultQuery->where('progress', 'like', "%{$request->input('progress')}%");
@@ -327,8 +327,8 @@ class TripController extends Controller
                 $resultQuery->where('go_info.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_info.create_date', '<=', $dateto);
+//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+                $resultQuery->where('go_info.create_date', '<=', $request->input('dateto'));
             }
 //            if ($request->filled('progress')) {
 //                $resultQuery->where('progress', '=', "{$request->input('progress')}");
@@ -406,8 +406,8 @@ class TripController extends Controller
                 $resultQuery->where('go_request.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('go_request.create_date', '<=', $dateto);
+//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+                $resultQuery->where('go_request.create_date', '<=', $request->input('dateto'));
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");

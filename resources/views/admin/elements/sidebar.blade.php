@@ -165,12 +165,24 @@
                                 <span class="nav-text">Tài xế</span>
                             </a>
                             <ul aria-expanded="false">
-                                <li><a href="{{ route('driver.admin.index') }}"> Danh sách tài xế</a></li>
-                                <li><a href="{{ route('driver.admin.create') }}">Thêm tài xế</a></li>
-                                <li><a href="{{ route('driver.admin.warn') }}"> Tài xế sắp hết tiền</a></li>
-                                <li><a href="{{ route('driver.admin.online') }}">Tài xế online</a></li>
-                                <li><a href="{{ route('driver.admin.onlinemap') }}">Tài xế online (map)</a></li>
-                                <li><a href="{{ route('driver.admin.log') }}">Tra cứu tiền</a></li>
+                                @can('Controllers > DriverController > admin_index')
+                                    <li><a href="{{ route('driver.admin.index') }}"> Danh sách tài xế</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > admin_create')
+                                    <li><a href="{{ route('driver.admin.create') }}">Thêm tài xế</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > admin_warn')
+                                    <li><a href="{{ route('driver.admin.warn') }}"> Tài xế sắp hết tiền</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > admin_online')
+                                    <li><a href="{{ route('driver.admin.online') }}">Tài xế online</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > admin_onlinemap')
+                                    <li><a href="{{ route('driver.admin.onlinemap') }}">Tài xế online (map)</a></li>
+                                @endcan
+                                @can('Controllers > DriverController > log')
+                                    <li><a href="{{ route('driver.admin.log') }}">Tra cứu tiền</a></li>
+                                @endcan
                             </ul>
                         </li>
                     @endcan
@@ -520,7 +532,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
-            <p>Version 1.1.18</p>
+            <p>Version 1.1.18.3</p>
         </div>
     </div>
 </div>

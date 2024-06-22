@@ -683,8 +683,8 @@ class DriverController extends Controller
             $resultQuery->where('create_date', '>=', "{$request->input('datefrom')}");
         }
         if ($request->filled('dateto')) {
-            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-            $resultQuery->where('create_date', '<=', $dateto);
+//            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+            $resultQuery->where('create_date', '<=', $request->input('dateto'));
         }
         //check tai xe thuoc dai ly
         $current_user = auth()->user();
@@ -987,8 +987,8 @@ class DriverController extends Controller
             $resultQuery->where('time', '>=', "{$request->input('datefrom')}");
         }
         if ($request->filled('dateto')) {
-            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-            $resultQuery->where('time', '<=', $dateto);
+//            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+            $resultQuery->where('time', '<=', $request->input('dateto'));
         }
         //check tai xe thuoc dai ly
         $current_user = auth()->user();

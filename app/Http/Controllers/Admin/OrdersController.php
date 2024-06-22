@@ -82,8 +82,8 @@ class OrdersController extends Controller
                 $resultQuery->where('created_at', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
-                $resultQuery->where('created_at', '<=', $dateto);
+//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
+                $resultQuery->where('created_at', '<=', $request->input('dateto'));
             }
             if ($request->filled('status_data')) {
                 $resultQuery->where('status', 'like', "%{$request->input('status_data')}%");
