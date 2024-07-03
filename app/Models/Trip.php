@@ -38,8 +38,8 @@ class Trip extends Model
         'service_cost',
         'feedback',
         'is_show_app',
-        'money_vat'
-
+        'money_vat',
+        'created_by'
 	];
 
     public function user() : BelongsTo
@@ -63,8 +63,4 @@ class Trip extends Model
     public function discount_used() : HasOne {
         return $this->hasOne(VoucherUsed::class, 'go_info_id', 'id');
     }
-
-
-
-
 }

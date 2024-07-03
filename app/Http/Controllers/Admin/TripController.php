@@ -48,9 +48,9 @@ class TripController extends Controller
             if ($request->filled('goid')) {
                 $pieces = explode("_", $request->input('goid'));
                 if (isset($pieces[1]))
-                    $resultQuery->Where('go_info.id', 'like', "%{$pieces[1]}%");
+                    $resultQuery->where('go_info.id', '=', "{$pieces[1]}");
                 else
-                    $resultQuery->Where('go_info.id', 'like', "%{$request->input('goid')}%");
+                    $resultQuery->where('go_info.id', '=', "{$request->input('goid')}");
             }
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
@@ -61,11 +61,13 @@ class TripController extends Controller
                 $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
                 $resultQuery->orWhere('user_driver_data.name', 'like', "%{$request->input('name')}%");
             }
+            if ($request->filled('gsm_id')) {
+                $resultQuery->where('go_info.order_id_gsm', 'like', "%{$request->input('gsm_id')}%");
+            }
             if ($request->filled('datefrom')) {
                 $resultQuery->where('go_info.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
                 $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
             if ($request->filled('progress') && $request->input('progress') != 0) {
@@ -100,7 +102,7 @@ class TripController extends Controller
             }
         }
 
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-01');
         if (!$request->filled('datefrom')) {
             $resultQuery->where('go_info.create_date', '>=', $currentDate);
         }
@@ -134,12 +136,9 @@ class TripController extends Controller
             $resultQuery->where('go_info.service_id', '=', $service_id);
         }
 
-
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::where('is_active', '1')->pluck('name', 'id')->toArray();
-
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
 
         if ($request->input('excel') == "Excel") {
@@ -156,7 +155,6 @@ class TripController extends Controller
         // $roleArr = Agency::pluck('name', 'id')->toArray();
         // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.index', compact('service_id', 'drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
-
     }
 
 
@@ -300,7 +298,6 @@ class TripController extends Controller
                 );
 
             $resultQuery->where('go_request.id', $go_request_id);
-
             $data = $resultQuery->first();
 
             return response()->json([
@@ -322,18 +319,18 @@ class TripController extends Controller
             if ($request->filled('phone')) {
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
                 $resultQuery->orWhere('user_driver_data.phone', 'like', "%{$request->input('phone')}%");
-
             }
             if ($request->filled('name')) {
                 $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
                 $resultQuery->orWhere('user_driver_data.name', 'like', "%{$request->input('name')}%");
-
+            }
+            if ($request->filled('gsm_id')) {
+                $resultQuery->where('go_info.order_id_gsm', 'like', "%{$request->input('gsm_id')}%");
             }
             if ($request->filled('datefrom')) {
                 $resultQuery->where('go_info.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
                 $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
             }
 //            if ($request->filled('progress')) {
@@ -341,7 +338,7 @@ class TripController extends Controller
 //            }
         }
 
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-01');
         if (!$request->filled('datefrom')) {
             $resultQuery->where('go_info.create_date', '>=', $currentDate);
         }
@@ -371,9 +368,6 @@ class TripController extends Controller
         $resultQuery->where('progress', '=', "4");
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-
-//        return $drivers;
-
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
@@ -418,21 +412,11 @@ class TripController extends Controller
                 $resultQuery->where('go_request.create_date', '>=', "{$request->input('datefrom')}");
             }
             if ($request->filled('dateto')) {
-//                $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
                 $resultQuery->where('go_request.create_date', '<', "{$request->input('dateto')}");
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
             }
-
-//            $tags = json_decode($request->input("tags"), true);
-//            if (!empty($tags)) {
-//                $resultQuery->where(function ($query) use ($tags) {
-//                    foreach ($tags as $tag) {
-//                        $query->orWhere('go_request.pickup_address', 'like', "%{$tag}%");
-//                    }
-//                });
-//            }
 
             $tags = json_decode($request->input("tags"), true);
             if (!empty($tags)) {
@@ -466,7 +450,7 @@ class TripController extends Controller
             }
         }
 
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-01');
         if (!$request->filled('datefrom')) {
             $resultQuery->where('go_request.create_date', '>=', $currentDate);
         }
@@ -483,8 +467,6 @@ class TripController extends Controller
             'user_data.phone as user_phone09');
 
         $drivers = $resultQuery->paginate(config('Reading.nodes_per_page'));
-
-//        return $drivers;
 
         $ServicesArr = CfServiceMain::pluck('name', 'id')->toArray();
         $ServicesTypeArr = CfServiceType::pluck('name', 'id')->toArray();
@@ -569,13 +551,11 @@ class TripController extends Controller
             }
         }
 
-
         $check_phone_kh = UserB::firstWhere('phone', $driveData["sdt_kh"]);
         if (empty($check_phone_kh)) {
             return redirect()->route('trip.admin.create')->with('error', __('Số điện thoại khách hàng không tồn tại.'));
         }
         $trip["user_id"] = $check_phone_kh->id;
-
 
         $check_phone_dv = CfServiceDetail::firstWhere('id', $driveData["service_detail_id"]);
         if (empty($check_phone_dv)) {
@@ -648,6 +628,7 @@ class TripController extends Controller
         $trip["service_cost"] = $driveData["money_dv"];
         $trip["money_vat"] = $driveData["vat_money"];
         $trip["is_show_app"] = 0;
+        $trip["created_by"] = $current_user->email;
 
         $trip = Trip::create($trip);
         if ($trip) {

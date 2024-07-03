@@ -36,13 +36,17 @@
                             @csrf
                             <input type="hidden" name="todo" value="Filter">
                             <div class="row">
-                                <div class="mb-3 col-md-3">
+                                <div class="mb-3 col-md-4">
                                     <input type="search" name="phone" class="form-control" placeholder="Số điện thoại"
                                            value="{{ old('phone', request()->input('phone')) }}">
                                 </div>
-                                <div class="mb-3 col-md-3">
+                                <div class="mb-3 col-md-4">
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
+                                </div>
+                                <div class="mb-3 col-md-4">
+                                    <input type="search" name="gsm_id" class="form-control" placeholder="Mã GSM"
+                                           value="{{ old('gsm_id', request()->input('gsm_id')) }}">
                                 </div>
                                 {{--							<div class="mb-3 col-md-4">--}}
 
@@ -57,14 +61,14 @@
                                 {{--								</select>--}}
                                 {{--							</div>--}}
                                 <?php
-                                $today = date('Y-m-d');
+                                $today = date('Y-m-01');
                                 ?>
 
                                 <div class="mb-3 col-md-4">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
                                            value="{{ old('datefrom', request()->input('datefrom', $today)) }}">
                                 </div>
-                                <div class="mb-3 col-md-3">
+                                <div class="mb-3 col-md-4">
                                     <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"
                                            value="{{ old('dateto', request()->input('dateto')) }}">
                                 </div>
@@ -113,7 +117,7 @@
                                 @forelse ($drivers as $page)
                                     <tr>
                                         <td> {{ $i++ }} </td>
-                                        <td > BSHIP_{{ $page->id }} </td>
+                                        <td> BSHIP_{{ $page->id }} </td>
                                         <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tên:</strong> {{$page->user_name09}}
                                             <br><strong>SĐT:</strong> {{$page->user_phone09}}
@@ -123,7 +127,8 @@
                                             <br><strong>SĐT:</strong> {{$page->driver_phone}}
                                         </td>
                                         <td style="min-width: 120px; word-wrap: break-word;">
-                                            {{ $ServicesArr[$page->service_id] }}<hr>
+                                            {{ $ServicesArr[$page->service_id] }}
+                                            <hr>
                                             {{ $ServicesTypeArr[$page->service_type] }}
                                         </td>
 
@@ -153,7 +158,7 @@
 
                                         <td style="min-width: 135px; word-wrap: break-word;"> {{ $page->create_date}} </td>
 
-                                        <td>
+                                        <td style="min-width: 165px; word-wrap: break-word;">
                                             @if ($page->progress == 3)
                                                 <span
                                                     class="badge badge-success mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
@@ -180,7 +185,8 @@
                                             @else
                                                 <span class="badge badge-warning mt-1">Tiền mặt</span>
                                             @endif
-
+                                            <br>
+                                            <span class="badge badge-danger mt-1">{{$page->created_by}}</span>
                                         </td>
 
                                         <td class="text-center" style="min-width: 120px; word-wrap: break-word;">

@@ -82,7 +82,7 @@
                                     </select>
                                 </div>
                                 <?php
-                                $today = date('Y-m-d');
+                                $today = date('Y-m-01');
                                 ?>
 
                                 <div class="mb-3 col-md-4">

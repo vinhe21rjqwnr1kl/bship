@@ -62,21 +62,25 @@
                                         <span class="tags-length">0 Thẻ</span>
                                     </div>
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="search" name="goid" class="form-control" placeholder="Mã chuyến đi"
                                            value="{{ old('phone', request()->input('goid')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="search" name="phone" class="form-control" placeholder="Số điện thoại"
                                            value="{{ old('phone', request()->input('phone')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
                                 </div>
+                                <div class="mb-3 col-md-3">
+                                    <input type="search" name="gsm_id" class="form-control" placeholder="Mã GSM"
+                                           value="{{ old('gsm_id', request()->input('gsm_id')) }}">
+                                </div>
 
                                 @if($service_id == 0)
-                                    <div class="mb-3 col-md-4">
+                                    <div class="mb-3 col-md-3">
                                         <select name="service_type" class="default-select form-control">
                                             <option value="0">-- Tất cả --</option>
                                             @foreach($ServicesTypeArr as $key => $serviceType)
@@ -87,7 +91,7 @@
                                     </div>
                                 @endif
 
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <select name="progress" class="default-select form-control">
                                         <option value="0">-- Tất cả --</option>
                                         <option
@@ -103,18 +107,18 @@
                                     </select>
                                 </div>
                                 <?php
-                                $today = date('Y-m-d');
+                                $today = date('Y-m-01');
                                 ?>
 
                                 <div class="mb-3 col-md-3">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
                                            value="{{ old('datefrom', request()->input('datefrom', $today)) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"
                                            value="{{ old('dateto', request()->input('dateto')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-12">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
                                     <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
@@ -169,8 +173,9 @@
                                             <br><strong>SĐT:</strong> {{$page->driver_phone}}
                                         </td>
                                         <td style="min-width: 120px; word-wrap: break-word;">
-                                            {{ $ServicesArr[$page->service_id] }} <hr>
-                                            {{ $ServicesTypeArr[$page->service_type] }}
+                                            {{ $ServicesArr[$page->service_id] ?? '-'}}
+                                            <hr>
+                                            {{ $ServicesTypeArr[$page->service_type] ?? '-'}}
                                         </td>
                                         <td style="min-width: 150px; word-wrap: break-word;">
                                             <strong>Tổng:</strong> {{ number_format($page->cost - $page->discount_from_code) }}
@@ -199,7 +204,7 @@
 
                                         <td style="min-width: 135px; word-wrap: break-word;"> {{ $page->create_date}} </td>
 
-                                        <td>
+                                        <td style="min-width: 165px; word-wrap: break-word;">
                                             @if ($page->progress == 3)
                                                 <span
                                                     class="badge badge-success mt-1"> {{ $CfGoProcessArr[$page->progress] }}</span>
@@ -226,6 +231,8 @@
                                             @else
                                                 <span class="badge badge-warning mt-1">Tiền mặt</span>
                                             @endif
+                                            <br>
+                                            <span class="badge badge-danger mt-1">{{$page->created_by}}</span>
                                         </td>
                                         <td class="text-center" style="min-width: 120px; word-wrap: break-word;">
                                             @if($userId ==1)
@@ -305,7 +312,7 @@
         //     document.location.reload();
         // }, 60000);
 
-        var apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
+        let apiTemp = '{{ route("trip.admin.detail", ["service" => ":service", "go_id" => ":id"] ) }}';
     </script>
 
     <script src="{{ asset('js/delivery-food-modal.js') }}"></script>

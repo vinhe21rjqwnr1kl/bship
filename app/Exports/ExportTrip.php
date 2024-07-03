@@ -27,26 +27,62 @@ class ExportTrip implements FromCollection, WithHeadings
         $service_id = $this->service_id;
         $resultQuery = Trip::query();
 
-        if ($request->phone) {
-            $resultQuery->where('user_data.phone', 'like', "%{$request->phone}%");
+
+        if ($request->filled('goid')) {
+            $pieces = explode("_", $request->input('goid'));
+            if (isset($pieces[1]))
+                $resultQuery->Where('go_info.id', 'like', "%{$pieces[1]}%");
+            else
+                $resultQuery->Where('go_info.id', 'like', "%{$request->input('goid')}%");
         }
-        if ($request->name) {
-            $resultQuery->where('user_data.name', 'like', "%{$request->name}%");
+        if ($request->filled('phone')) {
+            $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
+            $resultQuery->orWhere('user_driver_data.phone', 'like', "%{$request->input('phone')}%");
         }
-        if ($request->datefrom) {
-            $resultQuery->where('go_info.create_date', '>=', "{$request->datefrom}");
+        if ($request->filled('name')) {
+            $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
+            $resultQuery->orWhere('user_driver_data.name', 'like', "%{$request->input('name')}%");
         }
-        if ($request->dateto) {
-            $resultQuery->where('go_info.create_date', '<', "{$request->dateto}");
+        if ($request->filled('gsm_id')) {
+            $resultQuery->where('go_info.order_id_gsm', 'like', "%{$request->input('gsm_id')}%");
         }
-        if ($request->progress) {
-            $resultQuery->where('go_info.progress', 'like', "%{$request->progress}%");
+        if ($request->filled('datefrom')) {
+            $resultQuery->where('go_info.create_date', '>=', "{$request->input('datefrom')}");
+        }
+        if ($request->filled('dateto')) {
+            $resultQuery->where('go_info.create_date', '<', "{$request->input('dateto')}");
+        }
+        if ($request->filled('progress') && $request->input('progress') != 0) {
+            $resultQuery->where('go_info.progress', 'like', "%{$request->input('progress')}%");
+        }
+        if ($request->filled('service_type') && $request->input('service_type') != 0) {
+            $resultQuery->where('cf_services_detail.service_type', '=', $request->input('service_type'));
         }
 
-        if ($service_id > 0) {
-            $resultQuery->where('go_info.service_id', '=', $service_id);
+        $tags = json_decode($request->input("tags"), true);
+        if (!empty($tags)) {
+            $resultQuery->where(function ($query) use ($tags) {
+                foreach ($tags as $tag) {
+                    $parts = explode(',', $tag);
+                    $city = trim($parts[0]);
+                    $district = isset($parts[1]) ? trim($parts[1]) : null;
+                    $ward = isset($parts[2]) ? trim($parts[2]) : null;
 
+                    // Kiểm tra nếu quận và phường được chỉ định
+                    if ($district && $ward) {
+                        $output = "$ward, $district, $city";
+                        $query->orWhere('go_info.pickup_address', 'like', "%{$output}%");
+                    } elseif ($district) {
+                        // Nếu chỉ có quận được chỉ định
+                        $query->orWhere('go_info.pickup_address', 'like', "%{$district}, {$city}%");
+                    } else {
+                        // Nếu chỉ có thành phố được chỉ định
+                        $query->orWhere('go_info.pickup_address', 'like', "%{$city}%");
+                    }
+                }
+            });
         }
+
 
         $resultQuery->join('user_driver_data', 'user_driver_data.id', '=', 'go_info.driver_id');
         $resultQuery->join('user_data', 'user_data.id', '=', 'go_info.user_id');
@@ -55,6 +91,8 @@ class ExportTrip implements FromCollection, WithHeadings
         $resultQuery->join('cf_services_type', 'cf_services_detail.service_type', '=', 'cf_services_type.id');
         $resultQuery->join('cf_go_process', 'cf_go_process.id', '=', 'go_info.progress');
         $resultQuery->leftJoin('t_discount_used', 't_discount_used.go_info_id', '=', 'go_info.id');
+        $resultQuery->leftJoin('log_add_money_request', 'go_info.id', '=', 'log_add_money_request.go_id');
+
 
 
         $resultQuery->select('go_info.id',
@@ -65,6 +103,7 @@ class ExportTrip implements FromCollection, WithHeadings
             DB::raw('(driver_cost - service_cost) as total_dl'),
             DB::raw('(butl_cost + service_cost ) as total_tx'),
             'go_info.service_cost',
+            't_discount_used.discount_code',
             'go_info.discount_from_code',
             DB::raw('if(go_info.payment_status="PAID", "Online", "Tiền mặt")'),
             'go_info.create_date as go_create_date',
@@ -72,8 +111,9 @@ class ExportTrip implements FromCollection, WithHeadings
             'user_driver_data.phone as driver_phone',
             'user_data.name as user_name09',
             'user_data.phone as user_phone09',
+            'go_info.order_id_gsm',
             DB::raw('if(go_info.go_request_id=1000, "Admin", "User")'),
-            't_discount_used.discount_code',
+            'go_info.created_by',
         );
 
         $resultQuery->orderBy('go_info.' . 'create_date', 'asc');
@@ -84,13 +124,14 @@ class ExportTrip implements FromCollection, WithHeadings
         if ($driveData["agency_id"] > 0) {
             $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
         }
+
         return $resultQuery->get();
     }
 
     public function headings(): array
     {
         return ["Mã Chuyến", "Loại", "Dịch vụ", "Trạng thái ", "Đi Từ", "Đến", "Kilomet", "Tổng tiền", "Tiền Đại lý",
-            "Tiền Tài xế", "Tiền Bảo Hiểm", "Tiền Khuyến mãi", "Hình thức thanh toán", "Ngày tạo", "Tên Tx", "SĐT Tài xế",
-            "Tên khách hàng", "SĐT khách hàng", "Tạo bởi", "Mã giảm giá"];
+            "Tiền Tài xế", "Tiền Bảo Hiểm", "Mã giảm giá", "Tiền Khuyến mãi", "Hình thức thanh toán", "Ngày tạo", "Tên Tx", "SĐT Tài xế",
+            "Tên khách hàng", "SĐT khách hàng","Mã GSM", "Tạo bởi", "Người tạo"];
     }
 }
