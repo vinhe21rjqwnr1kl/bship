@@ -122,7 +122,7 @@ class ExportTrip implements FromCollection, WithHeadings
         $driveData["agency_id"] = $current_user->agency_id;
 
         if ($driveData["agency_id"] > 0) {
-            $resultQuery->where('agency_id', '=', $driveData["agency_id"]);
+            $resultQuery->where('user_driver_data.agency_id', '=', $driveData["agency_id"]);
         }
 
         return $resultQuery->get();
