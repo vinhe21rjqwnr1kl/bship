@@ -77,7 +77,7 @@
                                         </option>
                                         <option
                                             {{ request()->input('status') == 3 ? 'selected="selected"':'' }} value="3">
-                                            Khách hủy
+                                            Khách hủy tìm chuyến
                                         </option>
                                     </select>
                                 </div>
@@ -186,7 +186,7 @@
                                             @elseif($page->statusmain == 1)
                                                 <span class="badge badge-danger mt-1"> Không tìm thấy tx</span>
                                             @elseif($page->statusmain == 3)
-                                                <span class="badge badge-danger mt-1"> Khách hủy</span>
+                                                <span class="badge badge-danger mt-1"> Khách hủy tìm chuyến</span>
                                             @else
                                                 <span class="badge badge-warning mt-1"> Đang tìm</span>
                                             @endif
