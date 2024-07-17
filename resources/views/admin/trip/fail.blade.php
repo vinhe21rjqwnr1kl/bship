@@ -76,7 +76,7 @@
                                             Tìm tạo chuyến thành công
                                         </option>
                                         <option
-                                            {{ request()->input('status') == 3 ? 'selected="selected"':'' }} value="0">
+                                            {{ request()->input('status') == 3 ? 'selected="selected"':'' }} value="3">
                                             Khách hủy
                                         </option>
                                     </select>
