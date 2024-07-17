@@ -120,7 +120,12 @@
                                 </div>
                                 <div class="mb-3 col-md-12">
                                     <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
-                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+
+                                    @can('Controllers > TripController > handleExcelTrip')
+                                        <input type="submit" name="excel" value="Excel" class="btn btn-primary me-1"
+                                               formaction="{{ route('trip.admin.excel_trip', $service_id) }}">
+                                    @endcan
+
                                     <a href="{{ route('trip.admin.index',$service_id) }}" class="btn btn-danger">Nhập
                                         Lại</a>
                                 </div>
@@ -146,14 +151,10 @@
                                     <th><strong> Tài Xế </strong></th>
                                     <th><strong> DV </strong></th>
                                     <th><strong> Tiền </strong></th>
-                                    {{--                                    <th><strong> Phương thức </strong></th>--}}
                                     <th><strong> Thông tin </strong></th>
-                                    {{--                                    <th><strong> Tạo bởi </strong></th>--}}
                                     <th><strong> Thời gian </strong></th>
-                                    {{--                                    <th><strong> Mã GSM </strong></th>--}}
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Hành động </strong></th>
-                                    {{--                                    <th><strong> Hoàn tiền </strong></th>--}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -279,6 +280,27 @@
                                                     @else
 
                                                     @endif
+                                                @endif
+                                            </div>
+                                            <div class="mt-2">
+                                                @if ($page->payment_status == "PAID" && $page->progress == 3)
+                                                    @if($page->log_add_money_request_status === 0)
+                                                        <span class="badge badge-warning">Chưa duyệt</span>
+                                                    @elseif( $page->log_add_money_request_status === 1)
+                                                        <span class="badge badge-success">Đã duyệt</span>
+                                                    @elseif($page->log_add_money_request_status === 2)
+                                                        <span class="badge badge-primary">Xóa</span>
+                                                    @else
+                                                        <form method="POST" action="{{route('driver.admin.payment.refund_payment_trip', ['go_id'=>$page->id])}}">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-xs btn-danger">Hoàn tiền</button>
+{{--                                                        <a href="{{ route('driver.admin.payment.refund_payment_trip', $page->id) }}"--}}
+{{--                                                           class="badge badge-danger">Hoàn tiền</a>--}}
+                                                        </form>
+
+                                                    @endif
+                                                @else
+
                                                 @endif
                                             </div>
                                         </td>

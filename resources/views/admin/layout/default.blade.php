@@ -38,7 +38,7 @@
     @endif
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
+    <script src="{{ asset('installer/js/jquery.min.js') }}"></script>
 </head>
 
 <body>

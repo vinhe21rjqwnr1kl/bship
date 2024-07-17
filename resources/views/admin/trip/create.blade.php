@@ -121,6 +121,15 @@
                                         </p>
                                         @enderror
                                     </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="gsm_code">Mã GSM</label>
+                                        <input type="text" name="gsm_code" class="form-control" id="gsm_code" placeholder="" value="{{ old('gsm_code') }}">
+                                        @error('gsm_code')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
 
 
 									<div class="col-md-12">

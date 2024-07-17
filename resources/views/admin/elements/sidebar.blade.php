@@ -29,7 +29,6 @@
 
 
         <ul class="metismenu" id="menu">
-
             <li>
                 <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                     <i class="flaticon-141-home"></i>
@@ -69,14 +68,7 @@
                             <li><a href="{{ route('trip.admin.index',8) }}"> Chuyến đi xe hơi</a></li>
                             <li><a href="{{ route('trip.admin.index',11) }}">Chuyến đi xe máy</a></li>
                             <li><a href="{{ route('trip.admin.index',12) }}">Chuyến đi chung</a></li>
-                            {{--                            <li><a href="{{ route('trip.admin.index',3) }}">Xe ôm Vinfast</a></li>--}}
-                            {{--                            <li><a href="{{ route('trip.admin.index',4) }}">Tài xế tỉnh</a></li>--}}
-                            {{--                            <li><a href="{{ route('trip.admin.index',5) }}">Xe hơi</a></li>--}}
-                            {{--                            <li><a href="{{ route('trip.admin.index',8) }}">Bảo hiểm xe</a></li>--}}
-                            {{--                            <li><a href="{{ route('trip.admin.index',9) }}">Bike</a></li>--}}
-                            {{--                            <li><a href="{{ route('trip.admin.index',10) }}">Thuê xe tự lái</a></li>--}}
                             <li><a href="{{ route('trip.admin.create') }}">Tạo chuyến</a></li>
-
                         </ul>
                     </li>
                     <li>
@@ -111,7 +103,6 @@
                 @endif
                 <!--  Đại lý BUÔN MA THUỘT -->
                 @if($agency_id !=3 && $role_id !== null )
-
                     <li class="nav-label">Thông tin</li>
                     <li>
                         <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -186,7 +177,8 @@
                             </ul>
                         </li>
                     @endcan
-                    @can('Controllers > DriverController > admin_index')
+                    @if (Auth::user()->can('Controllers > DriverController > payment') ||
+                         Auth::user()->can('Controllers > DriverController > payment_approve'))
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <i class="flaticon-088-tools"></i>
@@ -206,11 +198,11 @@
                                 @can('Controllers > DriverController > payment_log')
                                     <li><a href="{{ route('driver.admin.payment_log') }}">Lịch sử nạp tiền</a></li>
                                 @endcan
-
                             </ul>
                         </li>
-                    @endcan
-                    @can('Controllers > UsersController > index')
+                    @endif
+
+                    @can('Controllers > UsersController > indexbutl')
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <i class="flaticon-049-copy"></i>
@@ -220,25 +212,42 @@
                                 @can('Controllers > UsersController > indexbutl')
                                     <li><a href="{{ route('admin.usersbutl.index') }}"> Danh sách</a></li>
                                 @endcan
-                                @can('Controllers > PointController > log')
-                                    <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @if (Auth::user()->can('Controllers > PointController > addPoint') ||
+                         Auth::user()->can('Controllers > PointController > givePoint') ||
+                         Auth::user()->can('Controllers > PointController > point_list') ||
+                         Auth::user()->can('Controllers > PointController > log') ||
+                         Auth::user()->can('Controllers > PointController > point_list_request'))
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-049-copy"></i>
+                                <span class="nav-text">Nạp điểm hách hàng</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                @can('Controllers > PointController > addPoint')
+                                    <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
+                                @endcan
+{{--                                @can('Controllers > PointController > givePoint')--}}
+{{--                                    <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>--}}
+{{--                                @endcan--}}
+                                @can('Controllers > PointController > point_list')
+                                    <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
                                 @endcan
                                 @can('Controllers > PointController > point_list_request')
                                     <li><a href="{{ route('admin.point.list-request') }}"> Danh sách cần duyệt </a></li>
                                 @endcan
-                                {{--                                @endif--}}
-                                @can('Controllers > PointController > point_list')
-                                    <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
+                                @can('Controllers > PointController > importLogPointRequest')
+                                    <li><a href="{{ route('admin.point.import_log_point_request') }}"> Import yêu cầu nạp điểm </a></li>
                                 @endcan
-                                @can('Controllers > PointController > addPoint')
-                                    <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
-                                @endcan
-                                @can('Controllers > PointController > givePoint')
-                                    <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>
+                                @can('Controllers > PointController > log')
+                                    <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>
                                 @endcan
                             </ul>
                         </li>
-                    @endcan
+                    @endif
 
                     @can('Controllers > LogAddMoneyController > cashoutIndex')
                         <li>

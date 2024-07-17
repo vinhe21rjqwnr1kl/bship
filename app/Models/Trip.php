@@ -14,6 +14,10 @@ class Trip extends Model
 {
     use HasFactory;
 
+    const COMPLETE = 3; // complete trip
+    const FAIL = 4; // trip fail
+    const CANCEL = 5; // driver canceled trip
+
     protected $table = 'go_info';
     protected $fillable = [
 		'service_detail_id',
@@ -39,12 +43,18 @@ class Trip extends Model
         'feedback',
         'is_show_app',
         'money_vat',
-        'created_by'
+        'created_by',
+        'order_id_gsm'
 	];
 
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function driver() : BelongsTo
+    {
+        return $this->belongsTo(Driver::class, 'driver_id', 'id')->withDefault();
     }
 
     public function trip_request() : BelongsTo

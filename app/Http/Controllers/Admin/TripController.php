@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\DriverRefund;
+use App\Services\ExportService;
 use App\Services\SuperAdminPermissionService;
 use App\Utils\SuperAdminPermissionCheck;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,12 @@ use Carbon\Carbon;
 
 class TripController extends Controller
 {
+    protected $exportService;
+
+    public function __construct(ExportService $exportService)
+    {
+        $this->exportService = $exportService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -40,10 +47,8 @@ class TripController extends Controller
     public function admin_index(Request $request, $service_id)
     {
         $page_title = __('Danh sách chuyến');
-//        $resultQuery = Trip::query()->with('delivery_order')->has('delivery_order');
         $resultQuery = Trip::query()->with(['food_order', 'delivery_order']);
 
-//        return $resultQuery->get();
         if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
             if ($request->filled('goid')) {
                 $pieces = explode("_", $request->input('goid'));
@@ -56,7 +61,6 @@ class TripController extends Controller
                 $resultQuery->where('user_data.phone', 'like', "%{$request->input('phone')}%");
                 $resultQuery->orWhere('user_driver_data.phone', 'like', "%{$request->input('phone')}%");
             }
-
             if ($request->filled('name')) {
                 $resultQuery->where('user_data.name', 'like', "%{$request->input('name')}%");
                 $resultQuery->orWhere('user_driver_data.name', 'like', "%{$request->input('name')}%");
@@ -141,22 +145,14 @@ class TripController extends Controller
         $ServicesTypeArr = CfServiceType::where('is_active', '1')->pluck('name', 'id')->toArray();
         $CfGoProcessArr = CfGoProcess::pluck('name', 'id')->toArray();
 
-        if ($request->input('excel') == "Excel") {
-            if (!SuperAdminPermissionCheck::isAdmin()) {
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
-            } else {
-                $response = Excel::download(new ExportTrip($request, $service_id), 'chuyendi.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-                if (ob_get_contents()) ob_end_clean();
-                return $response;
-            }
-        }
-
-        // $status = config('blog.status');
-        // $roleArr = Agency::pluck('name', 'id')->toArray();
-        // $roleArr[0]= "Công ty BUTL";
         return view('admin.trip.index', compact('service_id', 'drivers', 'ServicesArr', 'ServicesTypeArr', 'CfGoProcessArr', 'page_title'));
     }
 
+    public function handleExcelTrip(Request $request, $serviceId) {
+        $exporter = new ExportTrip($request, $serviceId);
+        $response = $this->exportService->exportData($exporter, 'chuyendi');
+        return $response;
+    }
 
     /**
      * @param $service_id
@@ -532,6 +528,7 @@ class TripController extends Controller
         $driveData["money_km"] = $request->input('money_km');;
         $driveData["money_dv"] = $request->input('money_dv');
         $driveData["vat_money"] = $request->input('vat_money');
+        $driveData["order_id_gsm"] = $request->input('gsm_code');
 
         $current_user = auth()->user();
         $driveData["agency_id"] = $current_user->agency_id;
@@ -629,6 +626,7 @@ class TripController extends Controller
         $trip["money_vat"] = $driveData["vat_money"];
         $trip["is_show_app"] = 0;
         $trip["created_by"] = $current_user->email;
+        $trip["order_id_gsm"] = $driveData["order_id_gsm"];
 
         $trip = Trip::create($trip);
         if ($trip) {

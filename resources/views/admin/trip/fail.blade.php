@@ -77,7 +77,7 @@
                                         </option>
                                         <option
                                             {{ request()->input('status') == 3 ? 'selected="selected"':'' }} value="0">
-                                            Đang nhập địa chỉ
+                                            Khách hủy
                                         </option>
                                     </select>
                                 </div>
@@ -148,7 +148,8 @@
                                         </td>
 
                                         <td style="min-width: 120px; word-wrap: break-word;">
-                                            {{ $ServicesArr[$page->service_id] }}<hr>
+                                            {{ $ServicesArr[$page->service_id] }}
+                                            <hr>
                                             {{ $ServicesTypeArr[$page->service_type] }}
                                         </td>
 
@@ -184,6 +185,8 @@
                                                 <span class="badge badge-success mt-1"> Tạo chuyến thành công</span>
                                             @elseif($page->statusmain == 1)
                                                 <span class="badge badge-danger mt-1"> Không tìm thấy tx</span>
+                                            @elseif($page->statusmain == 3)
+                                                <span class="badge badge-danger mt-1"> Khách hủy</span>
                                             @else
                                                 <span class="badge badge-warning mt-1"> Đang tìm</span>
                                             @endif

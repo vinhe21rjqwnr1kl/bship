@@ -23,6 +23,7 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin/tr
     Route::get('/detail/{service}/{go_id}', [TripController::class, 'admin_detail'])->name('trip.admin.detail');
     Route::get('/detail/fail/{service}/{go_request_id}', [TripController::class, 'admin_detail_fail'])->name('trip.admin.detail.fail');
 
+    Route::get('/excel-trip/{serviceId}', [TripController::class, 'handleExcelTrip'])->name('trip.admin.excel_trip');
 
 });
 
