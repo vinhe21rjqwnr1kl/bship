@@ -20,12 +20,13 @@ return [
 	'roles' => array(
 		'admin' => 'Super Admin'
 	),
-	
+
 	'available_langs' => [
 	  'en' => 'English',
 	  'ru' => 'Russian',
 	  'fr' => 'French',
 	  'hi' => 'Hindi',
 	],
+
 
 ];

@@ -36,6 +36,28 @@
 
 {{--                                    <input type="hidden" id="userId" name="id">--}}
 
+                                    <div class="form-group col-md-6 col-sx-12">
+                                        <label>Loại <span
+                                                class="text-primary">*(Chọn đúng loại của đơn yêu cầu)</span></label>
+                                        <select name="type" class="default-select form-control">
+                                            <option value="">-- Chọn --</option>
+                                            @if($type_points)
+                                                @foreach($type_points as $key => $type)
+                                                    <option
+                                                        {{ request()->input('type') == $key ? 'selected="selected"':'' }} value="{{ $key }}">
+                                                        {{ __($type) }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+
+                                        @error('type')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+
                                     <div class="form-group col-12">
                                         <label>Số điểm</label>
                                         <input type="number" name="point" id="point" class="form-control" value="{{ old('point') }}">

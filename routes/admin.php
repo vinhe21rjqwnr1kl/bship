@@ -69,13 +69,16 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
     Route::get('/user/check-user-give-point', [PointController::class, 'checkUserGivePoint'])->name('admin.point.check-user.give-point');
     Route::get('/user/add-points', [PointController::class, 'addPoint'])->name('admin.point.add');
     Route::post('/user/store-add-points', [PointController::class, 'storeAddPoint'])->name('admin.point.add.store');
-    Route::get('/user/give-points', [PointController::class, 'givePoint'])->name('admin.point.give');
-    Route::post('/user/store-give-points', [PointController::class, 'storeGivePoint'])->name('admin.point.give.store');
+//    Route::get('/user/give-points', [PointController::class, 'givePoint'])->name('admin.point.give');
+//    Route::post('/user/store-give-points', [PointController::class, 'storeGivePoint'])->name('admin.point.give.store');
 
     Route::get('/user/points', [PointController::class, 'point_list'])->name('admin.point.list');
     Route::get('/user/log-points', [PointController::class, 'log'])->name('admin.point.log');
     Route::get('/user/point-request', [PointController::class, 'point_list_request'])->name('admin.point.list-request');
     Route::post('/user/point/accept/{id}', [PointController::class, 'handleAcceptRequest'])->name('admin.point.handle-accept');
+    Route::post('/user/point/accept-multiple', [PointController::class, 'handleAcceptMultipleRequest'])->name('admin.point.point_handle_accept_multiple');
     Route::post('/user/point/remove/{id}', [PointController::class, 'handleRemoveRequest'])->name('admin.point.handle-remove');
+    Route::match(['get', 'post'], '/user/points/import-log-point-request', [PointController::class, 'importLogPointRequest'])->name('admin.point.import_log_point_request');
+    Route::post('/user/points/import-log-point-request/template', [PointController::class, 'exportTemplate'])->name('admin.point.import_log_point_request_template');
 
 });

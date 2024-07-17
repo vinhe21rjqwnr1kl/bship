@@ -44,23 +44,22 @@
                                 <div class="mb-3 col-md-3">
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
-
                                 </div>
                                 <div class="mb-3 col-md-3">
                                     <select name="is_active" class="default-select form-control">
                                         <option value="">Trạng thái</option>
                                         <option value="1">Hoạt động</option>
                                         <option value="2">Ngừng Hoạt động</option>
-
                                     </select>
                                 </div>
-                                <div class="mb-3 col-md-3">
-                                    <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-2">
-                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+                                <div class="mb-6 col-md-6">
+                                    <input type="submit" name="search" value="Tìm kiếm" class="btn btn-primary me-1">
+                                    @can('Controllers > DriverController > handleExcelDrivers')
+                                        <input type="submit" name="excel" value="Excel" class="btn btn-primary me-1"
+                                               formaction="{{ route('driver.admin.excel_drivers') }}">
+                                    @endcan
                                     <a href="{{ route('driver.admin.index') }}" class="btn btn-danger">Nhập Lại</a>
-
                                 </div>
-
                             </div>
                         </form>
                     </div>

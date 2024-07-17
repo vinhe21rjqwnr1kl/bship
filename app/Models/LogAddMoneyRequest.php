@@ -21,6 +21,7 @@ class LogAddMoneyRequest extends Model
         'status',
         'type',
 		'create_name',
+        'approved_by'
 	];
 
 	public function users()

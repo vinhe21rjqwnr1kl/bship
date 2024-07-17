@@ -73,7 +73,6 @@
                                     <th><strong> Thông tin </strong></th>
                                     <th><strong> Người tạo </strong></th>
                                     <th><strong> Thời gian </strong></th>
-                                    <th><strong> Trạng thái </strong></th>
                                     <th><strong> Duyệt </strong></th>
 
                                 </tr>
@@ -88,33 +87,25 @@
                                         <td> {{ $user->user_name }} </td>
                                         <td> {{ $user->user_phone }} </td>
                                         <td> {{ number_format($user->money) }}
-                                        <td> {{ $user->type }} </td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
+                                            {{ $type_payments[$user->type] ?? $user->type }}
+                                        </td>
                                         <td> {{ $user->reason }} </td>
                                         <td> {{ $user->create_name }} </td>
-                                        <td> {{ $user->create_date }} </td>
-                                        <td>
-                                            @if ($user->status == 0)
-                                                <span class="badge badge-warning">Chưa duyệt</span>
-                                            @elseif ($user->status == 1)
-                                                <span class="badge badge-success">Đã duyệt</span>
-                                            @else
-                                                <span class="badge badge-danger">Xoá</span>
-                                            @endif
-
-                                        </td>
-                                        <td style="min-width: 90px; word-wrap: break-word;">
+                                        <td style="min-width: 100px; word-wrap: break-word;"> {{ $user->create_date }} </td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             <form action="{{ route('driver.admin.payment_addmoney', $user->id) }}"
                                                   method="POST" style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-primary shadow btn-xs sharp me-1">
-                                                    <i class="fas fa-tasks"></i>
+                                                <button type="submit" class="btn btn-primary shadow btn-xs ">
+                                                    Duyệt
                                                 </button>
                                             </form>
                                             <form action="{{ route('driver.admin.payment_remove', $user->id) }}"
                                                   method="POST" style="display: inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger shadow btn-xs sharp me-1">
-                                                    <i class="fas fa-trash"></i>
+                                                <button type="submit" class="btn btn-danger shadow btn-xs ">
+                                                    Xóa
                                                 </button>
                                             </form>
                                         </td>

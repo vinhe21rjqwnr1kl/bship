@@ -43,11 +43,16 @@
                                         <select name="type" class="default-select form-control">
                                             <option value="">-- Chọn --</option>
                                             @if($type_payments)
-                                                @foreach($type_payments as  $type)
-                                                    <option
-                                                        {{ request()->input('type') == $type['id'] ? 'selected="selected"':'' }} value="{{ $type['id'] }}">
-                                                        {{ __($type['name']) }}
-                                                    </option>
+                                                @foreach($type_payments as $key => $type)
+                                                    @if($key == 'refund' )
+                                                        <option selected="selected" value="{{ $key }}">
+                                                            {{ $type }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $key }}">
+                                                            {{ $type }}
+                                                        </option>
+                                                        @endif
                                                 @endforeach
                                             @endif
                                         </select>
@@ -62,8 +67,10 @@
                                     <div class="form-group col-12">
                                         <label>Số tiền <br><span
                                                 class="text-danger">Ví dụ nạp ví: 300000 <br>Ví dụ trừ ví: -300000</span></label>
-                                        <input type="text" name="money" id="money" class="form-control"
-                                               value="{{ $money }}">
+
+                                        <input data-type="currency" type="text" class="form-control" data-hidden="#money" value="{{$money}}"/>
+                                        <input type="hidden" name="money" id="money" value="{{$money}}"/>
+
                                         @error('money')
                                         <p class="text-danger">
                                             {{ $message }}
@@ -95,7 +102,7 @@
             </form>
         </div>
     </div>
-
+    <script src="{{ asset('js/price-format.js') }}"></script>
     <script type="text/javascript">
 
         function check() {

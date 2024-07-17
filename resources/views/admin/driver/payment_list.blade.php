@@ -48,8 +48,11 @@
                             </div>
 
                             <div class=" col-sm-6 col-md-3 col-lg-4 col-xl-3 text-sm-end">
-                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-2">
-                                <input type="submit" name="excel" value="Excel" class="btn btn-primary me-2">
+                                <input type="submit" name="search" value="Tìm" class="btn btn-primary me-1">
+                                @can('Controllers > DriverController > handleExportPaymentRequest')
+                                    <input type="submit" name="excel" value="Excel" class="btn btn-primary me-1"
+                                           formaction="{{ route('driver.admin.export_payment_request') }}">
+                                @endcan
                                 <a href="{{ route('driver.admin.payment') }}" class="btn btn-danger">Nhập Lại</a>
                             </div>
                         </div>
@@ -83,8 +86,6 @@
                                     <th><strong> Người tạo </strong></th>
                                     <th><strong> Thời gian </strong></th>
                                     <th><strong> Trạng thái </strong></th>
-                                    <th><strong> Duyệt </strong></th>
-
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -97,11 +98,16 @@
                                         <td> {{ $user->user_name }} </td>
                                         <td> {{ $user->user_phone }} </td>
                                         <td> {{ number_format($user->money) }} </td>
-                                        <td> {{ $user->type }} </td>
+                                        <td style="min-width: 150px; word-wrap: break-word;">
+                                            {{ $type_payments[$user->type] ?? $user->type }}
+                                        </td>
                                         <td> {{ $user->reason }} </td>
                                         <td> {{ $user->create_name }} </td>
                                         <td style="min-width: 135px; word-wrap: break-word;"> {{ $user->create_date }} </td>
-                                        <td>
+                                        @php
+                                            $currentUser = auth()->user()->email;
+                                        @endphp
+                                        <td style="min-width: 150px; word-wrap: break-word;">
                                             @if ($user->status == 0)
                                                 <span class="badge badge-warning">Chưa duyệt</span>
                                             @elseif ($user->status == 1)
@@ -109,22 +115,18 @@
                                             @elseif($user->status == 2)
                                                 <span class="badge badge-danger">Xoá</span>
                                             @endif
-                                        </td>
-                                        @php
-                                            $currentUser = auth()->user()->email;
-                                        @endphp
-                                        <td>
-                                            @if($user->status == 0 && $currentUser == $user->create_name)
-                                                <form
-                                                    action="{{ route('driver.admin.payment_remove_user', $user->id) }}"
-                                                    method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <button type="submit"
-                                                            class="btn btn-danger shadow btn-xs sharp me-1">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
+
+                                                @if($user->status == 0 && $currentUser == $user->create_name)
+                                                    <form
+                                                        action="{{ route('driver.admin.payment_remove_user', $user->id) }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit"
+                                                                class="btn btn-danger shadow btn-xs sharp me-1">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                         </td>
 
                                     </tr>

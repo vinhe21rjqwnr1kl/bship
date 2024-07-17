@@ -6,8 +6,12 @@ use App\Exports\ExportDriversList;
 use App\Exports\ExportPaymentRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Services\ExportService;
 use App\Utils\SuperAdminPermissionCheck;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Models\Driver;
 use App\Models\User;
@@ -31,11 +35,14 @@ use Storage;
 
 class DriverController extends Controller
 {
+    protected ExportService $exportService;
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
+    public function __construct(ExportService $exportService)
+    {
+        $this->exportService = $exportService;
+    }
+
+
     public function admin_index(Request $request)
     {
         $page_title = __('Danh sách tài xế');
@@ -75,25 +82,15 @@ class DriverController extends Controller
         $roleArr = Agency::pluck('name', 'id')->toArray();
         $roleArr[0] = "Công ty BUTL";
 
-        if ($request->input('excel') == "Excel") {
-            if (!SuperAdminPermissionCheck::isAdmin()) {
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
-            } else {
-                $response = Excel::download(new ExportDriversList($request), 'dstaixe.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-                if (ob_get_contents()) ob_end_clean();
-                return $response;
-            }
-        }
-
-//        return $drivers;
-
         return view('admin.driver.index', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
+    public function handleExcelDrivers(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $exporter = new ExportDriversList($request);
+        return $this->exportService->exportData($exporter, 'dstaixe');
+    }
+
     public function admin_warn(Request $request)
     {
         $page_title = __('Danh sách tài xế sắp hết tiền');
@@ -136,10 +133,6 @@ class DriverController extends Controller
         return view('admin.driver.warn', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
     public function admin_create()
     {
         $page_title = __('Tạo Tài Xế');
@@ -149,12 +142,7 @@ class DriverController extends Controller
         return view('admin.driver.create', compact('users', 'page_title', 'screenOption'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function admin_store(Request $request)
+    public function admin_store(Request $request): \Illuminate\Http\RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -294,22 +282,16 @@ class DriverController extends Controller
         }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show($id)
     {
         return view('admin.blogs.show');
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param $id
+     * @return Application|Factory|View
      */
-    public function admin_edit($id)
+    public function admin_edit($id): Factory|View|Application
     {
         $page_title = __('Chỉnh Sửa Tài Xế');
         $driver = Driver::findorFail($id);
@@ -318,13 +300,7 @@ class DriverController extends Controller
         return view('admin.driver.edit', compact('drivers', 'driver', 'page_title', 'screenOption'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function admin_update(Request $request, $id)
+    public function admin_update(Request $request, $id): \Illuminate\Http\RedirectResponse
     {
         try {
             $driveData["name"] = $request->input('name');
@@ -391,9 +367,6 @@ class DriverController extends Controller
                         //Array ( [title] => avatar [value] => 1680872171_6.png ) Array ( [title] => cmnd [value] => 1680872171_7.png ) Array ( [title] => gplx [value] => 1680872171_8.png )
                         if ($blog_meta["title"] == 'avatar') {
                             $driveData["avatar_img"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
-//                            dd($appUrl);
-//                            dd($driveData["avatar_img"]);
-
                         }
                         if ($blog_meta["title"] == 'cmnd') {
                             $driveData["cmnd_image"] = $appUrl . 'admin/public/storage/driver/' . $blog_meta["value"];
@@ -418,11 +391,9 @@ class DriverController extends Controller
             }
 
             $driver->fill($driveData)->save();
-
             $msgResponse = $this->syncGsm($driver);
 
             return redirect()->back()->with('success', __('Cập nhật tài xế thành công. ') . $msgResponse);
-
 
 //      Đồng bộ GSM
 //        $configuration = Configuration::query()->where('name', 'gsm_config')->first();
@@ -579,11 +550,6 @@ class DriverController extends Controller
         }
     }
 
-
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function admin_online(Request $request)
     {
         $page_title = __('Danh sách tài xế đang online');
@@ -663,14 +629,11 @@ class DriverController extends Controller
         return view('admin.driver.online', compact('drivers', 'users', 'roleArr', 'page_title'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function payment(Request $request)
     {
         $page_title = __('Danh sách yêu cầu nạp tiền');
+
+        $type_payments = config('blog.type_payments');
 
         $resultQuery = LogAddMoneyRequest::query();
         if ($request->filled('phone')) {
@@ -683,7 +646,6 @@ class DriverController extends Controller
             $resultQuery->where('create_date', '>=', "{$request->input('datefrom')}");
         }
         if ($request->filled('dateto')) {
-//            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
             $resultQuery->where('create_date', '<=', $request->input('dateto'));
         }
         //check tai xe thuoc dai ly
@@ -697,23 +659,15 @@ class DriverController extends Controller
         $resultQuery->orderBy($sortBy, $direction);
         $LogAddMoneyRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
-        if ($request->input('excel') == "Excel") {
-            if (!SuperAdminPermissionCheck::isAdmin()) {
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập chức năng này.');
-            } else {
-                $response = Excel::download(new ExportPaymentRequest($request), 'ds-yeucau-naptien.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-                if (ob_get_contents()) ob_end_clean();
-                return $response;
-            }
-        }
-        return view('admin.driver.payment_list', compact('LogAddMoneyRequest', 'page_title'));
+        return view('admin.driver.payment_list', compact('LogAddMoneyRequest', 'type_payments', 'page_title'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
-     */
+    public function handleExportPaymentRequest(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $exporter = new ExportPaymentRequest($request);
+        return $this->exportService->exportData($exporter, 'ds-yeucau-naptien');
+    }
+
     public function payment_create($id = 0)
     {
         if ($id > 0) {
@@ -725,13 +679,7 @@ class DriverController extends Controller
 
         $page_title = __('Tạo yêu cầu nạp tiền');
 
-        $type_payments = array(
-            array('id' => 'cashin', 'name' => __('Nạp ví tài xế')),
-            array('id' => 'refund', 'name' => __('Hoàn ví cuốc hủy')),
-            array('id' => 'donate', 'name' => __('Tặng/thưởng')),
-            array('id' => 'cashout', 'name' => __('Rút ví ngưng hợp tác')),
-            array('id' => 'other', 'name' => __('Khác'))
-        );
+        $type_payments = config('blog.type_payments');
 
         $phone = '';
         $reason = '';
@@ -755,7 +703,7 @@ class DriverController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function payment_create_info(Request $request, $go_id = 0, $phone = null)
+    public function payment_create_info($go_id = 0, $phone = null)
     {
         if ($go_id > 0) {
             $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $go_id)->exists();
@@ -765,14 +713,7 @@ class DriverController extends Controller
         }
 
         $page_title = __('Tạo yêu cầu nạp tiền');
-
-        $type_payments = array(
-            array('id' => 'cashin', 'name' => __('Nạp ví tài xế')),
-            array('id' => 'refund', 'name' => __('Hoàn ví cuốc hủy')),
-            array('id' => 'donate', 'name' => __('Tặng/thưởng')),
-            array('id' => 'cashout', 'name' => __('Rút ví ngưng hợp tác')),
-            array('id' => 'other', 'name' => __('Khác'))
-        );
+        $type_payments = config('blog.type_payments');
 
         $driveData["phone"] = $phone;
         if ($phone) {
@@ -788,7 +729,7 @@ class DriverController extends Controller
             $driveData["user_name"] = $check_phone->name;
             $driveData["cmnd"] = $check_phone->cmnd;
             $info_string = 'Tên tài xế: ' . $driveData["user_name"] . ' --- CMND: ' . $driveData["cmnd"];
-//            dd($check_phone);
+
             if ($check_phone->is_active == 2) {
                 $info_string .= ". Tài khoản ngưng hoạt động không thể tạo yêu cầu";
             }
@@ -809,12 +750,12 @@ class DriverController extends Controller
         $driveData["go_id"] = $request->input('go_id');
         $driveData["phone"] = $request->input('phone');
         $driveData["money"] = $request->input('money');
-        $driveData["reason"] = $request->input('reason');
+        $driveData["reason"] = $request->input('reason') ?? '';
         $driveData["type"] = $request->input('type');
         $validation = [
             'money' => 'required|regex:/^[0-9-]+$/',
             'phone' => 'required|regex:/^[0-9]{10}+$/',
-            'reason' => 'required',
+            'reason' => ['max:100'],
             'type' => 'required',
 
         ];
@@ -822,7 +763,7 @@ class DriverController extends Controller
             'money.required' => __('Vui lòng nhập số tiền'),
             'phone.required' => __('Số điện thoại tài xế không để trống'),
             'phone.regex' => __('Số điện thoại tài xế phải là số'),
-            'reason.required' => __('Lí do nạp tiền không để trống'),
+            'reason.max' => __('Không vượt quá 100 ký tự'),
             'type.required' => __('Không để trống'),
 
         ];
@@ -862,6 +803,8 @@ class DriverController extends Controller
     {
         $page_title = __('Danh sách cần duyệt');
 
+        $type_payments = config('blog.type_payments');
+
         $resultQuery = LogAddMoneyRequest::query();
         if ($request->filled('phone')) {
             $resultQuery->where('user_phone', 'like', "%{$request->input('phone')}%");
@@ -882,7 +825,7 @@ class DriverController extends Controller
         $resultQuery->orderBy($sortBy, $direction);
         $LogAddMoneyRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
-        return view('admin.driver.payment_list_approve', compact('LogAddMoneyRequest', 'page_title'));
+        return view('admin.driver.payment_list_approve', compact('LogAddMoneyRequest', 'type_payments', 'page_title'));
     }
 
     public function payment_addmoney(Request $request, $id)
@@ -966,12 +909,6 @@ class DriverController extends Controller
         return $this->handle_payment_remove($id, true);
     }
 
-
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function payment_log(Request $request)
     {
         $page_title = __('Danh sách lịch sử nạp tiền');
@@ -987,7 +924,6 @@ class DriverController extends Controller
             $resultQuery->where('time', '>=', "{$request->input('datefrom')}");
         }
         if ($request->filled('dateto')) {
-//            $dateto = Carbon::createFromFormat('Y-m-d', $request->input('dateto'))->endOfDay();
             $resultQuery->where('time', '<=', $request->input('dateto'));
         }
         //check tai xe thuoc dai ly
@@ -1004,13 +940,13 @@ class DriverController extends Controller
         $resultQuery->orderBy($sortBy, $direction);
         $LogAddMoneyRequest = $resultQuery->paginate(config('Reading.nodes_per_page'));
 
-        if ($request->input('excel') == "Excel") {
-            $response = Excel::download(new ExportPayment($request), 'lsnaptien.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-            ob_end_clean();
-            return $response;
-        }
-
         return view('admin.driver.payment_list_log', compact('LogAddMoneyRequest', 'page_title'));
+    }
+
+    public function handleExportPaymentLog(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $exporter = new ExportPayment($request);
+        return $this->exportService->exportData($exporter, 'lsnaptien');
     }
 
     /**
@@ -1257,5 +1193,44 @@ class DriverController extends Controller
         }
 
     }
-//
+
+    public function doRefundToPaymentTrip($goId)
+    {
+        $trip = Trip::findOrFail($goId);
+        $driver = $trip->driver;
+        $refund = $trip->butl_cost;
+        $reason = 'Hoàn tiền chuyến thành công qua Chuyển khoảng BSHIP_' . $trip->id . ' lúc ' . now();
+
+        $logAddMoneyRequest = LogAddMoneyRequest::query()->where('go_id', '=', $trip->id)->exists();
+        if ($logAddMoneyRequest) {
+            return redirect()->back()->with('error', __('Yêu cầu hoàn tiền đã tồn tại.'));
+        }
+
+        $data["go_id"] = $trip->id;
+        $data["phone"] = $driver->phone;
+        $data["money"] = $refund;
+        $data["reason"] = $reason;
+        $data["type"] = 'refund_payment_trip';
+
+        if ($driver->is_active == 2) {
+            return redirect()->back()->with('error', __('Trạng thái tài xế không hoạt động, không thể tạo yêu cầu nạp tiền'));
+        } else {
+            $current_user = auth()->user();
+            $data["user_id"] = $driver->id;
+            $data["user_name"] = $driver->name;
+            $data["user_phone"] = $driver->phone;
+            $data["agency_id"] = $driver->agency_id;
+            $data["create_name"] = $current_user->email;
+            $data["status"] = 0;
+
+            // kiểm tra agency có quản lý tài xế không ?
+            if ($current_user->agency_id > 0) {
+                if ($current_user->agency_id != $driver->agency_id) {
+                    return redirect()->back()->with('error', __('Bạn không quản lí tài xế không tồn tại.'));
+                }
+            }
+            $log = LogAddMoneyRequest::create($data);
+            return redirect()->back()->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
+        }
+    }
 }
