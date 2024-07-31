@@ -20,5 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function () {
-        Route::post('driver-applicants/register', [DriverController::class, 'driverApplicantsApi'])->name('api.driver.applicants.register');
+    Route::prefix('driver')->group(function () {
+        Route::post('applicants', [DriverController::class, 'driverApplicantsApi'])->name('api.driver.applicants');
+
+    });
 });
