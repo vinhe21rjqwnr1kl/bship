@@ -174,6 +174,9 @@
                                 @can('Controllers > DriverController > log')
                                     <li><a href="{{ route('driver.admin.log') }}">Tra cứu tiền</a></li>
                                 @endcan
+                                @can('Controllers > DriverController > fetchDriverApplicants')
+                                    <li><a href="{{ route('driver.admin.applicants') }}"> Danh sách mong muốn trở thành tx</a></li>
+                                @endcan
                             </ul>
                         </li>
                     @endcan
@@ -230,9 +233,9 @@
                                 @can('Controllers > PointController > addPoint')
                                     <li><a href="{{ route('admin.point.add') }}"> Tặng điểm </a></li>
                                 @endcan
-{{--                                @can('Controllers > PointController > givePoint')--}}
-{{--                                    <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>--}}
-{{--                                @endcan--}}
+                                {{--                                @can('Controllers > PointController > givePoint')--}}
+                                {{--                                    <li><a href="{{ route('admin.point.give') }}"> Giao dịch điểm </a></li>--}}
+                                {{--                                @endcan--}}
                                 @can('Controllers > PointController > point_list')
                                     <li><a href="{{ route('admin.point.list') }}"> Danh sách yêu cầu </a></li>
                                 @endcan
@@ -240,7 +243,8 @@
                                     <li><a href="{{ route('admin.point.list-request') }}"> Danh sách cần duyệt </a></li>
                                 @endcan
                                 @can('Controllers > PointController > importLogPointRequest')
-                                    <li><a href="{{ route('admin.point.import_log_point_request') }}"> Import yêu cầu nạp điểm </a></li>
+                                    <li><a href="{{ route('admin.point.import_log_point_request') }}"> Import yêu cầu
+                                            nạp điểm </a></li>
                                 @endcan
                                 @can('Controllers > PointController > log')
                                     <li><a href="{{ route('admin.point.log') }}"> Nhật ký giao dịch điểm </a></li>

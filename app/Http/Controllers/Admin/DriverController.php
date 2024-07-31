@@ -1133,7 +1133,6 @@ class DriverController extends Controller
     }
 
     public function driverApplicantsApi(Request $request) {
-
         $applicant = DriverApplicant::create($request->only([
             'full_name',
             'email',
@@ -1150,6 +1149,36 @@ class DriverController extends Controller
             'message' => 'Driver applicant registered successfully!',
             'applicant' => $applicant
         ], 201);
+    }
 
+    public function fetchDriverApplicants(Request $request) {
+        $page_title = "Danh sách mong muốn trờ thành tài xế";
+        $query = DriverApplicant::query();
+
+        if ($request->isMethod('get') && $request->input('todo') == 'Filter') {
+            if ($request->filled('phone_number')) {
+                $query->where('phone_number', 'like', "%{$request->input('phone_number')}%");
+            }
+            if ($request->filled('full_name')) {
+                $query->where('full_name', 'like', "%{$request->input('full_name')}%");
+            }
+            if ($request->filled('email')) {
+                $query->where('email', 'like', "%{$request->input('email')}%");
+            }
+            if ($request->filled('identification')) {
+                if ($request->filled('identification') == 1) {
+                    $query->where('identification', '=', 1);
+                } else {
+                    $query->where('identification', '!=', 1);
+                }
+            }
+        }
+
+        $sortBy = $request->get('sort') ? $request->get('sort') : 'created_at';
+        $direction = $request->get('direction') ? $request->get('direction') : 'desc';
+        $query->orderBy($sortBy, $direction);
+        $driver_applicants = $query->paginate(config('Reading.nodes_per_page'));
+
+        return view('admin.driver.driver_applicants', compact('driver_applicants', 'page_title'));
     }
 }
