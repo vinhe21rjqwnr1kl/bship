@@ -6,6 +6,7 @@ use App\Exports\ExportDriversList;
 use App\Exports\ExportPaymentRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Configuration;
+use App\Models\DriverApplicant;
 use App\Services\ExportService;
 use App\Utils\SuperAdminPermissionCheck;
 use Carbon\Carbon;
@@ -41,7 +42,6 @@ class DriverController extends Controller
     {
         $this->exportService = $exportService;
     }
-
 
     public function admin_index(Request $request)
     {
@@ -158,6 +158,9 @@ class DriverController extends Controller
             $driveData["day_lock"] = $request->input('day_lock');
             $driveData["car_num"] = $request->input('car_num');
             $driveData["car_info"] = $request->input('car_info');
+            $driveData["car_color"] = $request->input('car_color');
+            $driveData["car_identification"] = $request->input('car_identification');
+            $driveData["create_time"] = now();
 
             $current_user = auth()->user();
             $driveData["agency_id"] = $current_user->agency_id;
@@ -227,55 +230,12 @@ class DriverController extends Controller
 
             $blog = Driver::query()->create($driveData);
 
-            $msgResponse = $this->syncGsm($blog);
+//            $msgResponse = $this->syncGsm($blog);
 
             DB::commit();
+//            return redirect()->back()->with('success', __('Tạo tài xế thành công. ') . $msgResponse);
+            return redirect()->back()->with('success', __('Tạo tài xế thành công.'));
 
-            return redirect()->back()->with('success', __('Tạo tài xế thành công. ') . $msgResponse);
-
-
-//            $configuration = Configuration::query()->where('name', 'gsm_config')->first();
-//            $accessToken = json_decode($configuration->value)->access_token;
-//            $xClient = json_decode($configuration->value)->gsm_username;
-//
-//            $msgResponse = '';
-//            $phoneCode = '+84';
-//            $fullPhoneNumber = $phoneCode . substr($driveData["phone"], 1);
-//
-//            $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
-//
-//            $headers = [
-//                'Content-Type' => 'application/json',
-//                'x-client-id' => $xClient,
-//                'Authorization' => 'Bearer ' . $accessToken,
-//            ];
-//
-//            $body = [
-//                'phone_number' => $fullPhoneNumber,
-//                'region_code' => 'VNM',
-//                'phone_number_code' => $phoneCode,
-//                'full_name' => $driveData["name"],
-//                'language_code' => 'vi',
-//                'email' => $driveData["email"],
-//                'sap_profile_id' => $blog->id,
-//                'city_id' => $blog->agency_id
-//            ];
-//
-//            $response = Http::withHeaders($headers)->post($url, $body);
-//
-//            dd($headers, $url, $body, $response->json());
-//            // Xử lý phản hồi
-//            $responseBody = $response->json();
-//            if ($responseBody) {
-//                if (isset($responseBody['error'])) {
-//                    $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['error'];
-//                } elseif (isset($responseBody['data'])) {
-//                    $blog->update(['user_gsm_id' => $responseBody['data']['user_id']]);
-//                } else {
-//                    $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['message'];
-//
-//                }
-//            }
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', __('An error occurred: ') . $e->getMessage());
@@ -316,6 +276,9 @@ class DriverController extends Controller
             $driveData["find_index"] = $request->input('find_index');
             $driveData["car_num"] = $request->input('car_num');
             $driveData["car_info"] = $request->input('car_info');
+            $driveData["car_color"] = $request->input('car_color');
+            $driveData["car_identification"] = $request->input('car_identification');
+            $driveData["reason_for_block"] = $request->input('reason_for_block');
 
 
             if ($driveData["is_active"] == 2) {
@@ -391,53 +354,10 @@ class DriverController extends Controller
             }
 
             $driver->fill($driveData)->save();
-            $msgResponse = $this->syncGsm($driver);
+//            $msgResponse = $this->syncGsm($driver);
+//            return redirect()->back()->with('success', __('Cập nhật tài xế thành công. ') . $msgResponse);
+            return redirect()->back()->with('success', __('Cập nhật tài xế thành công. '));
 
-            return redirect()->back()->with('success', __('Cập nhật tài xế thành công. ') . $msgResponse);
-
-//      Đồng bộ GSM
-//        $configuration = Configuration::query()->where('name', 'gsm_config')->first();
-//        $accessToken = json_decode($configuration->value)->access_token;
-//        $xClient = json_decode($configuration->value)->gsm_username;
-//
-//        $msgResponse = '';
-//        $phoneCode = '+84';
-//        $fullPhoneNumber = $phoneCode . substr($driveData["phone"], 1);
-//
-//        $url = 'https://test-api.xanhsm.com/gsm-partner-booking/butl/driver/create';
-//
-//        $headers = [
-//            'Content-Type' => 'application/json',
-//            'x-client-id' => $xClient,
-//            'Authorization' => 'Bearer ' . $accessToken,
-//        ];
-//
-//        $body = [
-//            'phone_number' => $fullPhoneNumber,
-//            'region_code' => 'VNM',
-//            'phone_number_code' => $phoneCode,
-//            'full_name' => $driveData["name"],
-//            'language_code' => 'vi',
-//            'email' => $driveData["email"],
-//            'sap_profile_id' => $driver->id,
-//            'city_id' => $driver->agency_id
-//        ];
-//        if ($driver->user_gsm_id) {
-//            $body['user_id'] = $driver->user_gsm_id;
-//        }
-//
-//        $response = Http::withHeaders($headers)->post($url, $body);
-//        // Xử lý phản hồi
-//        $responseBody = $response->json();
-//        if ($responseBody) {
-//            if (isset($responseBody['error'])) {
-//                $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['error'];
-//            } else if (isset($responseBody['data'])) {
-//                $driver->update(['user_gsm_id' => $responseBody['data']['user_id']]);
-//            } else {
-//                $msgResponse .= 'Lỗi đồng bộ GSM: ' . $responseBody['message'];
-//            }
-//        }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', __('An error occurred: ') . $e->getMessage());
         }
@@ -698,11 +618,6 @@ class DriverController extends Controller
         return view('admin.driver.payment_create', compact('phone', 'money', 'reason', 'go_id', 'info_string', 'type_payments', 'page_title'));
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function payment_create_info($go_id = 0, $phone = null)
     {
         if ($go_id > 0) {
@@ -794,11 +709,6 @@ class DriverController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function payment_approve(Request $request)
     {
         $page_title = __('Danh sách cần duyệt');
@@ -949,11 +859,6 @@ class DriverController extends Controller
         return $this->exportService->exportData($exporter, 'lsnaptien');
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function log(Request $request)
     {
         $page_title = __('Tra cứu tài xế');
@@ -986,10 +891,6 @@ class DriverController extends Controller
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function admin_drservice(Request $request, $driver_id)
     {
         $page_title = __('Quản lý dịch vụ');
@@ -1133,9 +1034,6 @@ class DriverController extends Controller
 
         $page_title = __('Tài xế Online ');
 
-//        $urrl = "http://dev-taixe.bship.vn:22072/api/v1/web/get_all_user";
-//        $urrl = "http://api-taixe.bship.vn:22072/api/v1/web/get_all_user";
-
         $url_api_socket = env('URL_API_SOCKET');
         $urrl = $url_api_socket . 'api/v1/web/get_all_user';
 
@@ -1232,5 +1130,26 @@ class DriverController extends Controller
             $log = LogAddMoneyRequest::create($data);
             return redirect()->back()->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
         }
+    }
+
+    public function driverApplicantsApi(Request $request) {
+
+        $applicant = DriverApplicant::create($request->only([
+            'full_name',
+            'email',
+            'date_of_birth',
+            'phone_number',
+            'current_address',
+            'current_status',
+            'current_city',
+            'identification',
+            'agree_to_share_info'
+        ]));
+
+        return response()->json([
+            'message' => 'Driver applicant registered successfully!',
+            'applicant' => $applicant
+        ], 201);
+
     }
 }
