@@ -39,7 +39,10 @@ class Driver extends Model
         'car_num',
         'car_info',
         'create_time',
-        'user_gsm_id'
+        'user_gsm_id',
+        'car_color',
+        'car_identification',
+        'reason_for_block',
     ];
 
     /**

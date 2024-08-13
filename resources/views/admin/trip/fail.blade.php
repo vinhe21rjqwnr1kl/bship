@@ -79,6 +79,10 @@
                                             {{ request()->input('status') == 3 ? 'selected="selected"':'' }} value="3">
                                             Khách hủy tìm chuyến
                                         </option>
+                                        <option
+                                            {{ request()->input('status') == 0 ? 'selected="selected"':'' }} value="0">
+                                            Đang tìm
+                                        </option>
                                     </select>
                                 </div>
                                 <?php

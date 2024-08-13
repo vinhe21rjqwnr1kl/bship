@@ -19,7 +19,7 @@ class HomeController extends Controller
 {
     public function all(Request $request)
     {
-        return redirect()->route('admin.dashboard');
+//        return redirect()->route('admin.dashboard');
 
         if(config('Reading.show_on_front') == 'Page')
         {

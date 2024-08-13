@@ -22,7 +22,7 @@ if(!function_exists('pr')){
 }
 
 Route::get('/', function() {
-  return redirect()->route('web.home');
+  return redirect()->route('admin.dashboard');
 });
 
 

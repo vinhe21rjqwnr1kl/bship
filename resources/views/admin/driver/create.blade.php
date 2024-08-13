@@ -90,7 +90,7 @@
 										@enderror
 									</div>
 									<div class="form-group col-md-12">
-										<label for="BlogTitle">Biển số xe</label>
+										<label for="BlogTitle">Biển số xe <span class="text-primary">*(VD: 29K1-288.32)</span></label>
 										<input type="text" name="car_num" class="form-control" id="BlogTitle" placeholder="" value="{{ old('car_num') }}">
 										@error('car_num')
 											<p class="text-danger">
@@ -99,7 +99,7 @@
 										@enderror
 									</div>
 									<div class="form-group col-md-12">
-										<label for="BlogTitle">Thông tin xe</label>
+                                        <label for="BlogTitle">Loại xe <span class="text-primary">*(VD: Vinfast Feliz S)</span></label>
 										<input type="text" name="car_info" class="form-control" id="BlogTitle" placeholder="" value="{{ old('car_info') }}">
 										@error('car_info')
 											<p class="text-danger">
@@ -107,6 +107,24 @@
 											</p>
 										@enderror
 									</div>
+                                    <div class="form-group col-md-12">
+                                        <label for="car_color">Màu xe <span class="text-primary">*(VD: Cam)</span></label>
+                                        <input type="text" name="car_color" class="form-control" id="car_color" placeholder="" value="{{ old('car_color') }}">
+                                        @error('car_color')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="car_identification">Số khung</label>
+                                        <input type="text" name="car_identification" class="form-control" id="car_identification" placeholder="" value="{{ old('car_identification') }}">
+                                        @error('car_identification')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
 									<div class="col-md-12">
 										<button type="submit" class="btn btn-primary">Thêm</button>
 									</div>
@@ -134,6 +152,9 @@
 									<div class="form-file">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][0][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta0Value">
 									</div>
+                                    <div class="mt-1">
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+                                    </div>
 							   </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
@@ -157,6 +178,9 @@
 									<div class="form-file">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][1][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta1Value">
 									</div>
+                                    <div class="mt-1">
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+                                    </div>
 							   </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
@@ -173,6 +197,9 @@
 									<div class="form-file">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][3][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta3Value">
 									</div>
+                                    <div class="mt-1">
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+                                    </div>
 							   </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
@@ -198,6 +225,9 @@
 									<div class="form-file">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][2][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta2Value">
 									</div>
+                                    <div class="mt-1">
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+                                    </div>
 							   </div>
                                 @error('data.BlogMeta.1.value')
                                     <p class="text-danger">
@@ -214,6 +244,9 @@
 									<div class="form-file">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][4][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta4Value">
 									</div>
+                                    <div class="mt-1">
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+                                    </div>
 							   </div>
                                 @error('data.BlogMeta.1.value')
                                     <p class="text-danger">

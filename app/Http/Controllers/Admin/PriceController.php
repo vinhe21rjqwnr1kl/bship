@@ -571,11 +571,6 @@ class PriceController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new user.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function admin_timeedit($id)
     {
         $page_title = __('Cập nhật giá theo thời gian');
@@ -587,12 +582,6 @@ class PriceController extends Controller
         return view('admin.price.timeedit', compact('CfFee', 'ServicesArr', 'ServicesTypeArr', 'ServicesDetailArr', 'CfIndexTime', 'page_title'));
     }
 
-    /**
-     * Store a newly created user in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function admin_timeupdate(Request $request, $id)
     {
         $fee["date_from"] = $request->input('date_from');
@@ -644,13 +633,8 @@ class PriceController extends Controller
 
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function admin_cache(Request $request)
     {
-
         $page_title = __('Cập nhật Cache');
         $body = [
             "cmd" =>"doReloadConfig",
@@ -668,10 +652,6 @@ class PriceController extends Controller
         return view('admin.price.cache', compact('page_title', 'response', 'response2'));
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function admin_service(Request $request)
     {
         $page_title = __('Danh sách dịch vụ cha');

@@ -282,27 +282,27 @@
                                                     @endif
                                                 @endif
                                             </div>
-                                            <div class="mt-2">
-                                                @if ($page->payment_status == "PAID" && $page->progress == 3)
-                                                    @if($page->log_add_money_request_status === 0)
-                                                        <span class="badge badge-warning">Chưa duyệt</span>
-                                                    @elseif( $page->log_add_money_request_status === 1)
-                                                        <span class="badge badge-success">Đã duyệt</span>
-                                                    @elseif($page->log_add_money_request_status === 2)
-                                                        <span class="badge badge-primary">Xóa</span>
-                                                    @else
-                                                        <form method="POST" action="{{route('driver.admin.payment.refund_payment_trip', ['go_id'=>$page->id])}}">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-xs btn-danger">Hoàn tiền</button>
+{{--                                            <div class="mt-2">--}}
+{{--                                                @if ($page->payment_status == "PAID" && $page->progress == 3)--}}
+{{--                                                    @if($page->log_add_money_request_status === 0)--}}
+{{--                                                        <span class="badge badge-warning">Chưa duyệt</span>--}}
+{{--                                                    @elseif( $page->log_add_money_request_status === 1)--}}
+{{--                                                        <span class="badge badge-success">Đã duyệt</span>--}}
+{{--                                                    @elseif($page->log_add_money_request_status === 2)--}}
+{{--                                                        <span class="badge badge-primary">Xóa</span>--}}
+{{--                                                    @else--}}
+{{--                                                        <form method="POST" action="{{route('driver.admin.payment.refund_payment_trip', ['go_id'=>$page->id])}}">--}}
+{{--                                                            @csrf--}}
+{{--                                                            <button type="submit" class="btn btn-xs btn-danger">Hoàn tiền</button>--}}
 {{--                                                        <a href="{{ route('driver.admin.payment.refund_payment_trip', $page->id) }}"--}}
 {{--                                                           class="badge badge-danger">Hoàn tiền</a>--}}
-                                                        </form>
+{{--                                                        </form>--}}
 
-                                                    @endif
-                                                @else
+{{--                                                    @endif--}}
+{{--                                                @else--}}
 
-                                                @endif
-                                            </div>
+{{--                                                @endif--}}
+{{--                                            </div>--}}
                                         </td>
                                     </tr>
                                 @empty

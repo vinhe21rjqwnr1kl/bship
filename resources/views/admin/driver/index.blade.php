@@ -85,10 +85,9 @@
                                     <th><strong> Trạng thái </strong></th>
                                     <th><strong> Thời gian </strong></th>
                                     <th><strong> Thao tác </strong></th>
-                                    <th><strong> Sync GSM </strong></th>
-                                    <th><strong> Trạng thái GSM </strong></th>
+{{--                                    <th><strong> Sync GSM </strong></th>--}}
+{{--                                    <th><strong> Trạng thái GSM </strong></th>--}}
                                     <th><strong> Dịch vụ </strong></th>
-
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -116,29 +115,23 @@
                                                class="btn btn-primary shadow btn-xs sharp me-1"><i
                                                     class="fas fa-pencil-alt"></i></a>
                                         </td>
-                                        <td class="text-center">
-                                            {{--                                            @if (!$page->user_gsm_id || $page->user_gsm_id == 1)--}}
-                                            {{--                                            <a href="{{ route('driver.admin.sync-driver-gsm', $page->id) }}"--}}
-                                            {{--                                               class="btn btn-primary shadow btn-xs sharp me-1"><i--}}
-                                            {{--                                                    class="fas fa-sync"></i></a>--}}
-                                            <form action="{{ route('driver.admin.sync-driver-gsm', $page->id) }}"
-                                                  method="POST" style="display: inline;">
-                                                @csrf
-                                                <button type="submit"
-                                                        class="btn btn-primary shadow btn-xs sharp me-1">
-                                                    <i class="fas fa-sync"></i>
-                                                </button>
-                                            </form>
-                                            {{--                                            @else--}}
-                                            {{--                                            @endif--}}
-                                        </td>
-                                        <td>
-                                            @if ($page->user_gsm_id && $page->user_gsm_id != 1)
-                                                <span class="badge badge-success">Đã đồng bộ</span>
-                                            @else
-                                                <span class="badge badge-danger">Chưa đồng bộ</span>
-                                            @endif
-                                        </td>
+{{--                                        <td class="text-center">--}}
+{{--                                            <form action="{{ route('driver.admin.sync-driver-gsm', $page->id) }}"--}}
+{{--                                                  method="POST" style="display: inline;">--}}
+{{--                                                @csrf--}}
+{{--                                                <button type="submit"--}}
+{{--                                                        class="btn btn-primary shadow btn-xs sharp me-1">--}}
+{{--                                                    <i class="fas fa-sync"></i>--}}
+{{--                                                </button>--}}
+{{--                                            </form>--}}
+{{--                                        </td>--}}
+{{--                                        <td>--}}
+{{--                                            @if ($page->user_gsm_id && $page->user_gsm_id != 1)--}}
+{{--                                                <span class="badge badge-success">Đã đồng bộ</span>--}}
+{{--                                            @else--}}
+{{--                                                <span class="badge badge-danger">Chưa đồng bộ</span>--}}
+{{--                                            @endif--}}
+{{--                                        </td>--}}
                                         <td class="text-center">
                                             <a href="{{ route('driver.admin.drservice', $page->id) }}"
                                                class="badge badge-primary">Đăng ký</a>

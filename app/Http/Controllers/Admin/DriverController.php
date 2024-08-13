@@ -280,7 +280,6 @@ class DriverController extends Controller
             $driveData["car_identification"] = $request->input('car_identification');
             $driveData["reason_for_block"] = $request->input('reason_for_block');
 
-
             if ($driveData["is_active"] == 2) {
                 $driveData["access_token"] = '';
                 $driveData["active_token"] = '';
@@ -289,7 +288,6 @@ class DriverController extends Controller
                 $driveData["access_token"] = '';
                 $driveData["active_token"] = '';
             }
-
 
             $validation = [
                 'name' => 'required',
@@ -706,7 +704,6 @@ class DriverController extends Controller
             $blog = LogAddMoneyRequest::create($driveData);
             return redirect()->route('driver.admin.payment', 0)->with('success', __('Thêm yêu cầu nạp tiền thành công.'));
         }
-
     }
 
     public function payment_approve(Request $request)
@@ -953,7 +950,6 @@ class DriverController extends Controller
             return redirect()->back()->with('error', __('Hệ thống đang bận và quá tải.'));
         }
     }
-
 
     public function admin_drserviceallow($id)
     {

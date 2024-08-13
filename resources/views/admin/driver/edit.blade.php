@@ -100,7 +100,7 @@
 										@enderror
 									</div>
 									<div class="form-group col-md-12">
-										<label for="BlogTitle">Biển số xe</label>
+										<label for="BlogTitle">Biển số xe <span class="text-primary">*(VD: 29K1-288.32)</span></label>
 										<input type="text" name="car_num" class="form-control" id="BlogTitle" placeholder="" value="{{ $driver->car_num }}">
 										@error('car_num')
 											<p class="text-danger">
@@ -109,7 +109,7 @@
 										@enderror
 									</div>
 									<div class="form-group col-md-12">
-										<label for="BlogTitle">Thông tin xe</label>
+										<label for="BlogTitle">Loại xe <span class="text-primary">*(VD: Vinfast Feliz S)</span></label>
 										<input type="text" name="car_info" class="form-control" id="BlogTitle" placeholder="" value="{{ $driver->car_info }}">
 										@error('car_info')
 											<p class="text-danger">
@@ -117,6 +117,24 @@
 											</p>
 										@enderror
 									</div>
+                                    <div class="form-group col-md-12">
+                                        <label for="car_color">Màu xe <span class="text-primary">*(VD: Cam)</span></label>
+                                        <input type="text" name="car_color" class="form-control" id="car_color" placeholder="" value="{{ $driver->car_color }}">
+                                        @error('car_color')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="car_identification">Số khung</label>
+                                        <input type="text" name="car_identification" class="form-control" id="car_identification" placeholder="" value="{{ $driver->car_identification }}">
+                                        @error('car_identification')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
 
 									<div class="form-group col-md-12">
 										<label for="BlogTitle">Trạng thái</label>
@@ -152,6 +170,16 @@
 
 									@endif
 
+                                    <div class="form-group col-md-12">
+                                        <label for="reason_for_block">Lý do khóa tài khoản</label>
+                                        <input type="text" name="reason_for_block" class="form-control" id="reason_for_block" placeholder="" value="{{ $driver->reason_for_block ?? null }}" {{ ($driver->is_active != 1 || !empty($driver->day_lock)) ? 'required' : '' }}>
+                                        @error('reason_for_block')
+                                        <p class="text-danger">
+                                            {{ $message }}
+                                        </p>
+                                        @enderror
+                                    </div>
+
 									<div class="col-md-12">
 										<button type="submit" class="btn btn-primary">Cập nhật</button>
 									</div>
@@ -180,10 +208,13 @@
 										<img src="{{ asset('images/noimage.jpg') }}" class="avatar img-for-onchange"  alt="{{ __('common.image') }}" width="100px" height="100px" title="{{ __('common.image') }}">
 									@endif
 									<input type="hidden" name="data[BlogMeta][0][title]" value="avatar" id="ContentMeta0Title">
-									<div class="form-file">
+									<div class="form-file mb-1">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][0][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta0Value">
 									</div>
-							   </div>
+                                        <font color="red">*(Ảnh không quá 2MB)</font>
+
+
+                                </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -206,10 +237,12 @@
 										<img src="{{ asset('images/noimage.jpg') }}" class="avatar img-for-onchange"  alt="{{ __('common.image') }}" width="100px" height="100px" title="{{ __('common.image') }}">
 									@endif
 									<input type="hidden" name="data[BlogMeta][1][title]" value="cmnd" id="ContentMeta1Title">
-									<div class="form-file">
+									<div class="form-file mb-1">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][1][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta1Value">
 									</div>
-							   </div>
+                                    <font color="red">*(Ảnh không quá 2MB)</font>
+
+                                </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -225,10 +258,12 @@
 										<img src="{{ asset('images/noimage.jpg') }}" class="avatar img-for-onchange"  alt="{{ __('common.image') }}" width="100px" height="100px" title="{{ __('common.image') }}">
 									@endif
 									<input type="hidden" name="data[BlogMeta][3][title]" value="cmnd_s" id="ContentMeta3Title">
-									<div class="form-file">
+									<div class="form-file mb-1">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][3][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta3Value">
 									</div>
-							   </div>
+                                    <font color="red">*(Ảnh không quá 2MB)</font>
+
+                                </div>
                                 @error('data.BlogMeta.0.value')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -251,10 +286,11 @@
 										<img src="{{ asset('images/noimage.jpg') }}" class="avatar img-for-onchange"  alt="{{ __('common.image') }}" width="100px" height="100px" title="{{ __('common.image') }}">
 									@endif
 									<input type="hidden" name="data[BlogMeta][2][title]" value="gplx" id="ContentMeta2Title">
-									<div class="form-file">
+									<div class="form-file mb-1">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][2][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta2Value">
 									</div>
-							   </div>
+                                    <font color="red">*(Ảnh không quá 2MB)</font>
+                                </div>
                                 @error('data.BlogMeta.1.value')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -270,10 +306,11 @@
 										<img src="{{ asset('images/noimage.jpg') }}" class="avatar img-for-onchange"  alt="{{ __('common.image') }}" width="100px" height="100px" title="{{ __('common.image') }}">
 									@endif
 									<input type="hidden" name="data[BlogMeta][4][title]" value="gplx_s" id="ContentMeta2Title">
-									<div class="form-file">
+									<div class="form-file mb-1">
 										<input type="file" class="ps-2 form-control img-input-onchange" name="data[BlogMeta][4][value]" accept=".png, .jpg, .jpeg"  id="BlogMeta4Value">
 									</div>
-							   </div>
+                                    <font color="red">*(Ảnh không quá 2MB)</font>
+                                </div>
                                 @error('data.BlogMeta.1.value')
                                     <p class="text-danger">
                                         {{ $message }}
@@ -290,10 +327,37 @@
 </div>
 
 @push('inline-scripts')
-	<script>
-		'use strict';
-		var screenOptionArray = '<?php echo json_encode($screenOption) ?>';
-	</script>
+    <script>
+        'use strict';
+        var screenOptionArray = '<?php echo json_encode($screenOption) ?>';
+
+        // Thêm logic mới ở đây
+        document.addEventListener('DOMContentLoaded', function() {
+            const isActiveSelect = document.getElementById('is_active');
+            const dayLockInput = document.getElementById('day_lock');
+            const reasonForBlockInput = document.getElementById('reason_for_block');
+            const reasonForBlockGroup = reasonForBlockInput.closest('.form-group');
+
+            function updateReasonForBlock() {
+                const isInactive = isActiveSelect.value != '1';
+                const hasDayLock = dayLockInput.value !== '';
+
+                if (isInactive) {
+                    reasonForBlockGroup.style.display = 'block';
+                    reasonForBlockInput.required = true;
+                } else {
+                    reasonForBlockGroup.style.display = 'none';
+                    reasonForBlockInput.required = false;
+                }
+            }
+
+            isActiveSelect.addEventListener('change', updateReasonForBlock);
+            dayLockInput.addEventListener('change', updateReasonForBlock);
+
+            // Gọi hàm lần đầu để thiết lập trạng thái ban đầu
+            updateReasonForBlock();
+        });
+    </script>
 @endpush
 
 @endsection

@@ -34,30 +34,30 @@
                 <form id="myTargetForm" method="GET">
                   <td>Số điện thoại TX:
                   <input type="text" id="sdt" name="sdt" value="{{$sdt_tx}}"> &nbsp;&nbsp;&nbsp;<input type="submit" value="Tìm"></td>
-                </form> 
+                </form>
               </tr>
       </table>
 						<table class="table table-responsive-lg mb-0" >
-            
-              
-        
-           
+
+
+
+
 							  <tbody>
-									<div class="panel-body"> 
+									<div class="panel-body">
 									<div >
 								  <div id="map" ></div>
 										</div>
-										
+
 										<!-- /.table-responsive -->
-						
+
 									</div>
 
 							</tbody>
-      
+
 						</table>
 					</div>
 				</div>
-			
+
 			</div>
 		</div>
 	</div>
@@ -74,7 +74,7 @@
     var sdt_tx_tim ={!!$sdt_tx!!} ;
     if(sdt_tx_tim !=1)
     {
-        for (i = 0; i < locations.length; i++) {  
+        for (i = 0; i < locations.length; i++) {
 
           //alert(locations[i][3]+'--'+sdt_tx_tim);
             if(locations[i][3]==sdt_tx_tim)
@@ -100,7 +100,7 @@
 
     var marker, i;
 
-    for (i = 0; i < locations.length; i++) {  
+    for (i = 0; i < locations.length; i++) {
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
         map: map
