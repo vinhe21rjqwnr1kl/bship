@@ -25,7 +25,8 @@ return [
 				),
 
     'type_payments' => array(
-        'cashin' => 'Nạp ví tài xế',
+        'cashin' => 'Nạp ví tài xế - Tiền mặt',
+        'cashin_online' => 'Nạp ví tài xế - Online',
         'refund' => 'Hoàn ví cuốc hủy',
         'refund_payment_trip' => 'Hoàn ví cuốc chuyển khoản',
         'donate' => 'Tặng/thưởng',

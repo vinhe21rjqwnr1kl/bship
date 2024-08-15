@@ -82,7 +82,7 @@
                                 @if($service_id == 0)
                                     <div class="mb-3 col-md-3">
                                         <select name="service_type" class="default-select form-control">
-                                            <option value="0">-- Tất cả --</option>
+                                            <option value="0">-- Tất cả (Dịch vụ) --</option>
                                             @foreach($ServicesTypeArr as $key => $serviceType)
                                                 <option
                                                     {{ request()->input('service_type') == $key ? 'selected="selected"':'' }} value="{{ $key }}">{{ $ServicesTypeArr[$key] }}</option>
@@ -93,7 +93,7 @@
 
                                 <div class="mb-3 col-md-3">
                                     <select name="progress" class="default-select form-control">
-                                        <option value="0">-- Tất cả --</option>
+                                        <option value="0">-- Tất cả (Trạng thái) --</option>
                                         <option
                                             {{ request()->input('progress') == 3 ? 'selected="selected"':'' }} value="3">{{ $CfGoProcessArr[3] }}</option>
                                         <option
@@ -106,6 +106,17 @@
                                             {{ request()->input('progress') == 5 ? 'selected="selected"':'' }} value="5">{{ $CfGoProcessArr[5] }}</option>
                                     </select>
                                 </div>
+
+                                <div class="mb-3 col-md-3">
+                                    <select name="trip_type" class="default-select form-control">
+                                        <option value="">-- Tất cả (Loại chuyến) --</option>
+                                        <option
+                                            {{ request()->input('trip_type') == 'system' ? 'selected="selected"':'' }} value="system">Chuyến hệ thống</option>
+                                        <option
+                                            {{ request()->input('trip_type') == 'gsm' ? 'selected="selected"':'' }} value="gsm">Chuyến GSM</option>
+                                    </select>
+                                </div>
+
                                 <?php
                                 $today = date('Y-m-01');
                                 ?>
@@ -282,27 +293,27 @@
                                                     @endif
                                                 @endif
                                             </div>
-{{--                                            <div class="mt-2">--}}
-{{--                                                @if ($page->payment_status == "PAID" && $page->progress == 3)--}}
-{{--                                                    @if($page->log_add_money_request_status === 0)--}}
-{{--                                                        <span class="badge badge-warning">Chưa duyệt</span>--}}
-{{--                                                    @elseif( $page->log_add_money_request_status === 1)--}}
-{{--                                                        <span class="badge badge-success">Đã duyệt</span>--}}
-{{--                                                    @elseif($page->log_add_money_request_status === 2)--}}
-{{--                                                        <span class="badge badge-primary">Xóa</span>--}}
-{{--                                                    @else--}}
-{{--                                                        <form method="POST" action="{{route('driver.admin.payment.refund_payment_trip', ['go_id'=>$page->id])}}">--}}
-{{--                                                            @csrf--}}
-{{--                                                            <button type="submit" class="btn btn-xs btn-danger">Hoàn tiền</button>--}}
-{{--                                                        <a href="{{ route('driver.admin.payment.refund_payment_trip', $page->id) }}"--}}
-{{--                                                           class="badge badge-danger">Hoàn tiền</a>--}}
-{{--                                                        </form>--}}
+                                            {{--                                            <div class="mt-2">--}}
+                                            {{--                                                @if ($page->payment_status == "PAID" && $page->progress == 3)--}}
+                                            {{--                                                    @if($page->log_add_money_request_status === 0)--}}
+                                            {{--                                                        <span class="badge badge-warning">Chưa duyệt</span>--}}
+                                            {{--                                                    @elseif( $page->log_add_money_request_status === 1)--}}
+                                            {{--                                                        <span class="badge badge-success">Đã duyệt</span>--}}
+                                            {{--                                                    @elseif($page->log_add_money_request_status === 2)--}}
+                                            {{--                                                        <span class="badge badge-primary">Xóa</span>--}}
+                                            {{--                                                    @else--}}
+                                            {{--                                                        <form method="POST" action="{{route('driver.admin.payment.refund_payment_trip', ['go_id'=>$page->id])}}">--}}
+                                            {{--                                                            @csrf--}}
+                                            {{--                                                            <button type="submit" class="btn btn-xs btn-danger">Hoàn tiền</button>--}}
+                                            {{--                                                        <a href="{{ route('driver.admin.payment.refund_payment_trip', $page->id) }}"--}}
+                                            {{--                                                           class="badge badge-danger">Hoàn tiền</a>--}}
+                                            {{--                                                        </form>--}}
 
-{{--                                                    @endif--}}
-{{--                                                @else--}}
+                                            {{--                                                    @endif--}}
+                                            {{--                                                @else--}}
 
-{{--                                                @endif--}}
-{{--                                            </div>--}}
+                                            {{--                                                @endif--}}
+                                            {{--                                            </div>--}}
                                         </td>
                                     </tr>
                                 @empty

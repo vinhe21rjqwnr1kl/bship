@@ -80,6 +80,14 @@ class TripController extends Controller
             if ($request->filled('service_type') && $request->input('service_type') != 0) {
                 $resultQuery->where('service_type', '=', $request->input('service_type'));
             }
+            if($request->filled('trip_type')){
+                if($request->input('trip_type') == 'system'){
+                    $resultQuery->whereNull('order_id_gsm');
+                }
+                if($request->input('trip_type') == 'gsm'){
+                    $resultQuery->whereNotNull('order_id_gsm');
+                }
+            }
 
             $tags = json_decode($request->input("tags"), true);
             if (!empty($tags)) {
@@ -332,6 +340,14 @@ class TripController extends Controller
 //            if ($request->filled('progress')) {
 //                $resultQuery->where('progress', '=', "{$request->input('progress')}");
 //            }
+            if($request->filled('trip_type')){
+                if($request->input('trip_type') == 'system'){
+                    $resultQuery->whereNull('order_id_gsm');
+                }
+                if($request->input('trip_type') == 'gsm'){
+                    $resultQuery->whereNotNull('order_id_gsm');
+                }
+            }
         }
 
         $currentDate = date('Y-m-01');

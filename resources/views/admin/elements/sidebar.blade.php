@@ -545,7 +545,7 @@
         </ul>
         <div class="copyright">
             <p class="fs-12">{!! config('Site.footer_text') !!}</p>
-            <p>Version 1.1.22</p>
+            <p>Version 1.1.23</p>
         </div>
     </div>
 </div>

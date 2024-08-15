@@ -80,7 +80,7 @@ class ExportPaymentRequest implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["Mã nạp tiền", "Tên TX", "SĐT TX", "Tiền", "Loại", "Thông tin", "Người tạo", "Thời gian", "Trạng Thái"];
+        return ["Mã nạp tiền", "Tên TX", "SĐT TX", "Tiền", "Loại", "Thông tin", "Người tạo", "Người duyệt", "Thời gian", "Trạng Thái"];
     }
 
 }
