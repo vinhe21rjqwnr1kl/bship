@@ -3,35 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\ExportDriversList;
+use App\Exports\ExportPayment;
 use App\Exports\ExportPaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Agency;
+use App\Models\CfDriverPercent;
+use App\Models\CfServiceDetail;
+use App\Models\CfServiceMain;
+use App\Models\CfServiceType;
 use App\Models\Configuration;
+use App\Models\Driver;
 use App\Models\DriverApplicant;
-use App\Services\ExportService;
-use App\Utils\SuperAdminPermissionCheck;
-use Carbon\Carbon;
+use App\Models\DriverService;
+use App\Models\LogAddMoney;
+use App\Models\LogAddMoneyRequest;
+use App\Models\Trip;
+use App\Models\User;
+use App\Services\common\ExportService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use App\Models\Driver;
-use App\Models\User;
-use App\Models\Agency;
-use App\Models\DriverService;
-use App\Models\CfServiceMain;
-use App\Models\CfServiceType;
-use App\Models\LogAddMoneyRequest;
-use App\Models\CfDriverPercent;
-use App\Models\LogAddMoney;
-use App\Models\CfServiceDetail;
-use App\Models\Trip;
-use App\Rules\EditorEmptyCheckRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
-use App\Exports\ExportPayment;
 use Storage;
 
 class DriverController extends Controller
@@ -779,6 +773,7 @@ class DriverController extends Controller
                 // cập nhật ds yêu cầu status = 1 đã duyệt
                 $request = LogAddMoneyRequest::findorFail($id);
                 $requestData["status"] = 1;
+                $requestData["approved_by"] = $current_user->email;
                 $request->fill($requestData)->save();
                 // add tiền cho tài xế
                 $driver->fill($driveData)->save();

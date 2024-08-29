@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ExportTrip;
 use App\Http\Controllers\Controller;
 use App\Jobs\DriverRefund;
-use App\Services\ExportService;
-use App\Services\SuperAdminPermissionService;
-use App\Utils\SuperAdminPermissionCheck;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use App\Models\Trip;
-use App\Models\TripRequest;
-use App\Models\CfServiceMain;
-use App\Models\CfServiceType;
 use App\Models\CfGoProcess;
 use App\Models\CfServiceDetail;
-use App\Models\UserB;
+use App\Models\CfServiceMain;
+use App\Models\CfServiceType;
 use App\Models\Driver;
 use App\Models\LogAddMoney;
-use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel\WithHeadings;
+use App\Models\Trip;
+use App\Models\TripRequest;
+use App\Models\UserB;
+use App\Services\common\ExportService;
+use App\Services\SuperAdminPermissionService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel\FromCollection;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
-use App\Exports\ExportTrip;
-use App\Rules\EditorEmptyCheckRule;
+use Maatwebsite\Excel\Facades\Excel\WithHeadings;
 use Storage;
 use Telegram\Bot\Laravel\Facades\Telegram;
-use Carbon\Carbon;
 
 
 class TripController extends Controller
@@ -428,6 +421,18 @@ class TripController extends Controller
             }
             if ($request->filled('status')) {
                 $resultQuery->where('go_request.status', '=', "{$request->input('status')}");
+            }
+            if ($request->filled('gsm_id')) {
+                $resultQuery->where('go_request.order_id_gsm', 'like', "%{$request->input('gsm_id')}%");
+            }
+
+            if($request->filled('trip_type')){
+                if($request->input('trip_type') == 'system'){
+                    $resultQuery->whereNull('go_request.order_id_gsm');
+                }
+                if($request->input('trip_type') == 'gsm'){
+                    $resultQuery->whereNotNull('go_request.order_id_gsm');
+                }
             }
 
             $tags = json_decode($request->input("tags"), true);

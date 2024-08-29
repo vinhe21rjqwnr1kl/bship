@@ -57,15 +57,28 @@
                                 {{--                                <input type="search" name="id" class="form-control" placeholder="Mã chuyến đi" value="{{ old('id', request()->input('id')) }}">--}}
                                 {{--                            </div>--}}
 
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="search" name="phone" class="form-control" placeholder="Số điện thoại"
                                            value="{{ old('phone', request()->input('phone')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="search" name="name" class="form-control" placeholder="Họ và tên"
                                            value="{{ old('name', request()->input('name')) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
+                                    <input type="search" name="gsm_id" class="form-control" placeholder="Mã GSM"
+                                           value="{{ old('gsm_id', request()->input('gsm_id')) }}">
+                                </div>
+                                <div class="mb-3 col-md-3">
+                                    <select name="trip_type" class="default-select form-control">
+                                        <option value="">-- Tất cả (Loại chuyến) --</option>
+                                        <option
+                                            {{ request()->input('trip_type') == 'system' ? 'selected="selected"':'' }} value="system">Chuyến hệ thống</option>
+                                        <option
+                                            {{ request()->input('trip_type') == 'gsm' ? 'selected="selected"':'' }} value="gsm">Chuyến GSM</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-3">
                                     <select name="status" class="default-select form-control">
                                         <option
                                             {{ request()->input('status') == 1 ? 'selected="selected"':'' }} value="1">
@@ -89,11 +102,11 @@
                                 $today = date('Y-m-01');
                                 ?>
 
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="date" name="datefrom" class="form-control" placeholder="Ngày bắt đầu"
                                            value="{{ old('datefrom', request()->input('datefrom', $today)) }}">
                                 </div>
-                                <div class="mb-3 col-md-4">
+                                <div class="mb-3 col-md-3">
                                     <input type="date" name="dateto" class="form-control" placeholder="Ngày kết thúc"
                                            value="{{ old('dateto', request()->input('dateto')) }}">
                                 </div>
@@ -177,8 +190,8 @@
                                                 <br><strong>Đến:</strong> {{ $page->drop_second_address }}
                                             @else
                                             @endif
-                                            @if($page->trip && $page->trip->order_id_gsm)
-                                                <br><br><strong>Mã GSM: </strong>{{ $page->trip->order_id_gsm }}
+                                            @if($page->order_id_gsm)
+                                                <br><br><strong>Mã GSM: </strong>{{ $page->order_id_gsm }}
                                             @endif
                                         </td>
 

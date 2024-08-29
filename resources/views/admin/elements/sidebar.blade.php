@@ -395,6 +395,63 @@
                                     </li>
                                 </ul>
                             </li>
+                            @if (Auth::user()->can('Controllers > NewsController > index')
+                                || Auth::user()->can('Controllers > NewsController > create')
+                                )
+                                <li>
+                                    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                        <i class="flaticon-088-tools"></i>
+                                        <span class="nav-text">Tin tức</span>
+                                    </a>
+                                    <ul aria-expanded="false">
+                                        @can('Controllers > NewsController > index')
+                                            <li><a href="{{ route('admin.news.index') }}">Danh sách tin tức</a></li>
+                                        @endcan
+                                        @can('Controllers > NewsController > create')
+                                            <li><a href="{{ route('admin.news.create') }}">Thêm tin tức</a></li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endif
+                            @if (Auth::user()->can('Controllers > FlashSaleController > index')
+                                || Auth::user()->can('Controllers > FlashSaleController > create')
+                                )
+                                <li>
+                                    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                        <i class="flaticon-088-tools"></i>
+                                        <span class="nav-text">Flash sale</span>
+                                    </a>
+                                    <ul aria-expanded="false">
+                                        @can('Controllers > FlashSaleController > index')
+                                            <li><a href="{{ route('admin.flash_sale.index') }}">Danh sách Flash Sale</a></li>
+                                        @endcan
+                                        @can('Controllers > FlashSaleController > create')
+                                            <li><a href="{{ route('admin.flash_sale.create') }}">Thêm Flash Sale</a></li>
+                                        @endcan
+                                            @can('Controllers > FlashSaleController > goldenHoursFlashSale')
+                                                <li><a href="{{ route('admin.flash_sale.golden_hours') }}">Khung giờ vàng</a></li>
+                                            @endcan
+                                    </ul>
+                                </li>
+                            @endif
+                            @if (Auth::user()->can('Controllers > TouristDestinationController > index')
+                                || Auth::user()->can('Controllers > TouristDestinationController > create')
+                                )
+                                <li>
+                                    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                        <i class="flaticon-088-tools"></i>
+                                        <span class="nav-text">Điểm hot nên đi</span>
+                                    </a>
+                                    <ul aria-expanded="false">
+                                        @can('Controllers > TouristDestinationController > index')
+                                            <li><a href="{{ route('admin.tourist_destinations.index') }}">Danh sách điểm du lịch</a></li>
+                                        @endcan
+                                        @can('Controllers > TouristDestinationController > create')
+                                            <li><a href="{{ route('admin.tourist_destinations.create') }}">Thêm điểm du lịch</a></li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endif
                         @endif
                         <li class="nav-label">Cài đặt đại lý</li>
                         <li>
