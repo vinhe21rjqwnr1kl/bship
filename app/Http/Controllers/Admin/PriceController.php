@@ -636,20 +636,11 @@ class PriceController extends Controller
     public function admin_cache(Request $request)
     {
         $page_title = __('Cập nhật Cache');
-        $body = [
-            "cmd" =>"doReloadConfig",
-            "data" => ""
-        ];
 
-        $urlReloadService = env("URL_API_USER") . "ButlAppServlet/app/services";
-        $urlReloadConfig = env("URL_API_SOCKET") . "api/v1/web/reloadConfig";
-
-        $response = Http::post($urlReloadService, $body)->json();
+        $urlReloadConfig = env("URL_API_SOCKET") . "api/app/reloadConfig";
         $response2 = Http::get($urlReloadConfig)->json();
 
-//        dd($response, $response2);
-
-        return view('admin.price.cache', compact('page_title', 'response', 'response2'));
+        return view('admin.price.cache', compact('page_title', 'response2'));
     }
 
     public function admin_service(Request $request)

@@ -42,7 +42,8 @@ return [
 					'js/custom-min.js',
 					'js/rdxjs-min.js',
 					'js/tags-input.js',
-				],
+                    'installer/js/sweet-alert2.min.js',
+                ],
 		    ],
 	    ],
 	    'pagelevel' => [

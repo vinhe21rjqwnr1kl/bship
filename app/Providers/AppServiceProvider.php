@@ -33,9 +33,17 @@ class AppServiceProvider extends ServiceProvider
         $BlogsActions = array_merge(config('dzmenu.Blog.Blogs'), config('dzmenu.Blog.BlogCategories'));
         $MenusActions = array_merge(config('dzmenu.Menu.Menus'), config('dzmenu.Menu.Menus'));
         $MenuItemsActions = array_merge(config('dzmenu.Menu.MenuItems'), config('dzmenu.Menu.MenuItems'));
-        
+
         View::share(compact('SystemActions', 'PagesActions', 'BlogsActions', 'MenusActions', 'MenuItemsActions'));
 
-        
+//                \DB::listen(function($query) {
+//            \Log::debug(
+//                $query->sql,
+//                [
+//                    'bindings' => $query->bindings,
+//                    'time' => $query->time
+//                ]
+//            );
+//        });
     }
 }

@@ -152,7 +152,7 @@ div.flaged-ticket {
     transform: rotate(135deg);
 }
 .toggle-icon.active span:nth-child(2){
-   
+
     opacity: 0;
 }
 .toggle-icon.active span:nth-child(3){
@@ -283,67 +283,67 @@ div.flaged-ticket {
 /*jstree css start here on 01-09-2021*/
 .jstree-default .jstree-anchor {
     color: #3F4254;
-    padding: 0 8px 0 4px; 
+    padding: 0 8px 0 4px;
 }
 .jstree-default .jstree-icon {
     color: #ffad0e;
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
 }
 .jstree-default .jstree-icon.fa {
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
 }
 .jstree-default .jstree-icon.la {
-   font-size: 1.5rem; 
+   font-size: 1.5rem;
 }
 .jstree-default .jstree-disabled {
     line-height: auto;
-    opacity: 0.7; 
+    opacity: 0.7;
     height: auto;
     cursor: not-allowed;
 }
 .jstree-default .jstree-disabled .jstree-icon {
-    color: #3F4254; 
-}   
+    color: #3F4254;
+}
 .jstree-default .fa-file-text {
     color: #969696;
-}   
+}
 .jstree-default .jstree-clicked {
     border: 0;
-    box-shadow: none; 
+    box-shadow: none;
     background: #F3F6F9;
     -webkit-box-shadow: none;
 }
 .jstree-default .jstree-hovered {
-    box-shadow: none; 
+    box-shadow: none;
     border: 0;
     background-color: #F3F6F9;
     -webkit-box-shadow: none;
 }
 .jstree-default .jstree-wholerow-clicked,
 .jstree-default .jstree-wholerow-clicked {
-    box-shadow: none; 
+    box-shadow: none;
     background: #EBEDF3;
     -webkit-box-shadow: none;
 }
 .jstree-default .jstree-wholerow-hovered,
 .jstree-default.jstree-wholerow .jstree-wholerow-hovered {
     border: 0;
-    box-shadow: none; 
+    box-shadow: none;
     -webkit-box-shadow: none;
     background-color: #F3F6F9;
 }
 .jstree-open > .jstree-anchor > .fa-folder:before {
-    content: "\f07c"; 
+    content: "\f07c";
     color:#ffad0e;
     margin-left: 2px;
 }
 .jstree-open > .jstree-anchor > .la-folder:before {
     margin-left: 2px;
-    color:#ffad0e;  
-    content: "\f200"; 
+    color:#ffad0e;
+    content: "\f200";
 }
 .jstree-default .jstree-clicked{
-   background: transparent; 
+   background: transparent;
 }
 .jstree-anchor{
     background: transparent;
@@ -386,7 +386,7 @@ div.flaged-ticket {
 
 .heart-blast {
     background-position: -1680px 0 !important;
-    transition: background 1s steps(28); 
+    transition: background 1s steps(28);
 }
 
 .heart {
@@ -395,10 +395,10 @@ div.flaged-ticket {
     display: inline-block;
     background: url(../images/like.png);
     cursor: pointer;
-    margin: -25px -15px; 
+    margin: -25px -15px;
 }
 
-ul.category-checkbox-list { 
+ul.category-checkbox-list {
     list-style: none;
     margin: 5px 20px;
 }
@@ -417,7 +417,7 @@ body.authPages
 {
 }
 
-ul.page-checkbox-list, ul.category-checkbox-list { 
+ul.page-checkbox-list, ul.category-checkbox-list {
     list-style: none;
     margin: 5px 20px;
 }
@@ -439,4 +439,85 @@ ul.page-checkbox-list li, ul.category-checkbox-list li {
 }
 .max-width-180 {
     max-width: 180px;
+}
+
+
+.toggle-switch {
+    position: relative;
+    padding-left: 0 !important;
+}
+
+.toggle-switch label {
+    padding: 0;
+}
+
+input.display-none {
+    display: none;
+}
+.toggle-switch label input + span {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    width: 3rem;
+    height: 1.5rem;
+    background: #bdc1c8;
+    border: 1px solid #eee;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: inset 0 0 5px #828282;
+}
+
+.toggle-switch label input + span small {
+    position: absolute;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1.875rem;
+    background: #fff;
+    transition: all 0.3s ease-in-out;
+    top: 0.2rem;
+    left: 0.2rem;
+}
+
+.toggle-switch label input:checked + span {
+    background-color: #eb8153;
+}
+
+.toggle-switch label input:checked + span small {
+    left: 1.7rem;
+    transition: left .25s;
+}
+
+.toggle-switch span:after {
+    line-height: 2.5rem;
+    width: 5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    position: absolute;
+    bottom: 0;
+    transition: opacity .25s;
+    left: 6rem;
+    opacity: 0.5;
+    color: #6b7381;
+}
+
+.toggle-switch label input:checked + span:after {
+    opacity: 1;
+}
+
+.w-24 {
+    width: 24rem;
+}
+
+.w-20 {
+    width: 20rem;
+}
+
+.w-6 {
+    width: 6rem;
+}
+.w-8 {
+    width: 8rem;
 }

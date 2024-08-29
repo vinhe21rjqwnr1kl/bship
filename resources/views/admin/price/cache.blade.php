@@ -55,20 +55,6 @@
                     <div class="card-header">
                         <h4 class="card-title"></h4>
 
-                        @if($response['code'] == 1)
-                            <div class="container-fluid">
-                                <div class="alert alert-success alert-dismissible alert-alt fade show">
-                                    <strong>{{ __('common.success') }}</strong> {{ __('Service cache reloaded successfully') }}
-                                </div>
-                            </div>
-                            @else
-                            <div class="container-fluid">
-                                <div class="alert alert-danger alert-dismissible alert-alt fade show">
-                                    <strong>{{ __('common.error') }}</strong> {{ __('Service cache reload failed') }}
-                                </div>
-                            </div>
-                        @endif
-
                         @if($response2['code'] == 1)
                             <div class="container-fluid">
                                 <div class="alert alert-success alert-dismissible alert-alt fade show">
