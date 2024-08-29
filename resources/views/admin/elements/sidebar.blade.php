@@ -148,6 +148,12 @@
                                 </li>
                             </ul>
                         </li>
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-381-push-pin"></i>
+                                <span class="nav-text">Đánh giá chuyến đi</span>
+                            </a>
+                        </li>
                     @endcan
                     @can('Controllers > DriverController > admin_index')
                         <li>
