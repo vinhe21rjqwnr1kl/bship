@@ -80,5 +80,6 @@ Route::middleware(['auth:sanctum', 'verified', 'permissions'])->prefix('admin')-
     Route::post('/user/point/remove/{id}', [PointController::class, 'handleRemoveRequest'])->name('admin.point.handle-remove');
     Route::match(['get', 'post'], '/user/points/import-log-point-request', [PointController::class, 'importLogPointRequest'])->name('admin.point.import_log_point_request');
     Route::post('/user/points/import-log-point-request/template', [PointController::class, 'exportTemplate'])->name('admin.point.import_log_point_request_template');
-
+    
+    // Route::get('get',[])
 });

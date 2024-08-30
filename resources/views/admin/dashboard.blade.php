@@ -39,6 +39,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div class="col-xl-3 col-sm-6 m-t35">
 			<div class="card card-coin">
 				<div class="card-body text-center">

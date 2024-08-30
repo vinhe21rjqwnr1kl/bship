@@ -148,12 +148,19 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                                <i class="flaticon-381-push-pin"></i>
-                                <span class="nav-text">Đánh giá chuyến đi</span>
-                            </a>
-                        </li>
+                        
+                    @endcan
+                    @can('Controllers > RatingsController > index')
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-push-pin"></i>
+                            <span class="nav-text">Đánh giá chuyến đi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.ratings.index') }}"> Danh sách đánh giá chuyến đi </a></li>
+                         
+                        </ul>
+                    </li>
                     @endcan
                     @can('Controllers > DriverController > admin_index')
                         <li>

@@ -34,7 +34,7 @@ class NewsService
 
         return $query->paginate(config('Reading.nodes_per_page'));
     }
-
+   
     private function applyFilters($query, Request $request): void
     {
         if ($request->filled('keyword')) {

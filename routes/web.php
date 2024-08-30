@@ -44,6 +44,6 @@ require __DIR__.'/delivery_type.php';
 require __DIR__.'/log_add_money.php';
 require __DIR__.'/orders.php';
 require __DIR__.'/news.php';
+require __DIR__.'/ratings.php';
 require __DIR__.'/flash_sale.php';
 require __DIR__.'/tourist_destinations.php';
-
