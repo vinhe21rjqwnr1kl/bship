@@ -8,6 +8,7 @@ use App\Models\FoodPriority;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\FoodPriorityService;
+use Illuminate\Support\Facades\Validator;
 
 class FoodPriorityController extends Controller
 {
@@ -76,14 +77,43 @@ public function search(Request $request)
         return view('admin.food_priority.create', compact('page_title'));
     }
     public function store(Request $request)
-    {
-        $data = $this->food_priorityService->prepareData($request->all());
-        $is_successful = $this->food_priorityService->storeFoodPriority($data);
+{
+    // Xác minh dữ liệu đầu vào
+  
+    $validator = Validator::make($request->all(), [
+        'restaurant_id' => 'required|exists:restaurants,id',
+        'product_id' => 'required|exists:food_products,id',
+    ]);
+    if ($validator->fails()) {
+        return redirect()->route('admin.food_priority.index')
+        ->with('error', 'Có lỗi xảy ra');
 
-        return $is_successful
-            ? redirect()->route('admin.food_priority.index')->with('success', __('Tạo ưu tiên thành công.'))
-            : redirect()->route('admin.food_priority.index')->with('error', __('Có lỗi xảy ra khi tạo ưu tiên.'));
     }
+
+    // Lấy dữ liệu từ request
+    $restaurantId = $request->input('restaurant_id');
+    $productId = $request->input('product_id');
+
+    // Kiểm tra xem product_id có thuộc restaurant_id không
+    $product = FoodProduct::find($productId);
+   
+   
+    if ( $product->restaurant_id != $restaurantId) {
+        return redirect()->route('admin.food_priority.index')
+        ->with('error', __('Có lỗi xảy ra.'))
+        ;
+           
+    }
+
+    // Chuẩn bị dữ liệu và lưu
+    $data = $this->food_priorityService->prepareData($request->all());
+    $is_successful = $this->food_priorityService->storeFoodPriority($data);
+
+    return $is_successful
+        ? redirect()->route('admin.food_priority.index')->with('success', __('Tạo ưu tiên thành công.'))
+        : redirect()->route('admin.food_priority.index')->with('error', __('Có lỗi xảy ra khi tạo ưu tiên.'));
+}
+
 
     public function destroy($id)
     {
