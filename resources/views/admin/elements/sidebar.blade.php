@@ -162,6 +162,8 @@
                         </ul>
                     </li>
                     @endcan
+
+                 
                     @can('Controllers > DriverController > admin_index')
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -374,8 +376,27 @@
                             </li>
                         @endif
                         @if($role_id ==1)
-                            <li class="nav-label">Cài đặt quảng cáo</li>
-                            <li>
+                        <li class="nav-label">Cài đặt ưu tiên</li>
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <i class="flaticon-162-edit"></i>
+                                <span class="nav-text">Cửa hàng ưu tiên</span>
+                            </a>
+                            
+                            <ul aria-expanded="false">
+                                <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'index') ? 'mm-active' : '' }}">
+                                    <a href="{{ route('admin.food_priority.index') }}">Danh sách</a>
+                                </li>
+                                <li class="{{ (DzHelper::controller() == 'UsersController' && DzHelper::action() == 'create') ? 'mm-active' : '' }}">
+                                    <a href="{{ route('admin.food_priority.create') }}">Thêm cửa hàng ưu tiên</a>
+                                </li>
+                               
+                            </ul>
+                        </li>
+                    @endif
+                        @if($role_id ==1)
+                            <li class="nav-lab  <li>el">Cài đặt quảng cáo</li>
+                          
                                 <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                     <i class="flaticon-162-edit"></i>
                                     <span class="nav-text">Thông báo</span>
